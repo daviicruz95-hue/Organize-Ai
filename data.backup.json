@@ -1,0 +1,1285 @@
+{
+  "activeMonth": "2026-11",
+  "months": [
+    {
+      "id": "2026-05",
+      "name": "Maio",
+      "year": 2026,
+      "incomes": [
+        {
+          "id": "inc-m-1",
+          "person": "Nat",
+          "description": "Salário / Pró-labore",
+          "amount": 2129.61,
+          "status": "received"
+        },
+        {
+          "id": "inc-m-2",
+          "person": "Davi",
+          "description": "Salário / Contratos",
+          "amount": 2242.71,
+          "status": "received"
+        }
+      ],
+      "expenses": [
+        {
+          "id": "exp-m-1",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Luz",
+          "amount": 401.04,
+          "dueDate": "11/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-2",
+          "person": "Nat",
+          "category": "Serviços",
+          "description": "Internet",
+          "amount": 109.9,
+          "dueDate": "15/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-3",
+          "person": "Nat",
+          "category": "Transporte",
+          "description": "Estapar (Estacionamento)",
+          "amount": 92.0,
+          "dueDate": "07/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-4",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "IPTU",
+          "amount": 47.44,
+          "dueDate": "15/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-5",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Taxa de Lixo",
+          "amount": 17.41,
+          "dueDate": "18/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-6",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Condomínio",
+          "amount": 642.0,
+          "dueDate": "10/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-7",
+          "person": "Nat",
+          "category": "Saúde",
+          "description": "Terapia",
+          "amount": 180.0,
+          "dueDate": "15/05",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-m-8",
+          "person": "Nat",
+          "category": "Cartão",
+          "description": "Fatura Crédito Nat",
+          "amount": 375.82,
+          "dueDate": "11/05",
+          "status": "paid",
+          "type": "card"
+        },
+        {
+          "id": "exp-m-9",
+          "person": "Nat",
+          "category": "Saúde",
+          "description": "Anticoncepcional",
+          "amount": 64.0,
+          "dueDate": "10/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-10",
+          "person": "Nat",
+          "category": "Outros",
+          "description": "Atrasado",
+          "amount": 360.0,
+          "dueDate": "20/05",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-m-11",
+          "person": "Nat",
+          "category": "Pessoal",
+          "description": "Escovas + Absorvente",
+          "amount": 40.0,
+          "dueDate": "20/05",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-m-12",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "Parcela Moto",
+          "amount": 932.72,
+          "dueDate": "15/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-13",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "MEI",
+          "amount": 90.0,
+          "dueDate": "20/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-14",
+          "person": "Davi",
+          "category": "Saúde",
+          "description": "Academia",
+          "amount": 109.9,
+          "dueDate": "10/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-15",
+          "person": "Davi",
+          "category": "Lazer",
+          "description": "Música",
+          "amount": 50.0,
+          "dueDate": "10/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-16",
+          "person": "Davi",
+          "category": "Doações",
+          "description": "Dízimo",
+          "amount": 550.0,
+          "dueDate": "10/05",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-m-17",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "Celular",
+          "amount": 75.0,
+          "dueDate": "10/05",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-m-18",
+          "person": "Davi",
+          "category": "Cartão",
+          "description": "Fatura Crédito Davi",
+          "amount": 985.09,
+          "dueDate": "15/05",
+          "status": "paid",
+          "type": "card"
+        },
+        {
+          "id": "exp-m-19",
+          "person": "Davi",
+          "category": "Alimentação",
+          "description": "Mercado (Marcus VR)",
+          "amount": 400.0,
+          "dueDate": "25/05",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-m-20",
+          "person": "Casa",
+          "category": "Imprevistos",
+          "description": "Multa Carro",
+          "amount": 190.0,
+          "dueDate": "22/05",
+          "status": "paid",
+          "type": "extra"
+        },
+        {
+          "id": "exp-m-21",
+          "person": "Casa",
+          "category": "Imprevistos",
+          "description": "Multa Bombeiro",
+          "amount": 80.0,
+          "dueDate": "25/05",
+          "status": "paid",
+          "type": "extra"
+        }
+      ],
+      "reserve": 0.0
+    },
+    {
+      "id": "2026-06",
+      "name": "Junho",
+      "year": 2026,
+      "incomes": [
+        {
+          "id": "inc-jun-1",
+          "person": "Davi",
+          "description": "Renda Total Junho",
+          "amount": 5200.0,
+          "status": "received"
+        }
+      ],
+      "expenses": [
+        {
+          "id": "exp-jun-1",
+          "person": "Nat",
+          "category": "Transporte",
+          "description": "Estapar (Estacionamento)",
+          "amount": 92.0,
+          "dueDate": "07/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-2",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Luz",
+          "amount": 344.65,
+          "dueDate": "10/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-3",
+          "person": "Nat",
+          "category": "Serviços",
+          "description": "Internet",
+          "amount": 109.9,
+          "dueDate": "15/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-4",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "IPTU",
+          "amount": 47.44,
+          "dueDate": "15/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-5",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Taxa de Lixo",
+          "amount": 17.41,
+          "dueDate": "16/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-6",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Condomínio",
+          "amount": 642.53,
+          "dueDate": "10/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-7",
+          "person": "Nat",
+          "category": "Saúde",
+          "description": "Terapia",
+          "amount": 360.0,
+          "dueDate": "15/06",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-jun-8",
+          "person": "Nat",
+          "category": "Saúde",
+          "description": "Anticoncepcional",
+          "amount": 80.0,
+          "dueDate": "10/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-9",
+          "person": "Nat",
+          "category": "Cartão",
+          "description": "Fatura Crédito Nat",
+          "amount": 548.46,
+          "dueDate": "09/06",
+          "status": "paid",
+          "type": "card"
+        },
+        {
+          "id": "exp-jun-10",
+          "person": "Nat",
+          "category": "Saúde",
+          "description": "Terapia Ajuste Maio",
+          "amount": 180.0,
+          "dueDate": "20/06",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-jun-11",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "Parcela Moto",
+          "amount": 932.72,
+          "dueDate": "15/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-12",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "MEI",
+          "amount": 90.0,
+          "dueDate": "20/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-13",
+          "person": "Davi",
+          "category": "Saúde",
+          "description": "Academia",
+          "amount": 109.9,
+          "dueDate": "10/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-14",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "Celular",
+          "amount": 75.0,
+          "dueDate": "10/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-15",
+          "person": "Davi",
+          "category": "Doações",
+          "description": "Dízimo",
+          "amount": 550.0,
+          "dueDate": "10/06",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-jun-16",
+          "person": "Davi",
+          "category": "Lazer",
+          "description": "Música",
+          "amount": 50.0,
+          "dueDate": "10/06",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jun-17",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "IPVA Moto",
+          "amount": 168.39,
+          "dueDate": "30/06",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-jun-18",
+          "person": "Davi",
+          "category": "Cartão",
+          "description": "Fatura Crédito Davi (Liq. Marcus 400)",
+          "amount": 357.62,
+          "dueDate": "15/06",
+          "status": "paid",
+          "type": "card"
+        },
+        {
+          "id": "exp-jun-19",
+          "person": "Casa",
+          "category": "Saúde",
+          "description": "Consulta Oftalmo",
+          "amount": 250.0,
+          "dueDate": "20/06",
+          "status": "paid",
+          "type": "extra"
+        }
+      ],
+      "reserve": 1300.0
+    },
+    {
+      "id": "2026-07",
+      "name": "Julho",
+      "year": 2026,
+      "incomes": [
+        {
+          "id": "inc-jul-1",
+          "person": "Davi",
+          "description": "Entrada Fixa 1",
+          "amount": 2500.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-jul-2",
+          "person": "Nat",
+          "description": "Pensão",
+          "amount": 800.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-jul-3",
+          "person": "Casa",
+          "description": "Ajuda Pai",
+          "amount": 1000.0,
+          "status": "received"
+        }
+      ],
+      "expenses": [
+        {
+          "id": "exp-jul-1",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Luz",
+          "amount": 305.64,
+          "dueDate": "10/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-2",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Condomínio",
+          "amount": 730.0,
+          "dueDate": "10/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-3",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "IPTU",
+          "amount": 47.44,
+          "dueDate": "15/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-4",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Taxa de Lixo",
+          "amount": 17.41,
+          "dueDate": "16/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-5",
+          "person": "Nat",
+          "category": "Serviços",
+          "description": "Internet",
+          "amount": 109.9,
+          "dueDate": "15/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-6",
+          "person": "Nat",
+          "category": "Saúde",
+          "description": "Terapia",
+          "amount": 180.0,
+          "dueDate": "15/07",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-jul-7",
+          "person": "Nat",
+          "category": "Saúde",
+          "description": "Anticoncepcional",
+          "amount": 80.0,
+          "dueDate": "10/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-8",
+          "person": "Nat",
+          "category": "Cartão",
+          "description": "Fatura Crédito Nat (Liq. 200)",
+          "amount": 457.0,
+          "dueDate": "10/07",
+          "status": "paid",
+          "type": "card"
+        },
+        {
+          "id": "exp-jul-9",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "Parcela Moto",
+          "amount": 932.72,
+          "dueDate": "15/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-10",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "MEI",
+          "amount": 90.0,
+          "dueDate": "20/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-11",
+          "person": "Davi",
+          "category": "Saúde",
+          "description": "Academia",
+          "amount": 109.9,
+          "dueDate": "10/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-12",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "Celular",
+          "amount": 75.0,
+          "dueDate": "10/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-13",
+          "person": "Davi",
+          "category": "Doações",
+          "description": "Dízimo",
+          "amount": 350.0,
+          "dueDate": "10/07",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-jul-14",
+          "person": "Davi",
+          "category": "Lazer",
+          "description": "Música (3/9)",
+          "amount": 50.0,
+          "dueDate": "10/07",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-jul-15",
+          "person": "Davi",
+          "category": "Cartão",
+          "description": "Fatura Crédito Davi (Liq. Marcus 400 4/5)",
+          "amount": 565.38,
+          "dueDate": "15/07",
+          "status": "paid",
+          "type": "card"
+        }
+      ],
+      "reserve": 2000.0
+    },
+    {
+      "id": "2026-08",
+      "name": "Agosto",
+      "year": 2026,
+      "incomes": [
+        {
+          "id": "inc-ago-1",
+          "person": "Davi",
+          "description": "Salário / Principal",
+          "amount": 3500.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-ago-2",
+          "person": "Nat",
+          "description": "Pensão",
+          "amount": 800.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-ago-3",
+          "person": "Casa",
+          "description": "Ajuda Pai",
+          "amount": 1000.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-ago-4",
+          "person": "Davi",
+          "description": "Extra / Trabalho",
+          "amount": 300.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-ago-5",
+          "person": "Nat",
+          "description": "Extra",
+          "amount": 200.0,
+          "status": "received"
+        }
+      ],
+      "expenses": [
+        {
+          "id": "exp-ago-1",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Condomínio",
+          "amount": 730.0,
+          "dueDate": "10/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-2",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "IPTU",
+          "amount": 47.44,
+          "dueDate": "15/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-3",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Taxa de Lixo",
+          "amount": 17.41,
+          "dueDate": "18/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-4",
+          "person": "Nat",
+          "category": "Serviços",
+          "description": "Internet",
+          "amount": 109.9,
+          "dueDate": "15/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-5",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Luz",
+          "amount": 406.0,
+          "dueDate": "10/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-6",
+          "person": "Nat",
+          "category": "Transporte",
+          "description": "Estapar (Estacionamento)",
+          "amount": 92.0,
+          "dueDate": "07/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-7",
+          "person": "Nat",
+          "category": "Cartão",
+          "description": "Fatura Crédito Nat (Última Laser)",
+          "amount": 309.11,
+          "dueDate": "10/08",
+          "status": "paid",
+          "type": "card"
+        },
+        {
+          "id": "exp-ago-8",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "Parcela Moto",
+          "amount": 932.72,
+          "dueDate": "15/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-9",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "MEI",
+          "amount": 90.0,
+          "dueDate": "20/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-10",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "IPVA Moto",
+          "amount": 150.0,
+          "dueDate": "31/08",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-ago-11",
+          "person": "Davi",
+          "category": "Saúde",
+          "description": "Academia",
+          "amount": 109.9,
+          "dueDate": "10/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-12",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "Celular",
+          "amount": 75.0,
+          "dueDate": "10/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-13",
+          "person": "Davi",
+          "category": "Lazer",
+          "description": "Música (6/9)",
+          "amount": 50.0,
+          "dueDate": "10/08",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-ago-14",
+          "person": "Davi",
+          "category": "Doações",
+          "description": "Dízimo",
+          "amount": 360.0,
+          "dueDate": "10/08",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-ago-15",
+          "person": "Davi",
+          "category": "Cartão",
+          "description": "Fatura Crédito Davi (Liq. Marcus 5/5)",
+          "amount": 371.89,
+          "dueDate": "15/08",
+          "status": "paid",
+          "type": "card"
+        }
+      ],
+      "reserve": 2000.0
+    },
+    {
+      "id": "2026-09",
+      "name": "Setembro",
+      "year": 2026,
+      "incomes": [
+        {
+          "id": "inc-set-1",
+          "person": "Davi",
+          "description": "Rayd / Boyd",
+          "amount": 3500.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-set-2",
+          "person": "Nat",
+          "description": "Pensão",
+          "amount": 800.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-set-3",
+          "person": "Casa",
+          "description": "Pai",
+          "amount": 1000.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-set-4",
+          "person": "Davi",
+          "description": "Freela",
+          "amount": 500.0,
+          "status": "received"
+        }
+      ],
+      "expenses": [
+        {
+          "id": "exp-set-1",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Condomínio",
+          "amount": 730.0,
+          "dueDate": "10/09",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-set-2",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Luz",
+          "amount": 308.0,
+          "dueDate": "10/09",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-set-3",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "IPTU",
+          "amount": 47.44,
+          "dueDate": "15/09",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-set-4",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Taxa de Lixo",
+          "amount": 17.41,
+          "dueDate": "18/09",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-set-5",
+          "person": "Nat",
+          "category": "Serviços",
+          "description": "Internet",
+          "amount": 109.9,
+          "dueDate": "15/09",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-set-6",
+          "person": "Nat",
+          "category": "Cartão",
+          "description": "Fatura Crédito Nat (inclui 403,08 1/4)",
+          "amount": 1027.27,
+          "dueDate": "10/09",
+          "status": "paid",
+          "type": "card"
+        },
+        {
+          "id": "exp-set-7",
+          "person": "Nat",
+          "category": "Transporte",
+          "description": "Estapar (Estacionamento)",
+          "amount": 92.0,
+          "dueDate": "07/09",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-set-8",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "Parcela Moto",
+          "amount": 933.0,
+          "dueDate": "15/09",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-set-9",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "MEI",
+          "amount": 90.0,
+          "dueDate": "20/09",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-set-10",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "Celular",
+          "amount": 75.0,
+          "dueDate": "10/09",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-set-11",
+          "person": "Davi",
+          "category": "Saúde",
+          "description": "Academia",
+          "amount": 109.9,
+          "dueDate": "10/09",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-set-12",
+          "person": "Davi",
+          "category": "Doações",
+          "description": "Dízimo",
+          "amount": 350.0,
+          "dueDate": "10/09",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-set-13",
+          "person": "Davi",
+          "category": "Cartão",
+          "description": "Fatura Crédito Davi",
+          "amount": 264.0,
+          "dueDate": "15/09",
+          "status": "paid",
+          "type": "card"
+        }
+      ],
+      "reserve": 2000.0
+    },
+    {
+      "id": "2026-11",
+      "name": "Novembro",
+      "year": 2026,
+      "incomes": [
+        {
+          "id": "inc-nov-1",
+          "person": "Davi",
+          "description": "KNN",
+          "amount": 4500.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-nov-2",
+          "person": "Davi",
+          "description": "Pensão",
+          "amount": 800.0,
+          "status": "received"
+        },
+        {
+          "id": "inc-nov-3",
+          "person": "Nat",
+          "description": "Pai",
+          "amount": 1000.0,
+          "status": "received",
+          "category": "Trabalho"
+        },
+        {
+          "id": "inc-nov-5",
+          "person": "Davi",
+          "description": "Marcus (Empréstimo a Receber)",
+          "amount": 121.0,
+          "status": "pending",
+          "category": "Empréstimo"
+        },
+        {
+          "id": "inc-nov-freela",
+          "person": "Davi",
+          "description": "Freela (Em Aberto / Aguardando)",
+          "amount": 0.0,
+          "status": "pending",
+          "category": "Freela"
+        }
+      ],
+      "expenses": [
+        {
+          "id": "exp-nov-1",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Condomínio",
+          "amount": 730.0,
+          "dueDate": "10/11",
+          "status": "pending",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-nov-2",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Luz",
+          "amount": 381.08,
+          "dueDate": "10/11",
+          "status": "pending",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-nov-3",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "IPTU",
+          "amount": 47.44,
+          "dueDate": "15/11",
+          "status": "pending",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-nov-4",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Taxa de Lixo",
+          "amount": 17.41,
+          "dueDate": "17/11",
+          "status": "pending",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-nov-5",
+          "person": "Nat",
+          "category": "Serviços",
+          "description": "Internet",
+          "amount": 109.9,
+          "dueDate": "15/11",
+          "status": "pending",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-nov-6",
+          "person": "Nat",
+          "category": "Cartão",
+          "description": "Fatura Crédito Nat",
+          "amount": 560.0,
+          "dueDate": "10/11",
+          "status": "pending",
+          "type": "card",
+          "subItems": [
+            {
+              "id": "sub-n-1",
+              "description": "Compra Parcelada 4x",
+              "amount": 403.08,
+              "category": "Compras",
+              "totalInstallments": 4,
+              "currentInstallment": 3,
+              "installments": "3/4"
+            },
+            {
+              "id": "sub-n-2",
+              "description": "Compras Correntes do Mês",
+              "amount": 156.92,
+              "category": "Geral",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            }
+          ],
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista"
+        },
+        {
+          "id": "exp-nov-7",
+          "person": "Nat",
+          "category": "Transporte",
+          "description": "Estapar (Estacionamento)",
+          "amount": 92.0,
+          "dueDate": "07/11",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-nov-8",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "Parcela Moto",
+          "amount": 933.0,
+          "dueDate": "15/11",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-nov-9",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "MEI",
+          "amount": 90.0,
+          "dueDate": "20/11",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-nov-10",
+          "person": "Davi",
+          "category": "Serviços",
+          "description": "Celular",
+          "amount": 75.0,
+          "dueDate": "10/11",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-nov-11",
+          "person": "Davi",
+          "category": "Saúde",
+          "description": "Academia",
+          "amount": 109.9,
+          "dueDate": "10/11",
+          "status": "paid",
+          "type": "fixed"
+        },
+        {
+          "id": "exp-nov-12",
+          "person": "Davi",
+          "category": "Doações",
+          "description": "Dízimo",
+          "amount": 400.0,
+          "dueDate": "10/11",
+          "status": "paid",
+          "type": "variable"
+        },
+        {
+          "id": "exp-nov-13",
+          "person": "Davi",
+          "category": "Cartão",
+          "description": "Fatura Crédito Davi",
+          "amount": 766.78,
+          "dueDate": "15/11",
+          "status": "paid",
+          "type": "card",
+          "subItems": [
+            {
+              "id": "sub-d-1",
+              "description": "Compra Parcelada 10x",
+              "amount": 73.0,
+              "category": "Compras",
+              "totalInstallments": 10,
+              "currentInstallment": 1,
+              "installments": "1/10"
+            },
+            {
+              "id": "sub-d-2",
+              "description": "Compra Parcelada 2x",
+              "amount": 278.06,
+              "category": "Compras",
+              "totalInstallments": 2,
+              "currentInstallment": 1,
+              "installments": "1/2"
+            },
+            {
+              "id": "sub-d-3",
+              "description": "Compras Correntes / Avulsas",
+              "amount": 415.72,
+              "category": "Geral",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            }
+          ],
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista"
+        },
+        {
+          "id": "exp-nov-14",
+          "person": "Casa",
+          "category": "Presentes",
+          "description": "Presente Gui e Leo",
+          "amount": 150.0,
+          "dueDate": "22/11",
+          "status": "paid",
+          "type": "extra"
+        }
+      ],
+      "reserve": 2000.0
+    }
+  ],
+  "futureInstallments": [
+    {
+      "id": "inst-1",
+      "person": "Nat",
+      "description": "Compra Parcelada 4x",
+      "card": "Cartão Nat",
+      "installmentAmount": 403.08,
+      "currentInstallment": 3,
+      "totalInstallments": 4,
+      "endMonth": "Dezembro/2026",
+      "status": "active"
+    },
+    {
+      "id": "inst-2",
+      "person": "Davi",
+      "description": "Compra Parcelada 10x",
+      "card": "Cartão Davi",
+      "installmentAmount": 73.0,
+      "currentInstallment": 1,
+      "totalInstallments": 10,
+      "endMonth": "Agosto/2027",
+      "status": "active"
+    },
+    {
+      "id": "inst-3",
+      "person": "Davi",
+      "description": "Compra Parcelada 2x",
+      "card": "Cartão Davi",
+      "installmentAmount": 278.06,
+      "currentInstallment": 1,
+      "totalInstallments": 2,
+      "endMonth": "Dezembro/2026",
+      "status": "active"
+    },
+    {
+      "id": "inst-4",
+      "person": "Davi",
+      "description": "Parcela Financiamento Moto",
+      "card": "Bancário",
+      "installmentAmount": 933.0,
+      "currentInstallment": 18,
+      "totalInstallments": 36,
+      "endMonth": "Maio/2028",
+      "status": "active"
+    }
+  ],
+  "savingsGoal": {
+    "targetAmount": 1000.0,
+    "description": "Meta Mensal de Poupança da Casa",
+    "emergencyFundCurrent": 2000.0,
+    "emergencyFundTarget": 10000.0
+  }
+}

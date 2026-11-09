@@ -1,0 +1,248 @@
+{
+  "activeMonth": "2026-11",
+  "savingsGoal": {
+    "targetAmount": 1000.0,
+    "description": "Meta Mensal de Poupança da Casa",
+    "emergencyFundCurrent": 0.0,
+    "emergencyFundTarget": 10000.0
+  },
+  "futureInstallments": [
+    {
+      "id": "inst-1793842374038",
+      "person": "Davi",
+      "description": "Moto",
+      "card": "Financiamento / Parcela (Davi)",
+      "installmentAmount": 933.0,
+      "currentInstallment": 27,
+      "totalInstallments": 48,
+      "endMonth": "+21 meses",
+      "status": "active"
+    }
+  ],
+  "months": [
+    {
+      "id": "2026-11",
+      "name": "Novembro",
+      "year": 2026,
+      "reserve": 0.0,
+      "incomes": [
+        {
+          "id": "inc-1793842725532",
+          "person": "Davi",
+          "description": "KNN",
+          "amount": 4500.0,
+          "category": "Salário",
+          "status": "pending"
+        },
+        {
+          "id": "inc-1793842740950",
+          "person": "Davi",
+          "description": "Freela",
+          "amount": 300.0,
+          "category": "Salário",
+          "status": "pending"
+        },
+        {
+          "id": "inc-1793842753028",
+          "person": "Davi",
+          "description": "Pensão",
+          "amount": 800.0,
+          "category": "Salário",
+          "status": "pending"
+        },
+        {
+          "id": "inc-1793842778241",
+          "person": "Davi",
+          "description": "Marcus",
+          "amount": 400.0,
+          "category": "Devedor",
+          "status": "pending"
+        }
+      ],
+      "expenses": [
+        {
+          "id": "exp-1793842134279",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Condomínio",
+          "amount": 730.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842150598",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Luz",
+          "amount": 351.08,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842188422",
+          "person": "Nat",
+          "category": "Tributos",
+          "description": "IPTU",
+          "amount": 47.44,
+          "dueDate": "15",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842207122",
+          "person": "Nat",
+          "category": "Tributos",
+          "description": "Lixo",
+          "amount": 17.41,
+          "dueDate": "16",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842229482",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Internet",
+          "amount": 109.9,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842267860",
+          "person": "Nat",
+          "category": "Transporte",
+          "description": "Estapar",
+          "amount": 92.0,
+          "dueDate": "07",
+          "status": "pending",
+          "type": "variable",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842374038",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "Moto",
+          "amount": 933.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "installment",
+          "totalInstallments": 48,
+          "currentInstallment": 27,
+          "installments": "27/48",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842387817",
+          "person": "Davi",
+          "category": "Tributos",
+          "description": "MEI",
+          "amount": 90.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "recurrent",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842449200",
+          "person": "Davi",
+          "category": "Geral",
+          "description": "Celular",
+          "amount": 75.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842465665",
+          "person": "Davi",
+          "category": "Saúde & Bem-Estar",
+          "description": "Academia",
+          "amount": 110.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842514172",
+          "person": "Davi",
+          "category": "Dízimo",
+          "description": "Dízimo",
+          "amount": 450.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842541276",
+          "person": "Davi",
+          "category": "Cartão de Crédito",
+          "description": "Crédito",
+          "amount": 766.78,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842692431",
+          "person": "Nathalie",
+          "category": "Cartão de Crédito",
+          "description": "Crédito",
+          "amount": 560.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "users": [
+    {
+      "id": "user-davi",
+      "name": "Davi & Nathalie",
+      "email": "davi@organizeai.com",
+      "password": "123",
+      "role": "family",
+      "avatar": "",
+      "familyId": "fam-davi-nathalie"
+    },
+    {
+      "id": "usr-1794073215410",
+      "name": "Amigo Teste",
+      "email": "amigo@teste.com",
+      "password": "123",
+      "role": "user",
+      "avatar": ""
+    },
+    {
+      "id": "usr-1794082443334",
+      "name": "Davi",
+      "email": "costacf@icloud.com",
+      "password": "216792",
+      "role": "family",
+      "avatar": "",
+      "familyId": "fam-davi-nathalie"
+    },
+    {
+      "id": "usr-1794093755482",
+      "name": "Nathalie Cruz",
+      "email": "nathaliea.pezzarico@gmail.com",
+      "password": "Tomate149",
+      "role": "family",
+      "avatar": "",
+      "familyId": "fam-davi-nathalie"
+    },
+    {
+      "id": "usr-1794097408425",
+      "name": "Davi Cruz",
+      "email": "daviicruz95@gmail.com",
+      "password": "216792",
+      "role": "family",
+      "avatar": "",
+      "familyId": "fam-davi-nathalie"
+    },
+    {
+      "id": "usr-nathalie-dot",
+      "name": "Nathalie Cruz",
+      "email": "nathalie.a.pezarico@gmail.com",
+      "password": "Tomate149",
+      "familyId": "fam-davi-nathalie",
+      "role": "family",
+      "avatar": ""
+    }
+  ]
+}

@@ -1,0 +1,584 @@
+{
+  "activeMonth": "2026-11",
+  "savingsGoal": {
+    "targetAmount": 1000.0,
+    "description": "Meta Mensal de Poupança da Casa",
+    "emergencyFundCurrent": 0.0,
+    "emergencyFundTarget": 10000.0
+  },
+  "futureInstallments": [
+    {
+      "id": "inst-1793842374038",
+      "person": "Davi",
+      "description": "Moto",
+      "card": "Financiamento / Parcela (Davi)",
+      "installmentAmount": 933.0,
+      "currentInstallment": 27,
+      "totalInstallments": 48,
+      "endMonth": "+21 meses",
+      "status": "active"
+    },
+    {
+      "id": "inst-1793843486082",
+      "person": "Nathalie",
+      "description": "Revisão do Carro",
+      "card": "Cartão Nathalie",
+      "installmentAmount": 403.07,
+      "currentInstallment": 3,
+      "totalInstallments": 4,
+      "endMonth": "+1 meses",
+      "status": "active"
+    },
+    {
+      "id": "inst-1793843638493",
+      "person": "Davi",
+      "description": "Marcus",
+      "card": "Cartão Davi",
+      "installmentAmount": 278.07,
+      "currentInstallment": 1,
+      "totalInstallments": 2,
+      "endMonth": "+1 meses",
+      "status": "active"
+    }
+  ],
+  "months": [
+    {
+      "id": "2026-11",
+      "name": "Novembro",
+      "year": 2026,
+      "reserve": 0.0,
+      "incomes": [
+        {
+          "id": "inc-1793842725532",
+          "person": "Davi",
+          "description": "KNN",
+          "amount": 2300.0,
+          "category": "Salário",
+          "status": "received"
+        },
+        {
+          "id": "inc-1793842740950",
+          "person": "Davi",
+          "description": "Freela",
+          "amount": 300.0,
+          "category": "Salário",
+          "status": "received"
+        },
+        {
+          "id": "inc-1793842753028",
+          "person": "Davi",
+          "description": "Pensão",
+          "amount": 800.0,
+          "category": "Salário",
+          "status": "pending"
+        },
+        {
+          "id": "inc-1793842778241",
+          "person": "Davi",
+          "description": "Marcus",
+          "amount": 400.0,
+          "category": "Devedor",
+          "status": "pending"
+        },
+        {
+          "id": "inc-1793843945486",
+          "person": "Nathalie",
+          "description": "Pai",
+          "amount": 2000.0,
+          "category": "Presente",
+          "status": "received"
+        },
+        {
+          "id": "inc-1793844027123",
+          "person": "Davi",
+          "description": "Rayd",
+          "amount": 3500.0,
+          "category": "Salário",
+          "status": "received"
+        }
+      ],
+      "expenses": [
+        {
+          "id": "exp-1793842134279",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Condomínio",
+          "amount": 730.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842150598",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Luz",
+          "amount": 351.08,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842188422",
+          "person": "Nat",
+          "category": "Tributos",
+          "description": "IPTU",
+          "amount": 47.44,
+          "dueDate": "15",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842207122",
+          "person": "Nat",
+          "category": "Tributos",
+          "description": "Lixo",
+          "amount": 17.41,
+          "dueDate": "16",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842229482",
+          "person": "Nat",
+          "category": "Habitação",
+          "description": "Internet",
+          "amount": 109.9,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842267860",
+          "person": "Nat",
+          "category": "Transporte",
+          "description": "Estapar",
+          "amount": 92.0,
+          "dueDate": "07",
+          "status": "pending",
+          "type": "variable",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842374038",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "Moto",
+          "amount": 933.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "installment",
+          "totalInstallments": 48,
+          "currentInstallment": 27,
+          "installments": "27/48",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842387817",
+          "person": "Davi",
+          "category": "Tributos",
+          "description": "MEI",
+          "amount": 90.0,
+          "dueDate": "10",
+          "status": "paid",
+          "type": "recurrent",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842449200",
+          "person": "Davi",
+          "category": "Geral",
+          "description": "Celular",
+          "amount": 75.0,
+          "dueDate": "10",
+          "status": "paid",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842465665",
+          "person": "Davi",
+          "category": "Saúde & Bem-Estar",
+          "description": "Academia",
+          "amount": 110.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842514172",
+          "person": "Davi",
+          "category": "Dízimo",
+          "description": "Dízimo",
+          "amount": 450.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793842541276",
+          "person": "Davi",
+          "category": "Cartão de Crédito",
+          "description": "Cartão Davi",
+          "amount": 766.79,
+          "dueDate": "10",
+          "status": "paid",
+          "type": "card",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": [
+            {
+              "id": "sub-1793843638493",
+              "description": "Marcus",
+              "amount": 278.07,
+              "category": "Variável",
+              "totalInstallments": 2,
+              "currentInstallment": 1,
+              "installments": "1/2"
+            },
+            {
+              "id": "sub-1793843650558",
+              "description": "Cavanhas",
+              "amount": 42.0,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843660876",
+              "description": "Mercado",
+              "amount": 48.0,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843692870",
+              "description": "Apple",
+              "amount": 66.9,
+              "category": "Recorrente",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843713753",
+              "description": "Microfone",
+              "amount": 72.5,
+              "category": "Variável",
+              "totalInstallments": 10,
+              "currentInstallment": 1,
+              "installments": "1/10"
+            },
+            {
+              "id": "sub-1793843728631",
+              "description": "Pé de Café",
+              "amount": 64.0,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843749403",
+              "description": "Youtube",
+              "amount": 34.9,
+              "category": "Recorrente",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843763076",
+              "description": "Atacadão",
+              "amount": 93.65,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843776138",
+              "description": "Direto do Campo",
+              "amount": 57.11,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843787466",
+              "description": "Bistek",
+              "amount": 9.66,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            }
+          ]
+        },
+        {
+          "id": "exp-1793842692431",
+          "person": "Nathalie",
+          "category": "Cartão de Crédito",
+          "description": "Cartão Nathalie",
+          "amount": 549.89,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "card",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": [
+            {
+              "id": "sub-1793843329707",
+              "description": "Café Faculdade",
+              "amount": 11.0,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843346222",
+              "description": "Café Faculdade",
+              "amount": 4.5,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843365285",
+              "description": "Cerveja",
+              "amount": 18.0,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843376279",
+              "description": "Uber",
+              "amount": 11.31,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843387403",
+              "description": "Uber",
+              "amount": 14.8,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843398464",
+              "description": "Uber",
+              "amount": 11.6,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843413096",
+              "description": "Uber",
+              "amount": 12.61,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843426127",
+              "description": "Pé de Café",
+              "amount": 27.0,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843486082",
+              "description": "Revisão do Carro",
+              "amount": 403.07,
+              "category": "Variável",
+              "totalInstallments": 4,
+              "currentInstallment": 3,
+              "installments": "3/4"
+            },
+            {
+              "id": "sub-1793843516616",
+              "description": "Café Faculdade",
+              "amount": 18.0,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843527694",
+              "description": "Café Faculdade",
+              "amount": 11.0,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            },
+            {
+              "id": "sub-1793843553959",
+              "description": "Café Faculdade",
+              "amount": 7.0,
+              "category": "Variável",
+              "totalInstallments": 1,
+              "currentInstallment": 1,
+              "installments": "À vista"
+            }
+          ]
+        },
+        {
+          "id": "exp-1793843258313",
+          "person": "Davi",
+          "category": "Geral",
+          "description": "Presente Gui e Lud",
+          "amount": 100.0,
+          "dueDate": "10",
+          "status": "pending",
+          "type": "variable",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793870811023",
+          "person": "Nathalie",
+          "category": "Alimentação",
+          "description": "Mercado",
+          "amount": 400.0,
+          "dueDate": "10",
+          "status": "paid",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1793972064369",
+          "person": "Nathalie",
+          "category": "Alimentação",
+          "description": "Direto do Campo",
+          "amount": 100.0,
+          "dueDate": "10",
+          "status": "paid",
+          "type": "fixed",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1794110707188",
+          "person": "Nathalie",
+          "category": "Alimentação",
+          "description": "Almoço",
+          "amount": 35.0,
+          "dueDate": "08/11",
+          "status": "paid",
+          "type": "debit",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        }
+      ]
+    }
+  ],
+  "savingsBoxes": [
+    {
+      "id": "box-emergencia",
+      "name": "Reserva de Emergência",
+      "category": "Segurança",
+      "icon": "shield-check",
+      "color": "emerald",
+      "currentAmount": 3156.0,
+      "targetAmount": 18000.0,
+      "notes": "Segurança essencial para 3 a 6 meses de despesas da família"
+    },
+    {
+      "id": "box-cofrinho",
+      "name": "Cofrinho da Casa / Reforma",
+      "category": "Casa",
+      "icon": "piggy-bank",
+      "color": "amber",
+      "currentAmount": 0.0,
+      "targetAmount": 5000.0,
+      "notes": "Móveis, decoração e melhorias do lar"
+    },
+    {
+      "id": "box-viagem",
+      "name": "Viagem & Férias",
+      "category": "Sonhos",
+      "icon": "plane",
+      "color": "purple",
+      "currentAmount": 0.0,
+      "targetAmount": 3000.0,
+      "notes": "Descanso e viagens especiais do casal"
+    },
+    {
+      "id": "box-1793845301914",
+      "name": "Conserto do Carro",
+      "category": "Carro",
+      "icon": "car",
+      "color": "purple",
+      "currentAmount": 800.0,
+      "targetAmount": 800.0,
+      "notes": ""
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+# Node modules & temporary files
+node_modules/
+nodejs/
+cloudflared
+temp_audio*
+*.log
+.DS_Store
+
+# Session credentials (keep local auth out of public git)
+whatsapp-service/auth_info_baileys/
+whatsapp-service/node_modules/
+__pycache__/
+*.pyc
