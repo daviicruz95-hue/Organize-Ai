@@ -1,9 +1,10 @@
 FROM python:3.11-slim
 
-# Install system dependencies (curl, ffmpeg) and Node.js 20
+# Install system dependencies (curl, ffmpeg, git, ca-certificates) and Node.js 20
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ffmpeg \
+    git \
     ca-certificates \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
@@ -17,7 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Install WhatsApp service npm dependencies
 COPY whatsapp-service/package*.json ./whatsapp-service/
-RUN cd whatsapp-service && npm install --production
+RUN cd whatsapp-service && npm install --omit=dev
 
 # Copy application source code
 COPY . .
