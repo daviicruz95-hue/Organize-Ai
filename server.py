@@ -772,16 +772,39 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                 message_text = req.get("text") or req.get("body") or req.get("message", "")
                 sender_name = req.get("senderName") or req.get("pushName") or "Davi"
                 sender_phone = req.get("phone") or req.get("from") or ""
+                text_clean = message_text.lower().strip()
+                is_zeca_call = req.get("isZecaCall", False) or any(k in text_clean for k in ["zeca", "zéca", "zeck", "zac"])
+
+                # Check for explicit group activation command
+                if any(k in text_clean for k in ["ativar grupo", "ativa grupo", "ativa esse grupo", "ativar esse grupo", "liga o grupo"]):
+                    activate_reply = (
+                        "🤖 *Grupo ativado com sucesso no Organize Aí!* 🎉\n\n"
+                        "A partir de agora, qualquer gasto enviado neste grupo por texto ou áudio será lançado automaticamente no seu painel!\n\n"
+                        "💡 *Dica:* Você nem precisa me marcar toda vez. Mandando algo como _\"50 padaria débito\"_ eu já anoto na hora! 🚀"
+                    )
+                    return self.send_json_response({"success": True, "reply": activate_reply, "groupActivated": True})
 
                 if "nat" in sender_name.lower():
                     sender_name = "Nathalie"
-                else:
+                elif "davi" in sender_name.lower():
                     sender_name = "Davi"
 
                 parsed = bot.parse_message(message_text, sender_phone=sender_phone, sender_name=sender_name)
 
-                # STRICT CHECK: If no amount was parsed or amount <= 0, do NOT launch and do NOT reply
+                # If no financial amount was detected:
                 if not parsed or parsed.get("amount", 0) <= 0:
+                    if is_zeca_call:
+                        help_reply = (
+                            "👋 *Fala aí! Aqui é o Zeca do Organize Aí!* 🤖\n\n"
+                            "Tô 100% online e pronto pra registrar suas contas!\n\n"
+                            "💬 *Você pode mandar por texto ou áudio, por exemplo:*\n"
+                            "• _\"Almoço 35 no débito\"_\n"
+                            "• _\"Gasolina 50 reais no crédito\"_\n"
+                            "• _\"Uber 22 no Pix\"_\n"
+                            "• Ou manda um **áudio** falando o valor e o que foi!\n\n"
+                            "Manda aí que eu lanço na hora no seu caderno! 📊"
+                        )
+                        return self.send_json_response({"success": True, "reply": help_reply, "ignored": False})
                     return self.send_json_response({"success": False, "reply": None, "ignored": True})
 
                 # Save directly into family account

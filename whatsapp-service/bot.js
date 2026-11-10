@@ -26,9 +26,55 @@ const TRANSCRIBE_SCRIPT = path.join(__dirname, '..', 'transcribe_audio.py');
 const processedIds = new Set();
 let currentSock = null;
 
-// Only the couple's finance group and explicitly named finance groups are allowed
-const ALLOWED_GROUPS = new Set(['120363431136155849@g.us']);
-const BLOCKED_GROUPS = new Set();
+const ALLOWED_GROUPS_FILE = path.join(__dirname, 'allowed_groups.json');
+const allowedGroups = new Set(['120363431136155849@g.us']);
+const groupSubjectsCache = new Map();
+
+try {
+    if (fs.existsSync(ALLOWED_GROUPS_FILE)) {
+        const raw = JSON.parse(fs.readFileSync(ALLOWED_GROUPS_FILE, 'utf-8'));
+        if (Array.isArray(raw)) {
+            raw.forEach(id => allowedGroups.add(id));
+        }
+    }
+} catch (e) {
+    console.error('Erro ao ler allowed_groups.json:', e.message);
+}
+
+function saveAllowedGroups() {
+    try {
+        fs.writeFileSync(ALLOWED_GROUPS_FILE, JSON.stringify([...allowedGroups], null, 2), 'utf-8');
+    } catch (e) {
+        console.error('Erro ao salvar allowed_groups.json:', e.message);
+    }
+}
+
+const FINANCE_KEYWORDS = [
+    'finan', 'organize', 'organiza', 'zeca', 'gasto', 'despesa',
+    'conta', 'casa', 'casal', 'famili', 'famíli', 'orcamento',
+    'orçamento', 'custo', 'cartao', 'cartão', 'economia', 'compras'
+];
+
+async function isGroupAuthorized(sock, remoteJid) {
+    if (allowedGroups.has(remoteJid)) return true;
+    let subject = groupSubjectsCache.get(remoteJid);
+    if (!subject) {
+        try {
+            const metadata = await sock.groupMetadata(remoteJid);
+            subject = (metadata?.subject || '').toLowerCase();
+            groupSubjectsCache.set(remoteJid, subject);
+        } catch (e) {
+            return false;
+        }
+    }
+    if (subject && FINANCE_KEYWORDS.some(kw => subject.includes(kw))) {
+        allowedGroups.add(remoteJid);
+        saveAllowedGroups();
+        console.log(`✅ Grupo financeiro reconhecido e autorizado: "${subject}" (${remoteJid})`);
+        return true;
+    }
+    return false;
+}
 
 function saveStatus(statusObj) {
     try {
@@ -133,86 +179,113 @@ async function startBot() {
             const remoteJid = m.key.remoteJid;
             if (!remoteJid || remoteJid === 'status@broadcast') continue;
 
-            // Extract preliminary text to check for self-replies
-            let text = m.message.conversation ||
-                       m.message.extendedTextMessage?.text ||
-                       m.message.imageMessage?.caption ||
-                       '';
-
-            // NEVER process bot's own confirmations (prevent feedback loops)
-            if (text.includes('Lançado com sucesso no Organize') || text.includes('Fala Davi! Aqui é o Zeca')) {
-                continue;
-            }
-
             const isGroup = remoteJid.endsWith('@g.us');
             const ownPhone = sock.user?.id ? sock.user.id.split(':')[0] : '554791490805';
+            const cleanOwnPhone = ownPhone.replace(/\D/g, '');
             const senderJid = isGroup ? (m.key.participant || m.participant || '') : remoteJid;
             const isSelfChat = !isGroup && (remoteJid.includes(ownPhone) || remoteJid.includes('5547991490805'));
 
-            // AUDIO / VOICE MESSAGE PROCESSING
-            if (m.message.audioMessage) {
-                console.log(`🎤 Áudio recebido no chat ${remoteJid}... Baixando para transcrição`);
-                const tempAudioPath = path.join(__dirname, `temp_audio_${Date.now()}.ogg`);
-                try {
-                    const audioBuffer = await downloadMediaMessage(m, 'buffer', {});
-                    fs.writeFileSync(tempAudioPath, audioBuffer);
+            // Check if group is authorized
+            let isAuthGroup = isGroup ? await isGroupAuthorized(sock, remoteJid) : false;
 
-                    const { stdout } = await execPromise(`python3 "${TRANSCRIBE_SCRIPT}" "${tempAudioPath}"`);
-                    text = stdout.trim();
-                    console.log('📝 Áudio transcrito:', text);
-                } catch (audioErr) {
-                    console.error('Erro na transcrição:', audioErr.message);
-                } finally {
-                    if (fs.existsSync(tempAudioPath)) {
-                        try { fs.unlinkSync(tempAudioPath); } catch (e) {}
+            // Check if quoting bot
+            const quotedParticipant = m.message.extendedTextMessage?.contextInfo?.participant || '';
+            const isQuotingBot = quotedParticipant.includes(cleanOwnPhone);
+
+            // Check if bot was tagged/mentioned in mentions array
+            const mentionedJids = m.message.extendedTextMessage?.contextInfo?.mentionedJid || [];
+            const isBotMentioned = mentionedJids.some(jid => jid.includes(cleanOwnPhone));
+
+            // Extract preliminary text / caption
+            let text = m.message.conversation ||
+                       m.message.extendedTextMessage?.text ||
+                       m.message.imageMessage?.caption ||
+                       m.message.videoMessage?.caption ||
+                       m.message.documentMessage?.caption ||
+                       '';
+
+            // Check if user called Zeca in text/caption
+            const initialLower = text.toLowerCase();
+            let isZecaCall = initialLower.includes('zeca') || 
+                             initialLower.includes('zéca') || 
+                             initialLower.includes('zeck') || 
+                             initialLower.includes('zac') || 
+                             isBotMentioned || 
+                             isQuotingBot;
+
+            // AUDIO / VOICE MESSAGE PROCESSING:
+            // Download & transcribe IF: private chat OR authorized group OR quoting bot OR calling Zeca
+            if (m.message.audioMessage) {
+                if (!isGroup || isAuthGroup || isQuotingBot || isZecaCall) {
+                    console.log(`🎤 Áudio recebido no chat ${remoteJid}... Baixando para transcrição`);
+                    const tempAudioPath = path.join(__dirname, `temp_audio_${Date.now()}.ogg`);
+                    try {
+                        const audioBuffer = await downloadMediaMessage(m, 'buffer', {});
+                        fs.writeFileSync(tempAudioPath, audioBuffer);
+
+                        const { stdout } = await execPromise(`python3 "${TRANSCRIBE_SCRIPT}" "${tempAudioPath}"`);
+                        text = stdout.trim();
+                        console.log('📝 Áudio transcrito:', text);
+                    } catch (audioErr) {
+                        console.error('Erro na transcrição:', audioErr.message);
+                    } finally {
+                        if (fs.existsSync(tempAudioPath)) {
+                            try { fs.unlinkSync(tempAudioPath); } catch (e) {}
+                        }
                     }
+                } else {
+                    // Audio from un-authorized general group (church, sports, etc) -> skip to save CPU
+                    continue;
                 }
             }
 
             if (!text || text.trim().length === 0) continue;
 
-            const textLower = text.toLowerCase();
+            // NEVER process bot's own confirmations (prevent feedback loops)
+            if (text.includes('Lançado com sucesso no Organize') || text.includes('Fala aí! Aqui é o Zeca')) {
+                continue;
+            }
 
-            // 1. STRICT CHAT AUTHORIZATION FILTER:
+            const textLower = text.toLowerCase();
+            if (!isZecaCall) {
+                isZecaCall = textLower.includes('zeca') || 
+                             textLower.includes('zéca') || 
+                             textLower.includes('zeck') || 
+                             textLower.includes('zac');
+            }
+
+            // Command: "Zeca ativar grupo"
+            if (isGroup && (textLower.includes('ativar grupo') || textLower.includes('ativa grupo') || textLower.includes('ativa esse grupo'))) {
+                allowedGroups.add(remoteJid);
+                saveAllowedGroups();
+                isAuthGroup = true;
+                console.log(`✅ Grupo ativado manualmente por comando: ${remoteJid}`);
+            }
+
+            // STRICT CHAT AUTHORIZATION:
             if (isGroup) {
-                // Must be the couple's finance group or named with finances/zeca
-                if (!ALLOWED_GROUPS.has(remoteJid)) {
-                    if (BLOCKED_GROUPS.has(remoteJid)) {
-                        continue;
-                    }
-                    try {
-                        const metadata = await sock.groupMetadata(remoteJid);
-                        const subject = (metadata.subject || '').toLowerCase();
-                        if (subject.includes('finan') || subject.includes('organize') || subject.includes('zeca') || subject.includes('gastos')) {
-                            ALLOWED_GROUPS.add(remoteJid);
-                            console.log(`✅ Grupo financeiro reconhecido e autorizado: "${metadata.subject}" (${remoteJid})`);
-                        } else {
-                            BLOCKED_GROUPS.add(remoteJid);
-                            console.log(`🚫 Grupo comum bloqueado: "${metadata.subject}" (${remoteJid})`);
-                            continue;
-                        }
-                    } catch (e) {
-                        BLOCKED_GROUPS.add(remoteJid);
-                        continue;
-                    }
+                // In groups: ONLY process if user explicitly called Zeca OR it's an authorized finance group
+                if (!isZecaCall && !isAuthGroup) {
+                    continue;
                 }
             } else if (!isSelfChat) {
-                // In private chat with other people: ONLY allow if message starts with "zeca"
-                const textTrim = textLower.trim();
-                if (!textTrim.startsWith('zeca') && !textTrim.startsWith('zéca') && !textTrim.startsWith('zac') && !textTrim.startsWith('zeck')) {
+                // In private chat with other people: ONLY process if message calls Zeca
+                if (!isZecaCall) {
                     continue;
                 }
             }
 
-            // 2. FINANCIAL INTENT FILTER (Must contain numbers or financial currency words):
+            // FINANCIAL INTENT OR ZECA CALL:
             const hasDigit = /\d+/.test(text);
             const hasCurrencyWord = /(reais|real|r\$|pix|d[eé]bito|devido|cr[eé]dito|cart[aã]o|paguei|comprei|gastei|custou|cento|vinte|trinta|quarenta|cinquenta|dez|quinze|quatro|cinco|seis|sete|oito|nove)/i.test(text);
-            if (!hasDigit && !hasCurrencyWord) {
-                // Casual chat ("bom dia", "kkk", "tudo bem?") -> Ignore completely!
+
+            // If user did not call Zeca explicitly, require financial intent (numbers/currency)
+            if (!isZecaCall && !hasDigit && !hasCurrencyWord) {
+                // Casual chat in finance group ("bom dia", "tudo bem?") -> ignore
                 continue;
             }
 
-            console.log(`📩 [Processando Gasto] Chat: ${remoteJid} | Remetente: ${senderJid} | Mensagem: "${text}"`);
+            console.log(`📩 [Processando Gasto] Chat: ${remoteJid} | Remetente: ${senderJid} | ZecaCall: ${isZecaCall} | Mensagem: "${text}"`);
 
             // DETERMINE SENDER (Davi vs Nathalie)
             let determinedSender = 'Davi';
@@ -223,8 +296,9 @@ async function startBot() {
                     determinedSender = 'Davi';
                 } else if (senderPush.includes('nat') || senderPush.includes('nati') || senderPush.includes('nathalie') || senderPush.includes('pezzarico') || senderPush.includes('pezarico')) {
                     determinedSender = 'Nathalie';
+                } else if (m.pushName) {
+                    determinedSender = m.pushName;
                 } else {
-                    // Default to Davi unless message context says otherwise
                     determinedSender = 'Davi';
                 }
             } else {
@@ -244,54 +318,54 @@ async function startBot() {
 
             const senderPhone = senderJid.replace('@s.whatsapp.net', '').replace('@g.us', '');
 
-            // Choose primary webhook: Production cloud URL first, or local container
-            const primaryWebhook = process.env.PORT 
-                ? `http://localhost:${process.env.PORT}/api/webhook/whatsapp` 
-                : 'https://apporganizeai.com.br/api/webhook/whatsapp';
-            const localFallback = 'http://localhost:5050/api/webhook/whatsapp';
+            // Endpoints list: Direct Railway first (immune to FortiGuard SSL interception), then custom domain, then local
+            const endpoints = [
+                'https://organize-ai-production-6b46.up.railway.app/api/webhook/whatsapp',
+                'https://apporganizeai.com.br/api/webhook/whatsapp',
+                'http://localhost:5050/api/webhook/whatsapp'
+            ];
+
+            const payload = {
+                text: text,
+                senderName: determinedSender,
+                phone: senderPhone,
+                isGroup: isGroup,
+                isZecaCall: isZecaCall
+            };
 
             try {
-                let resp;
-                try {
-                    resp = await fetch(primaryWebhook, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            text: text,
-                            senderName: determinedSender,
-                            phone: senderPhone,
-                            isGroup: isGroup
-                        })
-                    });
-                } catch (netErr) {
-                    console.log(`⚠️ Falha ao conectar em ${primaryWebhook}, tentando fallback local...`);
-                    resp = await fetch(localFallback, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            text: text,
-                            senderName: determinedSender,
-                            phone: senderPhone,
-                            isGroup: isGroup
-                        })
-                    });
+                let resp = null;
+                for (const url of endpoints) {
+                    try {
+                        const r = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        const ct = r.headers.get('content-type') || '';
+                        if (r.ok && ct.includes('application/json')) {
+                            resp = r;
+                            break;
+                        }
+                    } catch (e) {
+                        // Try next endpoint
+                    }
                 }
 
-                // If on local machine and primary succeeded, also sync local
-                if (!process.env.PORT && primaryWebhook.startsWith('https://')) {
-                    fetch(localFallback, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            text: text,
-                            senderName: determinedSender,
-                            phone: senderPhone,
-                            isGroup: isGroup
-                        })
-                    }).catch(() => {});
+                if (!resp) {
+                    console.log('⚠️ Nenhum endpoint de webhook respondeu com JSON.');
+                    continue;
                 }
 
                 const data = await resp.json();
+                if (data.reply) {
+                    console.log(`🤖 Zeca respondendo no chat ${remoteJid}...`);
+                    await sock.sendMessage(remoteJid, { text: data.reply }, { quoted: m });
+                }
+                if (data.groupActivated && isGroup) {
+                    allowedGroups.add(remoteJid);
+                    saveAllowedGroups();
+                }
                 if (data.reply) {
                     console.log(`🤖 Zeca respondendo no chat ${remoteJid}...`);
                     await sock.sendMessage(remoteJid, { text: data.reply }, { quoted: m });
