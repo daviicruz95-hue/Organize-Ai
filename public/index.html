@@ -154,9 +154,9 @@
         <!-- User Profile Pill -->
         <button onclick="openProfileModal()" id="btnUserProfile" title="Configurações da Conta e Perfil" class="flex items-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold px-2.5 py-1.5 md:px-3 md:py-2 rounded-2xl shadow-xs transition active:scale-95 cursor-pointer">
           <div id="userAvatarPill" class="w-6 h-6 rounded-full bg-[#18191D] text-white flex items-center justify-center text-[10px] font-black uppercase">
-            D
+            •
           </div>
-          <span id="userNamePill" class="hidden sm:inline max-w-[110px] truncate">Davi & Nathalie</span>
+          <span id="userNamePill" class="hidden sm:inline max-w-[110px] truncate">Carregando...</span>
           <i data-lucide="settings" class="w-3.5 h-3.5 text-slate-400"></i>
         </button>
 
@@ -273,175 +273,17 @@
       </button>
     </div>
 
-    <!-- TAB 1: CADERNO DA CASA (NATHALIE & DAVI TWO COLUMNS) -->
+    <!-- TAB 1: CADERNO DE CONTAS & FATURAS -->
     <div id="tab-content-caderno" class="space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- NATHALIE COLUMN -->
-        <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
-          <div class="pb-3 border-b border-slate-100 space-y-2.5">
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2.5 min-w-0">
-                <div class="w-9 h-9 rounded-2xl bg-[#F0EDFF] text-[#5B21B6] border border-[#DDD5FE] flex items-center justify-center font-black text-sm shrink-0">
-                  N
-                </div>
-                <div class="min-w-0">
-                  <h2 class="text-sm md:text-base font-bold text-slate-900 truncate">Caderno Nathalie</h2>
-                  <p class="text-[11px] text-slate-500 font-medium truncate">Contas fixas, recorrentes e faturas</p>
-                </div>
-              </div>
-              <div class="text-right shrink-0">
-                <span class="text-xs md:text-sm font-black bg-[#18191D] text-white px-3 py-1.5 rounded-xl shadow-xs inline-block">
-                  <span id="colNatTotal">R$ 0,00</span>
-                </span>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 w-full">
-              <button onclick="openAddCardModal('Nathalie')" title="Criar Cartão / Fatura para Nathalie" class="text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
-                <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
-                <span>+ Cartão</span>
-              </button>
-              <button onclick="openAddExpenseModal('Nathalie')" title="Adicionar conta para Nathalie" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                <span>+ Nova Conta</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- LIST NATHALIE -->
-          <div id="cadernoListNat" class="space-y-3">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
-        <!-- DAVI COLUMN -->
-        <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
-          <div class="pb-3 border-b border-slate-100 space-y-2.5">
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2.5 min-w-0">
-                <div class="w-9 h-9 rounded-2xl bg-[#EDF5FF] text-[#0369A1] border border-[#BAE6FD] flex items-center justify-center font-black text-sm shrink-0">
-                  D
-                </div>
-                <div class="min-w-0">
-                  <h2 class="text-sm md:text-base font-bold text-slate-900 truncate">Caderno Davi</h2>
-                  <p class="text-[11px] text-slate-500 font-medium truncate">Contas fixas, moto e parcelas</p>
-                </div>
-              </div>
-              <div class="text-right shrink-0">
-                <span class="text-xs md:text-sm font-black bg-[#18191D] text-white px-3 py-1.5 rounded-xl shadow-xs inline-block">
-                  <span id="colDaviTotal">R$ 0,00</span>
-                </span>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 w-full">
-              <button onclick="openAddCardModal('Davi')" title="Criar Cartão / Fatura para Davi" class="text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
-                <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
-                <span>+ Cartão</span>
-              </button>
-              <button onclick="openAddExpenseModal('Davi')" title="Adicionar conta para Davi" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                <span>+ Nova Conta</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- LIST DAVI -->
-          <div id="cadernoListDavi" class="space-y-3">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
+      <div id="cadernoContainer" class="space-y-6">
+        <!-- Rendered dynamically by renderCadernoColumns() -->
       </div>
     </div>
 
     <!-- TAB: DÉBITO & PIX (GASTOS IMEDIATOS DO DIA A DIA) -->
     <div id="tab-content-debit" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-emerald-50/80 via-white to-sky-50/80 border border-emerald-200/80 rounded-3xl p-5 md:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">Gastos à Vista</span>
-            <span class="text-xs text-slate-500">• Dinheiro que já saiu da conta hoje</span>
-          </div>
-          <h2 class="text-lg md:text-xl font-extrabold text-slate-900">Acompanhamento de Débito & PIX</h2>
-          <p class="text-xs text-slate-600">Almoço na rua, padaria, café, mercado e transferências imediatas sem misturar com faturas de cartão.</p>
-        </div>
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-          <button onclick="openQuickDebitPixModal('Davi', 'pix')" class="flex-1 sm:flex-none px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
-            <span>⚡ + Lançar PIX</span>
-          </button>
-          <button onclick="openQuickDebitPixModal('Davi', 'debit')" class="flex-1 sm:flex-none px-4 py-2.5 rounded-2xl bg-[#18191D] hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
-            <span>💳 + Lançar Débito</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- TWO COLUMNS: NATHALIE & DAVI DEBIT/PIX -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- NATHALIE DEBIT & PIX -->
-        <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
-          <div class="pb-3 border-b border-slate-100 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-2xl bg-[#F0EDFF] text-[#5B21B6] border border-[#DDD5FE] flex items-center justify-center font-black text-sm">
-                N
-              </div>
-              <div>
-                <h3 class="text-sm md:text-base font-bold text-slate-900">Débito & PIX Nathalie</h3>
-                <p class="text-[11px] text-slate-500 font-medium">Gastos diários à vista</p>
-              </div>
-            </div>
-            <div class="text-right">
-              <span class="text-xs md:text-sm font-black bg-emerald-700 text-white px-3 py-1.5 rounded-xl shadow-xs inline-block" id="totalDebitNat">
-                R$ 0,00
-              </span>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <button onclick="openQuickDebitPixModal('Nathalie', 'pix')" class="text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
-              <span>⚡ + PIX Nathalie</span>
-            </button>
-            <button onclick="openQuickDebitPixModal('Nathalie', 'debit')" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
-              <span>💳 + Débito Nathalie</span>
-            </button>
-          </div>
-          <div id="debitListNat" class="space-y-2.5">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
-        <!-- DAVI DEBIT & PIX -->
-        <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
-          <div class="pb-3 border-b border-slate-100 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-2xl bg-[#EDF5FF] text-[#0369A1] border border-[#BAE6FD] flex items-center justify-center font-black text-sm">
-                D
-              </div>
-              <div>
-                <h3 class="text-sm md:text-base font-bold text-slate-900">Débito & PIX Davi</h3>
-                <p class="text-[11px] text-slate-500 font-medium">Gastos diários à vista</p>
-              </div>
-            </div>
-            <div class="text-right">
-              <span class="text-xs md:text-sm font-black bg-emerald-700 text-white px-3 py-1.5 rounded-xl shadow-xs inline-block" id="totalDebitDavi">
-                R$ 0,00
-              </span>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <button onclick="openQuickDebitPixModal('Davi', 'pix')" class="text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
-              <span>⚡ + PIX Davi</span>
-            </button>
-            <button onclick="openQuickDebitPixModal('Davi', 'debit')" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
-              <span>💳 + Débito Davi</span>
-            </button>
-          </div>
-          <div id="debitListDavi" class="space-y-2.5">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
+      <div id="debitContainer" class="space-y-6">
+        <!-- Rendered dynamically by renderDebitPix() -->
       </div>
     </div>
 
@@ -681,7 +523,7 @@
       <div id="quickVoiceSection" class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-3">
         <p class="text-xs text-slate-500">
           Diga, por exemplo: <br>
-          <strong class="text-slate-800">"comprei café a 12, leite a 7 e pão a 6 no cartão da Nathalie"</strong>
+          <strong class="text-slate-800">"comprei mercado 85, farmácia 42 e gasolina 50"</strong>
         </p>
 
         <button onclick="toggleSpeechRecording()" id="quickVoiceBtn" class="w-16 h-16 rounded-full bg-[#18191D] hover:bg-slate-800 text-white flex items-center justify-center mx-auto shadow-sm transition active:scale-95 cursor-pointer">
@@ -700,7 +542,7 @@
       <!-- Text Mode Body -->
       <div id="quickTextSection" class="hidden space-y-2">
         <label class="text-xs font-bold text-slate-700">Digite sua frase com valores:</label>
-        <textarea id="quickTextInput" rows="2" placeholder="Ex: mercado ovo 14, coca 8 e chocolate 6 no crédito da Nathalie" oninput="parseQuickTextClient(this.value)" class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 rounded-2xl p-3 text-xs md:text-sm text-slate-800 focus:outline-none"></textarea>
+        <textarea id="quickTextInput" rows="2" placeholder="Ex: mercado ovo 14, café 18 e chocolate 9 no crédito" oninput="parseQuickTextClient(this.value)" class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-slate-400 rounded-2xl p-3 text-xs md:text-sm text-slate-800 focus:outline-none"></textarea>
       </div>
 
       <!-- Receipt Mode Body -->
@@ -739,7 +581,7 @@
       <input type="hidden" id="formExpenseId">
 
       <div class="space-y-3.5 text-xs">
-        <div>
+        <div id="personSelectorWrapper">
           <label class="font-bold text-slate-700 block mb-1">De quem é a conta?</label>
           <div class="grid grid-cols-3 gap-2">
             <button type="button" onclick="selectExpensePerson('Nathalie')" id="btnPersonNathalie" class="py-2 rounded-xl font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition cursor-pointer">Nathalie</button>
@@ -1124,7 +966,7 @@
       <div class="space-y-3 text-xs">
         <div>
           <label class="font-bold text-slate-700 block mb-1">Nome / Identificação</label>
-          <input type="text" id="formProfileName" placeholder="Ex: Davi & Nathalie" class="w-full bg-slate-50 border border-slate-200 focus:bg-white rounded-xl px-3 py-2 text-slate-800 font-semibold focus:outline-none">
+          <input type="text" id="formProfileName" placeholder="Ex: Seu Nome ou Família" class="w-full bg-slate-50 border border-slate-200 focus:bg-white rounded-xl px-3 py-2 text-slate-800 font-semibold focus:outline-none">
         </div>
         <div>
           <label class="font-bold text-slate-700 block mb-1">E-mail</label>
@@ -1160,7 +1002,7 @@
             </button>
           </div>
           <div id="pairInfo" class="text-[11px] text-purple-900 font-semibold bg-purple-50 p-2.5 rounded-xl border border-purple-100/80">
-            ✨ Davi & Nathalie compartilham este mesmo painel familiar.
+            💡 Digite o e-mail do seu parceiro(a) acima para conectar as contas da casa.
           </div>
         </div>
       </div>
@@ -1187,10 +1029,15 @@
     } catch (e) {}
 
     if (!currentUser) {
-      // Default to master Davi & Nathalie account if accessing directly
-      currentUser = { id: "user-davi", name: "Davi & Nathalie", email: "davi@organizeai.com" };
-      localStorage.setItem('organizeai_user', JSON.stringify(currentUser));
-      localStorage.setItem('organizeai_token', currentUser.id);
+      // Redirect to landing page to login or register
+      window.location.href = '/?login=true';
+    }
+
+    function isCoupleAccount() {
+      if (!currentUser) return false;
+      if (currentUser.partner && currentUser.partner.name) return true;
+      if (currentUser.familyId === 'fam-davi-nathalie' || currentUser.id === 'user-davi') return true;
+      return false;
     }
 
     // AUTOMATIC FETCH WRAPPER: Attaches X-User-Id to all API requests
@@ -1225,8 +1072,25 @@
       if (!currentUser) return;
       const namePill = document.getElementById('userNamePill');
       const avatarPill = document.getElementById('userAvatarPill');
-      if (namePill) namePill.textContent = currentUser.name || 'Minha Conta';
-      if (avatarPill) avatarPill.textContent = (currentUser.name || 'D').charAt(0).toUpperCase();
+      const myName = currentUser.name || 'Minha Conta';
+      if (namePill) namePill.textContent = myName;
+      if (avatarPill) avatarPill.textContent = myName.charAt(0).toUpperCase();
+
+      // Profile modal elements
+      const badge = document.getElementById('pairStatusBadge');
+      const info = document.getElementById('pairInfo');
+      if (badge && info) {
+        if (isCoupleAccount()) {
+          badge.textContent = "Conectada";
+          badge.className = "text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800";
+          const pName = currentUser.partner ? currentUser.partner.name : ((currentUser.id === 'user-davi' || currentUser.email === 'davi@organizeai.com') ? 'Nathalie Cruz' : 'Parceiro(a)');
+          info.textContent = `✨ Você e ${pName} compartilham este mesmo painel familiar.`;
+        } else {
+          badge.textContent = "Individual";
+          badge.className = "text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-slate-100 text-slate-700";
+          info.textContent = "💡 Digite o e-mail do seu parceiro(a) acima para conectar as contas da casa.";
+        }
+      }
     }
 
     function openProfileModal() {
@@ -1459,7 +1323,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
               </div>
               <div>
                 <h1 style="font-size: 20px; font-weight: 800; margin: 0; color: #0F172A; letter-spacing: -0.5px;">Organiza Aí</h1>
-                <p style="font-size: 11px; color: #64748B; margin: 2px 0 0 0;">Relatório Financeiro Mensal • Davi & Nathalie</p>
+                <p style="font-size: 11px; color: #64748B; margin: 2px 0 0 0;">Relatório Financeiro Mensal • ${currentUser ? currentUser.name : 'Organize Aí'}</p>
               </div>
             </div>
             <div style="text-align: right;">
@@ -1721,38 +1585,169 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       lucide.createIcons();
     }
 
+    // BUILD EXPENSE CARD HTML (REUSABLE FOR BOTH SINGLE AND COUPLE VIEWS)
+    function buildExpenseCardHtml(exp) {
+      const isPaid = exp.status === 'paid';
+      const isCard = exp.type === 'card';
+      const subItems = exp.subItems || [];
+      const isAccordionOpen = openCardAccordions.has(exp.id);
+
+      let typeBadge = '';
+      if (exp.type === 'fixed') {
+        typeBadge = '<span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-md">📌 Fixa</span>';
+      } else if (exp.type === 'recurrent') {
+        typeBadge = '<span class="bg-[#D8ECFF] text-[#0369A1] text-[10px] font-bold px-2 py-0.5 rounded-md">🔄 Recorrente</span>';
+      } else if (exp.type === 'installment') {
+        typeBadge = `<span class="bg-purple-100 text-purple-900 text-[10px] font-black px-2 py-0.5 rounded-md">🔢 Parcela ${exp.currentInstallment || 1}/${exp.totalInstallments || 1}</span>`;
+      } else if (exp.type === 'card') {
+        typeBadge = '<span class="bg-purple-200/80 text-purple-900 text-[10px] font-black px-2 py-0.5 rounded-md">💳 Cartão</span>';
+      } else {
+        typeBadge = '<span class="bg-slate-100 text-slate-500 text-[10px] font-medium px-2 py-0.5 rounded-md">⚡ Avulsa</span>';
+      }
+
+      if (isCard) {
+        return `
+          <div class="rounded-3xl border ${isPaid ? 'bg-slate-50 border-slate-200' : 'bg-[#F0EDFF] border-[#DDD5FE]'} overflow-hidden transition shadow-xs">
+            <div class="p-3.5 md:p-4 space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <button onclick="toggleExpenseStatus('${exp.id}')" title="Marcar fatura como Paga / Aberta" class="w-7 h-7 shrink-0 rounded-xl flex items-center justify-center transition cursor-pointer ${isPaid ? 'bg-emerald-500 text-white shadow-xs' : 'bg-white border border-purple-300 text-transparent hover:text-purple-600'}">
+                    <i data-lucide="check" class="w-4 h-4 font-black"></i>
+                  </button>
+                  <div class="flex items-center gap-1.5 min-w-0">
+                    <div class="w-7 h-7 rounded-lg bg-purple-200/80 text-purple-800 flex items-center justify-center shrink-0">
+                      <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    </div>
+                    <h4 class="text-sm font-black text-slate-900 truncate">${exp.description}</h4>
+                  </div>
+                </div>
+                <div class="text-right shrink-0">
+                  <span class="text-sm md:text-base font-black text-purple-950">${formatBRL(exp.amount)}</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between gap-2 pt-1 border-t border-purple-200/50 text-xs">
+                <div class="flex items-center flex-wrap gap-1.5 min-w-0">
+                  <span class="text-[10px] font-black bg-purple-200/90 text-purple-950 px-2 py-0.5 rounded-full shrink-0">
+                    ${subItems.length} ${subItems.length === 1 ? 'compra' : 'compras'}
+                  </span>
+                  <span class="text-[10px] font-bold text-slate-600">Venc: <strong class="text-slate-900">${exp.dueDate || '10'}</strong></span>
+                  <span class="text-[9px] font-black px-2 py-0.5 rounded-full ${isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-200/60 text-purple-900'}">
+                    ${isPaid ? 'PAGO' : 'FATURA ABERTA'}
+                  </span>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                  <button onclick="event.stopPropagation(); openAddSubItemModal('${exp.id}')" title="Adicionar compra" class="px-2 py-1 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-black text-[11px] flex items-center gap-1 transition shadow-xs cursor-pointer">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Compra</span>
+                  </button>
+                  <button onclick="event.stopPropagation(); openEditExpenseModal('${exp.id}')" title="Editar cartão" class="p-1 rounded-lg bg-white/80 hover:bg-white text-slate-500 hover:text-slate-800 transition cursor-pointer">
+                    <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="event.stopPropagation(); deleteExpense('${exp.id}', '${exp.description.replace(/'/g, "\'")}')" title="Excluir cartão" class="p-1 rounded-lg bg-white/80 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div onclick="toggleCardAccordion('${exp.id}')" class="w-full pt-1.5 flex items-center justify-between text-[11px] text-purple-800 font-bold hover:text-purple-950 cursor-pointer border-t border-purple-200/40">
+                <span class="flex items-center gap-1">
+                  <i data-lucide="${isAccordionOpen ? 'chevron-up' : 'chevron-down'}" class="w-3.5 h-3.5"></i>
+                  ${isAccordionOpen ? 'Ocultar compras da fatura' : 'Ver compras detalhadas no cartão'}
+                </span>
+                <span class="text-[10px] text-purple-600 font-semibold">${isAccordionOpen ? 'Clique para recolher' : 'Clique para expandir'}</span>
+              </div>
+            </div>
+
+            <div id="subitems-container-${exp.id}" class="${isAccordionOpen ? '' : 'hidden'} bg-white border-t border-purple-200/70 p-3 md:p-4 space-y-2">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <span class="text-[11px] font-black uppercase text-purple-900 tracking-wider">Detalhamento de Compras</span>
+                <button onclick="openAddSubItemModal('${exp.id}')" class="text-xs font-bold text-purple-700 hover:text-purple-900 flex items-center gap-1 cursor-pointer">
+                  <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i><span>Nova Compra</span>
+                </button>
+              </div>
+              <div class="space-y-1.5">
+                ${subItems.length === 0 ? '<p class="text-xs text-slate-400 text-center py-3">Nenhuma compra adicionada nesta fatura ainda.</p>' : subItems.map(sub => `
+                  <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-slate-100/80 transition text-xs border border-slate-100">
+                    <div class="min-w-0 pr-2">
+                      <p class="font-bold text-slate-900 truncate">${sub.description}</p>
+                      <p class="text-[10px] text-slate-500">${sub.category || 'Geral'} • ${sub.dueDate || exp.dueDate || '10'}</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <span class="font-black text-slate-900">${formatBRL(sub.amount)}</span>
+                      <button onclick="deleteSubItem('${exp.id}', '${sub.id}')" title="Excluir compra" class="text-slate-400 hover:text-rose-600 transition p-1 cursor-pointer">
+                        <i data-lucide="trash-2" class="w-3 h-3"></i>
+                      </button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-3.5 md:p-4 space-y-2 hover:border-slate-300 transition shadow-xs">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <button onclick="toggleExpenseStatus('${exp.id}')" title="Marcar como Paga / Pendente" class="w-7 h-7 shrink-0 rounded-xl flex items-center justify-center transition cursor-pointer ${isPaid ? 'bg-emerald-500 text-white shadow-xs' : 'bg-slate-100 text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200'}">
+                <i data-lucide="check" class="w-4 h-4 font-black"></i>
+              </button>
+              <div class="min-w-0">
+                <h4 class="text-xs md:text-sm font-bold text-slate-900 truncate ${isPaid ? 'line-through text-slate-400' : ''}">${exp.description}</h4>
+              </div>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="text-xs md:text-sm font-black text-slate-900">${formatBRL(exp.amount)}</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between gap-2 pt-1 border-t border-slate-100 text-[11px]">
+            <div class="flex items-center flex-wrap gap-1.5 min-w-0">
+              ${typeBadge}
+              <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full">${exp.category || 'Geral'}</span>
+              <span class="text-slate-300">•</span>
+              <span class="text-slate-500 text-[10px] font-medium">Venc: <strong class="text-slate-800">${exp.dueDate || '10'}</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <span class="text-[9px] font-black px-2 py-0.5 rounded-full ${isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                ${isPaid ? 'PAGO' : 'PENDENTE'}
+              </span>
+              <div class="flex items-center gap-0.5 pl-1 border-l border-slate-200">
+                <button onclick="openEditExpenseModal('${exp.id}')" title="Editar conta" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer">
+                  <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="deleteExpense('${exp.id}', '${exp.description.replace(/'/g, "\'")}')" title="Excluir conta" class="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     // RENDER DÉBITO & PIX TAB (GASTOS IMEDIATOS DO DIA A DIA)
     function renderDebitPix(monthData) {
-      const listNat = document.getElementById('debitListNat');
-      const listDavi = document.getElementById('debitListDavi');
-      if (!listNat || !listDavi) return;
-      listNat.innerHTML = '';
-      listDavi.innerHTML = '';
+      const container = document.getElementById('debitContainer');
+      if (!container) return;
 
-      let totalNat = 0;
-      let totalDavi = 0;
+      const couple = isCoupleAccount();
+      const myName = (currentUser && currentUser.name) ? currentUser.name : 'Minha Conta';
+      const myFirstName = myName.split(' ')[0];
 
-      const isDebitOrPix = (exp) => {
-        const t = (exp.type || '').toLowerCase();
-        const desc = (exp.description || '').toLowerCase();
-        const cat = (exp.category || '').toLowerCase();
-        return t === 'pix' || t === 'debit' || t === 'variável' || t === 'variable' ||
-               desc.includes('pix') || desc.includes('débito') || desc.includes('debito') ||
-               cat.includes('almoço') || cat.includes('café') || cat.includes('lanche');
-      };
+      const debitItems = (monthData.expenses || []).filter(exp => {
+        if (exp.type === 'card' || exp.isCard || exp.type === 'fixed' || exp.type === 'recurrent' || exp.type === 'installment') return false;
+        return true;
+      });
 
-      (monthData.expenses || []).forEach(exp => {
-        if (exp.type === 'card' || exp.isCard || exp.type === 'fixed' || exp.type === 'recurrent' || exp.type === 'installment') {
-          // Skip card invoices and fixed bills here
-          return;
-        }
-
+      const buildDebitItemHtml = (exp) => {
         const isPix = (exp.type === 'pix' || (exp.description || '').toLowerCase().includes('pix'));
         const typeBadge = isPix 
           ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">⚡ PIX</span>'
           : '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-sky-100 text-sky-800 border border-sky-200">💳 DÉBITO</span>';
 
-        const itemHtml = `
+        return `
           <div class="bg-slate-50/80 border border-slate-200/70 hover:border-slate-300 rounded-2xl p-3.5 transition flex items-center justify-between gap-3">
             <div class="min-w-0 space-y-1">
               <div class="flex items-center gap-2">
@@ -1773,272 +1768,302 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
             </div>
           </div>
         `;
+      };
 
-        if (exp.person === 'Nathalie') {
-          totalNat += (exp.amount || 0);
-          listNat.insertAdjacentHTML('beforeend', itemHtml);
+      if (!couple) {
+        let total = 0;
+        let itemsHtml = '';
+        debitItems.forEach(exp => {
+          total += (exp.amount || 0);
+          itemsHtml += buildDebitItemHtml(exp);
+        });
+
+        if (!itemsHtml) {
+          itemsHtml = '<div class="py-6 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">Nenhum gasto no débito/pix registrado neste mês.</div>';
+        }
+
+        container.innerHTML = `
+          <div class="bg-gradient-to-r from-emerald-50/80 via-white to-sky-50/80 border border-emerald-200/80 rounded-3xl p-5 md:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">Gastos à Vista</span>
+                <span class="text-xs text-slate-500">• Dinheiro que já saiu da conta hoje</span>
+              </div>
+              <h2 class="text-lg md:text-xl font-extrabold text-slate-900">Acompanhamento de Débito & PIX</h2>
+              <p class="text-xs text-slate-600">Almoço na rua, padaria, café, mercado e transferências imediatas sem misturar com faturas de cartão.</p>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <button onclick="openQuickDebitPixModal('${myFirstName}', 'pix')" class="flex-1 sm:flex-none px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>⚡ + Lançar PIX</span>
+              </button>
+              <button onclick="openQuickDebitPixModal('${myFirstName}', 'debit')" class="flex-1 sm:flex-none px-4 py-2.5 rounded-2xl bg-[#18191D] hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>💳 + Lançar Débito</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4 max-w-4xl mx-auto">
+            <div class="pb-3 border-b border-slate-100 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-2xl bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center justify-center font-black text-sm">
+                  ${myFirstName.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h3 class="text-sm md:text-base font-bold text-slate-900">Débito & PIX de ${myFirstName}</h3>
+                  <p class="text-[11px] text-slate-500 font-medium">Gastos diários à vista</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs md:text-sm font-black bg-emerald-700 text-white px-3 py-1.5 rounded-xl shadow-xs inline-block">
+                  ${formatBRL(total)}
+                </span>
+              </div>
+            </div>
+            <div class="space-y-2.5">${itemsHtml}</div>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      // COUPLE ACCOUNT
+      const p1Name = (currentUser.id === 'user-davi' || currentUser.email === 'davi@organizeai.com') ? 'Nathalie' : (currentUser.name || 'Você');
+      const p2Name = (currentUser.id === 'user-davi' || currentUser.email === 'davi@organizeai.com') ? 'Davi' : (currentUser.partner ? currentUser.partner.name : 'Parceiro(a)');
+
+      let totalP1 = 0;
+      let totalP2 = 0;
+      let listP1Html = '';
+      let listP2Html = '';
+
+      debitItems.forEach(exp => {
+        const itemHtml = buildDebitItemHtml(exp);
+        const personLower = (exp.person || '').toLowerCase();
+        if (personLower.includes('nat') || personLower === p1Name.toLowerCase()) {
+          totalP1 += (exp.amount || 0);
+          listP1Html += itemHtml;
         } else {
-          totalDavi += (exp.amount || 0);
-          listDavi.insertAdjacentHTML('beforeend', itemHtml);
+          totalP2 += (exp.amount || 0);
+          listP2Html += itemHtml;
         }
       });
 
-      document.getElementById('totalDebitNat').textContent = formatBRL(totalNat);
-      document.getElementById('totalDebitDavi').textContent = formatBRL(totalDavi);
+      if (!listP1Html) listP1Html = `<div class="py-6 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">Nenhum gasto no débito/pix de ${p1Name} neste mês.</div>`;
+      if (!listP2Html) listP2Html = `<div class="py-6 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">Nenhum gasto no débito/pix de ${p2Name} neste mês.</div>`;
 
-      if (listNat.children.length === 0) {
-        listNat.innerHTML = '<div class="py-6 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">Nenhum gasto no débito/pix de Nathalie neste mês.</div>';
-      }
-      if (listDavi.children.length === 0) {
-        listDavi.innerHTML = '<div class="py-6 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">Nenhum gasto no débito/pix de Davi neste mês.</div>';
-      }
+      container.innerHTML = `
+        <div class="bg-gradient-to-r from-emerald-50/80 via-white to-sky-50/80 border border-emerald-200/80 rounded-3xl p-5 md:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">Gastos à Vista</span>
+              <span class="text-xs text-slate-500">• Dinheiro que já saiu da conta hoje</span>
+            </div>
+            <h2 class="text-lg md:text-xl font-extrabold text-slate-900">Acompanhamento de Débito & PIX</h2>
+            <p class="text-xs text-slate-600">Almoço na rua, padaria, café, mercado e transferências imediatas sem misturar com faturas de cartão.</p>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <button onclick="openQuickDebitPixModal('${p2Name}', 'pix')" class="flex-1 sm:flex-none px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>⚡ + Lançar PIX</span>
+            </button>
+            <button onclick="openQuickDebitPixModal('${p2Name}', 'debit')" class="flex-1 sm:flex-none px-4 py-2.5 rounded-2xl bg-[#18191D] hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>💳 + Lançar Débito</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
+            <div class="pb-3 border-b border-slate-100 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-2xl bg-[#F0EDFF] text-[#5B21B6] border border-[#DDD5FE] flex items-center justify-center font-black text-sm">${p1Name.charAt(0).toUpperCase()}</div>
+                <div><h3 class="text-sm md:text-base font-bold text-slate-900">Débito & PIX ${p1Name}</h3><p class="text-[11px] text-slate-500 font-medium">Gastos diários à vista</p></div>
+              </div>
+              <div class="text-right"><span class="text-xs md:text-sm font-black bg-emerald-700 text-white px-3 py-1.5 rounded-xl shadow-xs inline-block">${formatBRL(totalP1)}</span></div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="openQuickDebitPixModal('${p1Name}', 'pix')" class="text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><span>⚡ + PIX ${p1Name}</span></button>
+              <button onclick="openQuickDebitPixModal('${p1Name}', 'debit')" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><span>💳 + Débito ${p1Name}</span></button>
+            </div>
+            <div class="space-y-2.5">${listP1Html}</div>
+          </div>
+
+          <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
+            <div class="pb-3 border-b border-slate-100 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-2xl bg-[#EDF5FF] text-[#0369A1] border border-[#BAE6FD] flex items-center justify-center font-black text-sm">${p2Name.charAt(0).toUpperCase()}</div>
+                <div><h3 class="text-sm md:text-base font-bold text-slate-900">Débito & PIX ${p2Name}</h3><p class="text-[11px] text-slate-500 font-medium">Gastos diários à vista</p></div>
+              </div>
+              <div class="text-right"><span class="text-xs md:text-sm font-black bg-emerald-700 text-white px-3 py-1.5 rounded-xl shadow-xs inline-block">${formatBRL(totalP2)}</span></div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="openQuickDebitPixModal('${p2Name}', 'pix')" class="text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><span>⚡ + PIX ${p2Name}</span></button>
+              <button onclick="openQuickDebitPixModal('${p2Name}', 'debit')" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><span>💳 + Débito ${p2Name}</span></button>
+            </div>
+            <div class="space-y-2.5">${listP2Html}</div>
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
     }
 
-    function openQuickDebitPixModal(person = 'Davi', type = 'pix') {
-      openAddExpenseModal(person);
+    function openQuickDebitPixModal(person, type = 'pix') {
+      const p = person || (currentUser ? currentUser.name : 'Eu');
+      openAddExpenseModal(p);
       onExpenseTypeChange(type);
       document.getElementById('formExpenseDesc').placeholder = type === 'pix' ? "Ex: Almoço na rua, Água, Mercado..." : "Ex: Compras no débito, Farmácia...";
       document.getElementById('formExpenseDueDate').value = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
     }
 
-    // RENDER CADERNO COLUMNS (NATHALIE & DAVI)
+    // RENDER CADERNO COLUMNS (DYNAMIC SINGLE USER OR COUPLE)
     function renderCadernoColumns(monthData) {
-      const listNat = document.getElementById('cadernoListNat');
-      const listDavi = document.getElementById('cadernoListDavi');
-      listNat.innerHTML = '';
-      listDavi.innerHTML = '';
+      const container = document.getElementById('cadernoContainer');
+      if (!container) return;
 
-      let totalNat = 0;
-      let totalDavi = 0;
+      const couple = isCoupleAccount();
+      const myName = (currentUser && currentUser.name) ? currentUser.name : 'Meu Caderno';
+      const myInitial = myName.charAt(0).toUpperCase();
 
-      monthData.expenses.forEach(exp => {
-        const isPaid = exp.status === 'paid';
-        const isCard = exp.type === 'card';
-        const subItems = exp.subItems || [];
-        const isAccordionOpen = openCardAccordions.has(exp.id);
+      if (!couple) {
+        let total = 0;
+        let itemsHtml = '';
 
-        // Classification badge
-        let typeBadge = '';
-        if (exp.type === 'fixed') {
-          typeBadge = '<span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-md">📌 Fixa</span>';
-        } else if (exp.type === 'recurrent') {
-          typeBadge = '<span class="bg-[#D8ECFF] text-[#0369A1] text-[10px] font-bold px-2 py-0.5 rounded-md">🔄 Recorrente</span>';
-        } else if (exp.type === 'installment') {
-          typeBadge = `<span class="bg-purple-100 text-purple-900 text-[10px] font-black px-2 py-0.5 rounded-md">🔢 Parcela ${exp.currentInstallment || 1}/${exp.totalInstallments || 1}</span>`;
-        } else if (exp.type === 'card') {
-          typeBadge = '<span class="bg-purple-200/80 text-purple-900 text-[10px] font-black px-2 py-0.5 rounded-md">💳 Cartão</span>';
-        } else {
-          typeBadge = '<span class="bg-slate-100 text-slate-500 text-[10px] font-medium px-2 py-0.5 rounded-md">⚡ Avulsa</span>';
-        }
+        (monthData.expenses || []).forEach(exp => {
+          total += (exp.amount || 0);
+          itemsHtml += buildExpenseCardHtml(exp);
+        });
 
-        let cardHtml = '';
-
-        if (isCard) {
-          // CREDIT CARD ACCORDION (MOBILE-OPTIMIZED WITH 3 CLEAR ROWS)
-          cardHtml = `
-            <div class="rounded-3xl border ${isPaid ? 'bg-slate-50 border-slate-200' : 'bg-[#F0EDFF] border-[#DDD5FE]'} overflow-hidden transition shadow-xs">
-              <div class="p-3.5 md:p-4 space-y-2.5">
-                
-                <!-- ROW 1: Checkbox + Card Name + Total Amount -->
-                <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-2.5 min-w-0">
-                    <button onclick="toggleExpenseStatus('${exp.id}')" title="Marcar fatura como Paga / Aberta" class="w-7 h-7 shrink-0 rounded-xl flex items-center justify-center transition cursor-pointer ${isPaid ? 'bg-emerald-500 text-white shadow-xs' : 'bg-white border border-purple-300 text-transparent hover:text-purple-600'}">
-                      <i data-lucide="check" class="w-4 h-4 font-black"></i>
-                    </button>
-                    <div class="flex items-center gap-1.5 min-w-0">
-                      <div class="w-7 h-7 rounded-lg bg-purple-200/80 text-purple-800 flex items-center justify-center shrink-0">
-                        <i data-lucide="credit-card" class="w-4 h-4"></i>
-                      </div>
-                      <h4 class="text-sm font-black text-slate-900 truncate">${exp.description}</h4>
-                    </div>
-                  </div>
-                  <div class="text-right shrink-0">
-                    <span class="text-sm md:text-base font-black text-purple-950">
-                      ${formatBRL(exp.amount)}
-                    </span>
-                  </div>
-                </div>
-
-                <!-- ROW 2: Badges (Left) + Action Buttons (Right) -->
-                <div class="flex items-center justify-between gap-2 pt-1 border-t border-purple-200/50 text-xs">
-                  <div class="flex items-center flex-wrap gap-1.5 min-w-0">
-                    <span class="text-[10px] font-black bg-purple-200/90 text-purple-950 px-2 py-0.5 rounded-full shrink-0">
-                      ${subItems.length} ${subItems.length === 1 ? 'compra' : 'compras'}
-                    </span>
-                    <span class="text-[10px] font-bold text-slate-600">
-                      Venc: <strong class="text-slate-900">${exp.dueDate || '10'}</strong>
-                    </span>
-                    <span class="text-[9px] font-black px-2 py-0.5 rounded-full ${isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-200/60 text-purple-900'}">
-                      ${isPaid ? 'PAGO' : 'FATURA ABERTA'}
-                    </span>
-                  </div>
-
-                  <div class="flex items-center gap-1 shrink-0">
-                    <button onclick="event.stopPropagation(); openAddSubItemModal('${exp.id}')" title="Adicionar compra neste cartão" class="px-2 py-1 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-black text-[11px] flex items-center gap-1 transition shadow-xs cursor-pointer">
-                      <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                      <span>Compra</span>
-                    </button>
-                    <button onclick="event.stopPropagation(); openEditExpenseModal('${exp.id}')" title="Editar cartão" class="p-1 rounded-lg bg-white/80 hover:bg-white text-slate-500 hover:text-slate-800 transition cursor-pointer">
-                      <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
-                    </button>
-                    <button onclick="event.stopPropagation(); deleteExpense('${exp.id}', '${exp.description.replace(/'/g, "\'")}')" title="Excluir cartão" class="p-1 rounded-lg bg-white/80 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer">
-                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- ROW 3: Dedicated full-width tap area for accordion -->
-                <div onclick="toggleCardAccordion('${exp.id}')" class="w-full pt-1.5 flex items-center justify-between text-[11px] text-purple-800 font-bold hover:text-purple-950 cursor-pointer border-t border-purple-200/40">
-                  <span class="flex items-center gap-1">
-                    <i data-lucide="${isAccordionOpen ? 'chevron-up' : 'chevron-down'}" class="w-3.5 h-3.5"></i>
-                    ${isAccordionOpen ? 'Ocultar compras da fatura' : 'Ver compras detalhadas no cartão'}
-                  </span>
-                  <span class="text-[10px] text-purple-600 font-semibold">
-                    ${isAccordionOpen ? 'Clique para recolher' : 'Clique para expandir'}
-                  </span>
-                </div>
-
-              </div>
-
-              <!-- SUB-ITEMS ACCORDION BODY -->
-              <div class="${isAccordionOpen ? 'block' : 'hidden'} bg-white/95 border-t border-purple-200/60 p-3.5 space-y-2.5">
-                <div class="flex items-center justify-between text-xs text-slate-600 font-bold">
-                  <span class="text-purple-950 font-black">Itens desta fatura (${subItems.length}):</span>
-                  <button onclick="openAddSubItemModal('${exp.id}')" class="text-[11px] font-black text-purple-700 hover:text-purple-900 flex items-center gap-1 bg-purple-50 hover:bg-purple-100 px-2.5 py-1 rounded-xl border border-purple-200 transition cursor-pointer">
-                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> + Adicionar Compra
-                  </button>
-                </div>
-
-                ${subItems.length === 0 ? `
-                  <div class="p-5 text-center rounded-2xl border-2 border-dashed border-purple-200 bg-purple-50/40 space-y-2">
-                    <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 mx-auto flex items-center justify-center font-black">
-                      <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-                    </div>
-                    <p class="text-xs font-bold text-purple-950">Nenhuma compra neste cartão ainda.</p>
-                    <p class="text-[11px] text-slate-500 max-w-xs mx-auto">Lance suas compras individuais (Uber, iFood, parcelas, Netflix...) para somar nesta fatura.</p>
-                    <button onclick="openAddSubItemModal('${exp.id}')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-xs transition cursor-pointer">
-                      <i data-lucide="plus" class="w-3.5 h-3.5"></i> + Adicionar Primeira Compra
-                    </button>
-                  </div>
-                ` : `
-                  <div class="space-y-1.5 divide-y divide-purple-100">
-                    ${subItems.map(sub => `
-                      <div class="pt-1.5 flex items-center justify-between gap-2 text-xs hover:bg-purple-50/50 px-2 py-1.5 rounded-xl transition">
-                        <div class="flex items-center gap-2 min-w-0">
-                          <span class="w-1.5 h-1.5 rounded-full bg-purple-600 shrink-0"></span>
-                          <span class="font-bold text-slate-800 truncate">${sub.description}</span>
-                          <span class="text-[10px] font-black bg-purple-100 text-purple-800 px-1.5 py-0.2 rounded-md shrink-0">
-                            ${sub.installments || 'À vista'}
-                          </span>
-                        </div>
-                        <div class="flex items-center gap-2 shrink-0">
-                          <span class="font-black text-slate-900">${formatBRL(sub.amount)}</span>
-                          <div class="flex items-center gap-1">
-                            <button onclick="openEditSubItemModal('${exp.id}', '${sub.id}')" title="Editar compra" class="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded cursor-pointer">
-                              <i data-lucide="pencil" class="w-3 h-3"></i>
-                            </button>
-                            <button onclick="deleteSubItem('${exp.id}', '${sub.id}', '${sub.description.replace(/'/g, "\'")}')" title="Remover compra" class="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded cursor-pointer">
-                              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    `).join('')}
-                  </div>
-                `}
-              </div>
+        if (!itemsHtml) {
+          itemsHtml = `
+            <div class="py-12 px-4 text-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50">
+              <div class="w-10 h-10 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center mx-auto mb-2 text-lg">✨</div>
+              <p class="text-sm font-bold text-slate-800">Seu caderno está zerado e pronto para começar!</p>
+              <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Adicione suas primeiras contas fixas, faturas de cartão ou parcelas clicando nos botões acima.</p>
             </div>
           `;
-        } else {
-          // REGULAR EXPENSE (NO TEXT OVERLAP ON MOBILE)
-          cardHtml = `
-            <div class="rounded-2xl border ${isPaid ? 'bg-slate-50/80 border-slate-200' : 'bg-white border-slate-200/90'} p-3 md:p-3.5 space-y-2 hover:border-slate-300 transition shadow-xs">
-              
-              <!-- LINE 1: Checkbox + Description (Left) + Amount (Right) -->
+        }
+
+        container.innerHTML = `
+          <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4 max-w-4xl mx-auto">
+            <div class="pb-3 border-b border-slate-100 space-y-2.5">
               <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-2.5 min-w-0">
-                  <button onclick="toggleExpenseStatus('${exp.id}')" title="Marcar como Pago / Pendente" class="w-7 h-7 shrink-0 rounded-xl flex items-center justify-center transition cursor-pointer ${isPaid ? 'bg-emerald-500 text-white shadow-xs' : 'bg-[#FEF7E6] border border-amber-300 text-amber-700 hover:bg-emerald-500 hover:text-white hover:border-transparent'}">
-                    <i data-lucide="check" class="w-4 h-4 font-black"></i>
-                  </button>
+                  <div class="w-10 h-10 rounded-2xl bg-[#18191D] text-white flex items-center justify-center font-black text-sm shrink-0">
+                    ${myInitial}
+                  </div>
                   <div class="min-w-0">
-                    <h4 class="text-xs md:text-sm font-bold ${isPaid ? 'text-slate-400 line-through' : 'text-slate-900'} truncate">
-                      ${exp.description}
-                    </h4>
+                    <h2 class="text-base md:text-lg font-bold text-slate-900 truncate">Caderno de ${myName}</h2>
+                    <p class="text-xs text-slate-500 font-medium truncate">Contas fixas, faturas de cartão e parcelas</p>
                   </div>
                 </div>
                 <div class="text-right shrink-0">
-                  <span class="text-xs md:text-sm font-black ${isPaid ? 'text-slate-400' : 'text-slate-900'}">
-                    ${formatBRL(exp.amount)}
+                  <span class="text-xs md:text-sm font-black bg-[#18191D] text-white px-3.5 py-1.5 rounded-xl shadow-xs inline-block">
+                    ${formatBRL(total)}
                   </span>
                 </div>
               </div>
 
-              <!-- LINE 2: Badges & Venc (Left) + Status Badge & Action Icons (Right) -->
-              <div class="flex items-center justify-between gap-2 pt-1 border-t border-slate-100 text-[11px]">
-                <div class="flex items-center flex-wrap gap-1.5 min-w-0">
-                  ${typeBadge}
-                  <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full">${exp.category || 'Geral'}</span>
-                  <span class="text-slate-300">•</span>
-                  <span class="text-slate-500 text-[10px] font-medium">Venc: <strong class="text-slate-800">${exp.dueDate || '10'}</strong></span>
-                </div>
-
-                <div class="flex items-center gap-1.5 shrink-0">
-                  <span class="text-[9px] font-black px-2 py-0.5 rounded-full ${isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                    ${isPaid ? 'PAGO' : 'PENDENTE'}
-                  </span>
-                  <div class="flex items-center gap-0.5 pl-1 border-l border-slate-200">
-                    <button onclick="openEditExpenseModal('${exp.id}')" title="Editar conta" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer">
-                      <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
-                    </button>
-                    <button onclick="deleteExpense('${exp.id}', '${exp.description.replace(/'/g, "\'")}')" title="Excluir conta" class="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer">
-                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                    </button>
-                  </div>
-                </div>
+              <div class="grid grid-cols-2 gap-2 w-full">
+                <button onclick="openAddCardModal('${myName}')" title="Criar Cartão / Fatura" class="text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
+                  <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+                  <span>+ Cartão</span>
+                </button>
+                <button onclick="openAddExpenseModal('${myName}')" title="Adicionar conta ao caderno" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                  <span>+ Nova Conta</span>
+                </button>
               </div>
-
             </div>
-          `;
-        }
 
-        if (exp.person === 'Nathalie' || exp.person === 'Nat') {
-          totalNat += exp.amount;
-          listNat.insertAdjacentHTML('beforeend', cardHtml);
-        } else if (exp.person === 'Davi') {
-          totalDavi += exp.amount;
-          listDavi.insertAdjacentHTML('beforeend', cardHtml);
+            <div class="space-y-3">
+              ${itemsHtml}
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      // COUPLE ACCOUNT
+      const p1Name = (currentUser.id === 'user-davi' || currentUser.email === 'davi@organizeai.com') ? 'Nathalie' : (currentUser.name || 'Você');
+      const p2Name = (currentUser.id === 'user-davi' || currentUser.email === 'davi@organizeai.com') ? 'Davi' : (currentUser.partner ? currentUser.partner.name : 'Parceiro(a)');
+
+      let totalP1 = 0;
+      let totalP2 = 0;
+      let listP1Html = '';
+      let listP2Html = '';
+
+      (monthData.expenses || []).forEach(exp => {
+        const itemHtml = buildExpenseCardHtml(exp);
+        const personLower = (exp.person || '').toLowerCase();
+        if (personLower.includes('nat') || personLower === p1Name.toLowerCase()) {
+          totalP1 += exp.amount;
+          listP1Html += itemHtml;
+        } else if (personLower.includes('davi') || personLower === p2Name.toLowerCase()) {
+          totalP2 += exp.amount;
+          listP2Html += itemHtml;
         } else {
-          totalNat += exp.amount / 2;
-          totalDavi += exp.amount / 2;
-          listNat.insertAdjacentHTML('beforeend', cardHtml);
+          totalP1 += exp.amount / 2;
+          totalP2 += exp.amount / 2;
+          listP1Html += itemHtml;
         }
       });
 
-      document.getElementById('colNatTotal').textContent = formatBRL(totalNat);
-      document.getElementById('colDaviTotal').textContent = formatBRL(totalDavi);
+      if (!listP1Html) {
+        listP1Html = `
+          <div class="py-8 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
+            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mx-auto mb-2"><i data-lucide="plus" class="w-4 h-4"></i></div>
+            <p class="text-xs font-bold text-slate-700">Nenhuma conta para ${p1Name}.</p>
+            <p class="text-[11px] text-slate-500 mt-0.5">Clique no botão "+" acima para adicionar.</p>
+          </div>
+        `;
+      }
+      if (!listP2Html) {
+        listP2Html = `
+          <div class="py-8 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
+            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mx-auto mb-2"><i data-lucide="plus" class="w-4 h-4"></i></div>
+            <p class="text-xs font-bold text-slate-700">Nenhuma conta para ${p2Name}.</p>
+            <p class="text-[11px] text-slate-500 mt-0.5">Clique no botão "+" acima para adicionar.</p>
+          </div>
+        `;
+      }
 
-      if (listNat.children.length === 0) {
-        listNat.innerHTML = `
-          <div class="py-8 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
-            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mx-auto mb-2">
-              <i data-lucide="plus" class="w-4 h-4"></i>
+      container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
+            <div class="pb-3 border-b border-slate-100 space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <div class="w-9 h-9 rounded-2xl bg-[#F0EDFF] text-[#5B21B6] border border-[#DDD5FE] flex items-center justify-center font-black text-sm shrink-0">${p1Name.charAt(0).toUpperCase()}</div>
+                  <div class="min-w-0"><h2 class="text-sm md:text-base font-bold text-slate-900 truncate">Caderno ${p1Name}</h2><p class="text-[11px] text-slate-500 font-medium truncate">Contas fixas, recorrentes e faturas</p></div>
+                </div>
+                <div class="text-right shrink-0"><span class="text-xs md:text-sm font-black bg-[#18191D] text-white px-3 py-1.5 rounded-xl shadow-xs inline-block">${formatBRL(totalP1)}</span></div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 w-full">
+                <button onclick="openAddCardModal('${p1Name}')" class="text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="credit-card" class="w-3.5 h-3.5"></i> <span>+ Cartão</span></button>
+                <button onclick="openAddExpenseModal('${p1Name}')" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="plus" class="w-3.5 h-3.5"></i> <span>+ Nova Conta</span></button>
+              </div>
             </div>
-            <p class="text-xs font-bold text-slate-700">Nenhuma conta para Nathalie.</p>
-            <p class="text-[11px] text-slate-500 mt-0.5">Clique no botão "+" acima para adicionar.</p>
+            <div class="space-y-3">${listP1Html}</div>
           </div>
-        `;
-      }
-      if (listDavi.children.length === 0) {
-        listDavi.innerHTML = `
-          <div class="py-8 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
-            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mx-auto mb-2">
-              <i data-lucide="plus" class="w-4 h-4"></i>
+
+          <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
+            <div class="pb-3 border-b border-slate-100 space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <div class="w-9 h-9 rounded-2xl bg-[#EDF5FF] text-[#0369A1] border border-[#BAE6FD] flex items-center justify-center font-black text-sm shrink-0">${p2Name.charAt(0).toUpperCase()}</div>
+                  <div class="min-w-0"><h2 class="text-sm md:text-base font-bold text-slate-900 truncate">Caderno ${p2Name}</h2><p class="text-[11px] text-slate-500 font-medium truncate">Contas fixas, moto e parcelas</p></div>
+                </div>
+                <div class="text-right shrink-0"><span class="text-xs md:text-sm font-black bg-[#18191D] text-white px-3 py-1.5 rounded-xl shadow-xs inline-block">${formatBRL(totalP2)}</span></div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 w-full">
+                <button onclick="openAddCardModal('${p2Name}')" class="text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="credit-card" class="w-3.5 h-3.5"></i> <span>+ Cartão</span></button>
+                <button onclick="openAddExpenseModal('${p2Name}')" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="plus" class="w-3.5 h-3.5"></i> <span>+ Nova Conta</span></button>
+              </div>
             </div>
-            <p class="text-xs font-bold text-slate-700">Nenhuma conta para Davi.</p>
-            <p class="text-[11px] text-slate-500 mt-0.5">Clique no botão "+" acima para adicionar.</p>
+            <div class="space-y-3">${listP2Html}</div>
           </div>
-        `;
-      }
+        </div>
+      `;
+      lucide.createIcons();
     }
 
     // RENDER QUICK CHECK LIST
@@ -2598,7 +2623,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
             </div>
             <h4 class="text-xs md:text-sm font-bold text-slate-900">Pronto para identificar oportunidades de economia!</h4>
             <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">
-              Conforme você e a Nathalie adicionarem as contas e faturas do cartão, o assistente calculará automaticamente os maiores custos, alertas de vencimento e estratégias para poupar.
+              Conforme você adicionar as contas e faturas do cartão, o assistente calculará automaticamente os maiores custos, alertas de vencimento e estratégias para poupar.
             </p>
           </div>
         `;
@@ -2906,13 +2931,15 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       lucide.createIcons();
     }
 
-    // EXPENSE MODAL MANAGEMENT (NATHALIE / DAVI / CASA)
+    // EXPENSE MODAL MANAGEMENT (DYNAMIC SINGLE / COUPLE)
     function selectExpensePerson(p) {
-      document.getElementById('formExpensePerson').value = p;
+      const myName = (currentUser && currentUser.name) ? currentUser.name : 'Eu';
+      const actualPerson = p || myName;
+      document.getElementById('formExpensePerson').value = actualPerson;
       ['Nathalie', 'Davi', 'Casa'].forEach(name => {
         const btn = document.getElementById(`btnPerson${name}`);
         if (btn) {
-          if (name === p) {
+          if (name === p || (name === 'Casa' && p === 'Casa')) {
             btn.className = "py-2 rounded-xl font-bold bg-[#18191D] text-white transition cursor-pointer";
           } else {
             btn.className = "py-2 rounded-xl font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition cursor-pointer";
@@ -2921,11 +2948,37 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       });
     }
 
-    function openAddCardModal(preSelectedPerson = 'Nathalie') {
-      const person = (preSelectedPerson === 'Nat' || preSelectedPerson === 'Nathalie') ? 'Nathalie' : preSelectedPerson;
-      document.getElementById('expenseModalTitle').textContent = `Novo Cartão de Crédito (${person})`;
+    function updatePersonSelectorUI() {
+      const wrapper = document.getElementById('personSelectorWrapper');
+      if (!wrapper) return;
+      if (!isCoupleAccount()) {
+        wrapper.classList.add('hidden');
+        const myName = (currentUser && currentUser.name) ? currentUser.name : 'Eu';
+        document.getElementById('formExpensePerson').value = myName;
+      } else {
+        wrapper.classList.remove('hidden');
+        const p1Name = (currentUser.id === 'user-davi' || currentUser.email === 'davi@organizeai.com') ? 'Nathalie' : (currentUser.name || 'Você');
+        const p2Name = (currentUser.id === 'user-davi' || currentUser.email === 'davi@organizeai.com') ? 'Davi' : (currentUser.partner ? currentUser.partner.name : 'Parceiro(a)');
+        const btnNat = document.getElementById('btnPersonNathalie');
+        const btnDavi = document.getElementById('btnPersonDavi');
+        if (btnNat) {
+          btnNat.textContent = p1Name;
+          btnNat.onclick = () => selectExpensePerson(p1Name);
+        }
+        if (btnDavi) {
+          btnDavi.textContent = p2Name;
+          btnDavi.onclick = () => selectExpensePerson(p2Name);
+        }
+      }
+    }
+
+    function openAddCardModal(preSelectedPerson) {
+      updatePersonSelectorUI();
+      const myName = (currentUser && currentUser.name) ? currentUser.name : 'Eu';
+      const person = preSelectedPerson || (isCoupleAccount() ? 'Nathalie' : myName);
+      document.getElementById('expenseModalTitle').textContent = isCoupleAccount() ? `Novo Cartão de Crédito (${person})` : "Novo Cartão de Crédito";
       document.getElementById('formExpenseId').value = "";
-      document.getElementById('formExpenseDesc').value = `Cartão ${person}`;
+      document.getElementById('formExpenseDesc').value = isCoupleAccount() ? `Cartão ${person}` : "Cartão de Crédito";
       document.getElementById('formExpenseAmount').value = "0";
       document.getElementById('formExpenseDueDate').value = "10";
       selectExpensePerson(person);
@@ -2933,13 +2986,16 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       document.getElementById('expenseModal').classList.remove('hidden');
     }
 
-    function openAddExpenseModal(preSelectedPerson = 'Casa') {
+    function openAddExpenseModal(preSelectedPerson) {
+      updatePersonSelectorUI();
+      const myName = (currentUser && currentUser.name) ? currentUser.name : 'Eu';
+      const person = preSelectedPerson || (isCoupleAccount() ? 'Casa' : myName);
       document.getElementById('expenseModalTitle').textContent = "Nova Conta no Caderno";
       document.getElementById('formExpenseId').value = "";
       document.getElementById('formExpenseDesc').value = "";
       document.getElementById('formExpenseAmount').value = "";
       document.getElementById('formExpenseDueDate').value = "10";
-      selectExpensePerson(preSelectedPerson === 'Nat' ? 'Nathalie' : preSelectedPerson);
+      selectExpensePerson(person);
       onExpenseTypeChange('fixed');
       document.getElementById('expenseModal').classList.remove('hidden');
     }
@@ -3354,19 +3410,82 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       };
     }
 
-    function toggleSpeechRecording() {
-      if (!currentSpeechRecognition) {
-        initSpeechRecognition();
-        if (!currentSpeechRecognition) {
-          alert("Reconhecimento de voz não suportado neste navegador. Use a aba 'Texto'!");
-          setQuickMode('text');
+    let mobileMediaRecorder = null;
+    let mobileAudioChunks = [];
+    let isMobileRecording = false;
+
+    async function toggleSpeechRecording() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      // Desktop / Android Chrome native speech recognition
+      if (SpeechRecognition && !navigator.userAgent.includes('iPhone') && !navigator.userAgent.includes('iPad')) {
+        if (!currentSpeechRecognition) initSpeechRecognition();
+        if (currentSpeechRecognition) {
+          if (isRecordingSpeech) {
+            currentSpeechRecognition.stop();
+          } else {
+            currentSpeechRecognition.start();
+          }
           return;
         }
       }
-      if (isRecordingSpeech) {
-        currentSpeechRecognition.stop();
-      } else {
-        currentSpeechRecognition.start();
+
+      // Universal MediaRecorder fallback for iOS Safari and mobile devices
+      if (isMobileRecording && mobileMediaRecorder && mobileMediaRecorder.state === "recording") {
+        mobileMediaRecorder.stop();
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mobileAudioChunks = [];
+        mobileMediaRecorder = new MediaRecorder(stream);
+
+        mobileMediaRecorder.onstart = () => {
+          isMobileRecording = true;
+          document.getElementById('waveformContainer').classList.remove('hidden');
+          document.getElementById('quickVoiceBtn').className = "w-16 h-16 rounded-full bg-rose-600 text-white flex items-center justify-center mx-auto shadow-md animate-pulse cursor-pointer";
+        };
+
+        mobileMediaRecorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) mobileAudioChunks.push(e.data);
+        };
+
+        mobileMediaRecorder.onstop = async () => {
+          isMobileRecording = false;
+          document.getElementById('waveformContainer').classList.add('hidden');
+          document.getElementById('quickVoiceBtn').className = "w-16 h-16 rounded-full bg-[#18191D] hover:bg-slate-800 text-white flex items-center justify-center mx-auto shadow-sm transition active:scale-95 cursor-pointer";
+          stream.getTracks().forEach(t => t.stop());
+
+          const audioBlob = new Blob(mobileAudioChunks, { type: 'audio/webm' });
+          const textInput = document.getElementById('quickTextInput');
+          setQuickMode('text');
+          textInput.placeholder = "Processando seu áudio com IA...";
+
+          try {
+            const res = await fetch('/api/audio/transcribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'audio/webm' },
+              body: audioBlob
+            });
+            const data = await res.json();
+            if (data && data.text && data.text.trim()) {
+              textInput.value = data.text.trim();
+              parseQuickTextClient(data.text.trim());
+            } else {
+              textInput.placeholder = "Não consegui entender a fala. Digite aqui:";
+            }
+          } catch (err) {
+            console.error("Transcribe error:", err);
+            textInput.placeholder = "Digite seus gastos aqui:";
+          }
+        };
+
+        mobileMediaRecorder.start();
+      } catch (err) {
+        console.warn("Microphone not available:", err);
+        alert("Acesso ao microfone indisponível. Por favor, utilize a aba 'Texto' para digitar seus gastos!");
+        setQuickMode('text');
       }
     }
 

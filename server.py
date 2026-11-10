@@ -12,11 +12,33 @@ from email.mime.multipart import MIMEMultipart
 
 PORT = int(os.environ.get("PORT", 5050))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_FILE = os.path.join(BASE_DIR, "data.json")
 PUBLIC_DIR = os.path.join(BASE_DIR, "public")
-USERS_DIR = os.path.join(BASE_DIR, "users_data")
-USERS_FILE = os.path.join(BASE_DIR, "users.json")
+
+# Persistent storage directory (supports Railway Volume /app/persistent_data)
+DATA_DIR = os.environ.get("DATA_DIR", BASE_DIR)
+os.makedirs(DATA_DIR, exist_ok=True)
+
+DATA_FILE = os.path.join(DATA_DIR, "data.json")
+USERS_DIR = os.path.join(DATA_DIR, "users_data")
+USERS_FILE = os.path.join(DATA_DIR, "users.json")
 os.makedirs(USERS_DIR, exist_ok=True)
+
+# Seed persistent volume on first startup if empty
+if os.path.abspath(DATA_DIR) != os.path.abspath(BASE_DIR):
+    import shutil
+    base_users = os.path.join(BASE_DIR, "users.json")
+    if not os.path.exists(USERS_FILE) and os.path.exists(base_users):
+        shutil.copy2(base_users, USERS_FILE)
+    base_data = os.path.join(BASE_DIR, "data.json")
+    if not os.path.exists(DATA_FILE) and os.path.exists(base_data):
+        shutil.copy2(base_data, DATA_FILE)
+    base_users_dir = os.path.join(BASE_DIR, "users_data")
+    if os.path.exists(base_users_dir):
+        for item in os.listdir(base_users_dir):
+            src = os.path.join(base_users_dir, item)
+            dst = os.path.join(USERS_DIR, item)
+            if not os.path.exists(dst) and os.path.isfile(src):
+                shutil.copy2(src, dst)
 
 # SMTP Config
 SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
@@ -26,25 +48,79 @@ SMTP_PASS = os.environ.get("SMTP_PASS", "")
 SMTP_FROM = os.environ.get("SMTP_FROM", "Organize Aí <suporte@apporganizeai.com.br>")
 
 def send_system_email(to_email, subject, html_content):
-    print(f"📧 [Email Disparo] Destinatário: {to_email} | Assunto: {subject}")
-    if not SMTP_USER or not SMTP_PASS:
-        print(f"ℹ️ [Email Simulação] Enviando para {to_email} com sucesso (configure SMTP_USER e SMTP_PASS para envio real).")
-        return True
-    try:
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = subject
-        msg["From"] = SMTP_FROM
-        msg["To"] = to_email
-        msg.attach(MIMEText(html_content, "html", "utf-8"))
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10) as s:
-            s.starttls()
-            s.login(SMTP_USER, SMTP_PASS)
-            s.sendmail(SMTP_FROM, [to_email], msg.as_string())
-        print(f"✅ E-mail enviado com sucesso para {to_email}!")
-        return True
-    except Exception as e:
-        print(f"⚠️ Erro ao enviar e-mail via SMTP: {e}")
-        return False
+    import urllib.request
+    print(f"📧 [Email Disparo] Destinatário: {to_email} | Assunto: {subject}", flush=True)
+
+    # 1. Resend API
+    resend_key = os.environ.get("RESEND_API_KEY", "").strip()
+    if resend_key:
+        try:
+            req_data = json.dumps({
+                "from": os.environ.get("RESEND_FROM", "Organize Aí <onboarding@resend.dev>"),
+                "to": [to_email],
+                "subject": subject,
+                "html": html_content
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://api.resend.com/emails",
+                data=req_data,
+                headers={
+                    "Authorization": f"Bearer {resend_key}",
+                    "Content-Type": "application/json"
+                }
+            )
+            with urllib.request.urlopen(req, timeout=12) as resp:
+                res = json.loads(resp.read().decode())
+                print(f"✅ [Resend Sucesso] E-mail entregue para {to_email}: {res}", flush=True)
+                return True
+        except Exception as e:
+            print(f"❌ [Resend Erro] Falha ao enviar para {to_email}: {e}", flush=True)
+
+    # 2. Brevo API
+    brevo_key = os.environ.get("BREVO_API_KEY", "").strip()
+    if brevo_key:
+        try:
+            req_data = json.dumps({
+                "sender": {"name": "Organize Aí", "email": os.environ.get("BREVO_FROM", "suporte@apporganizeai.com.br")},
+                "to": [{"email": to_email}],
+                "subject": subject,
+                "htmlContent": html_content
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://api.brevo.com/v3/smtp/email",
+                data=req_data,
+                headers={
+                    "api-key": brevo_key,
+                    "Content-Type": "application/json"
+                }
+            )
+            with urllib.request.urlopen(req, timeout=12) as resp:
+                res = json.loads(resp.read().decode())
+                print(f"✅ [Brevo Sucesso] E-mail entregue para {to_email}: {res}", flush=True)
+                return True
+        except Exception as e:
+            print(f"❌ [Brevo Erro] Falha ao enviar para {to_email}: {e}", flush=True)
+
+    # 3. SMTP Relay (Gmail App Password or Custom SMTP)
+    if SMTP_USER and SMTP_PASS:
+        try:
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = subject
+            msg["From"] = SMTP_FROM
+            msg["To"] = to_email
+            msg.attach(MIMEText(html_content, "html", "utf-8"))
+            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=12) as s:
+                s.starttls()
+                s.login(SMTP_USER, SMTP_PASS)
+                s.send_message(msg)
+            print(f"✅ [SMTP Sucesso] E-mail enviado para {to_email}", flush=True)
+            return True
+        except Exception as e:
+            print(f"⚠️ [SMTP Erro] Erro ao enviar e-mail via SMTP: {e}", flush=True)
+            return False
+
+    print(f"ℹ️ [Email Simulação] Enviando para {to_email} com sucesso (configure RESEND_API_KEY ou SMTP no Railway).", flush=True)
+    return True
 
 def send_welcome_email(email, name, password):
     subject = "🎉 Bem-vindo ao Organize Aí! Seus dados de acesso"
@@ -60,16 +136,19 @@ def send_welcome_email(email, name, password):
         </div>
         <div style="padding: 28px;">
           <h2 style="font-size: 18px; font-weight: 700; margin-top: 0; color: #0f172a;">Olá, {name}! 👋</h2>
-          <p style="font-size: 14px; line-height: 1.6; color: #475569;">
-            Sua conta no <strong>Organize Aí</strong> foi criada com sucesso! A partir de agora você tem o controle total das suas finanças, cartões e despesas diárias em um único lugar.
+          <p style="font-size: 14px; line-height: 1.6; color: #334155; font-weight: 600;">
+            Muito feliz que você confiou a organização da sua casa e das suas finanças à gente!
           </p>
-          <div style="background: #f1f5f9; border-radius: 14px; padding: 18px; margin: 20px 0;">
+          <p style="font-size: 13px; line-height: 1.6; color: #475569;">
+            O <strong>Organize Aí</strong> foi pensado para tirar o estresse financeiro da sua rotina: você acompanha suas contas fixas, faturas de cartão com subcompras detalhadas, gastos do dia a dia no Débito & PIX e caixinhas para guardar dinheiro — tudo de forma rápida e visual.
+          </p>
+          <div style="background: #f1f5f9; border-radius: 14px; padding: 18px; margin: 20px 0; border-left: 4px solid #18191D;">
             <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748b;">Seus dados de acesso:</p>
             <p style="margin: 4px 0; font-size: 14px;"><strong>E-mail:</strong> {email}</p>
             <p style="margin: 4px 0; font-size: 14px;"><strong>Senha:</strong> {password}</p>
           </div>
           <div style="text-align: center; margin-top: 24px;">
-            <a href="https://apporganizeai.com.br" style="display: inline-block; background: #18191D; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: 12px;">Acessar Meu Painel</a>
+            <a href="https://apporganizeai.com.br" style="display: inline-block; background: #18191D; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: 12px;">Acessar Meu Painel →</a>
           </div>
         </div>
         <div style="background: #f8fafc; padding: 16px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #f1f5f9;">
@@ -465,6 +544,42 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             req = json.loads(body)
         except Exception:
             req = {}
+
+                # AUDIO TRANSCRIPTION ENDPOINT (WHISPER)
+        if self.path == "/api/audio/transcribe":
+            try:
+                content_length = int(self.headers.get("Content-Length", 0))
+                audio_bytes = self.rfile.read(content_length) if content_length > 0 else b""
+                if not audio_bytes:
+                    return self.send_json_response({"error": "Nenhum áudio recebido."}, 400)
+
+                temp_input = os.path.join(BASE_DIR, f"temp_voice_{int(datetime.now().timestamp()*1000)}.webm")
+                with open(temp_input, "wb") as f:
+                    f.write(audio_bytes)
+
+                transcribed_text = ""
+                try:
+                    import transcribe_audio
+                    transcribed_text = transcribe_audio.transcribe(temp_input)
+                except Exception as te:
+                    print(f"Erro na transcrição: {te}", flush=True)
+                finally:
+                    if os.path.exists(temp_input):
+                        try:
+                            os.remove(temp_input)
+                        except Exception:
+                            pass
+
+                return self.send_json_response({"success": True, "text": transcribed_text})
+            except Exception as e:
+                return self.send_json_response({"error": str(e)}, 500)
+
+        # ADMIN TEST EMAIL ENDPOINT
+        elif self.path == "/api/admin/send-test-email":
+            target = req.get("email") or "daviicruz95@gmail.com"
+            name = req.get("name") or "Davi Cruz"
+            send_welcome_email(target, name, "senha-teste-123")
+            return self.send_json_response({"success": True, "message": f"E-mail de teste disparado para {target}!"})
 
         # 0. AUTH ENDPOINTS
         if self.path == "/api/auth/register":

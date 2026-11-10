@@ -52,6 +52,14 @@
       "familyId": "fam-davi-nathalie",
       "role": "family",
       "avatar": ""
+    },
+    {
+      "id": "usr-1794280484015",
+      "name": "Leandro Mello",
+      "email": "leandromellopp@gmail.com",
+      "password": "Davihacker",
+      "role": "user",
+      "avatar": ""
     }
   ]
 }

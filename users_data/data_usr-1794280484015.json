@@ -1,0 +1,63 @@
+{
+  "activeMonth": "2026-11",
+  "savingsGoal": {
+    "targetAmount": 1000.0,
+    "description": "Minha Meta de Poupança",
+    "boxes": [
+      {
+        "id": "box-1",
+        "name": "Reserva de Emergência",
+        "amount": 0.0,
+        "target": 5000.0,
+        "icon": "🛡️"
+      },
+      {
+        "id": "box-2",
+        "name": "Cofrinho / Sonhos",
+        "amount": 0.0,
+        "target": 2000.0,
+        "icon": "🐷"
+      }
+    ]
+  },
+  "futureInstallments": [],
+  "months": [
+    {
+      "id": "2026-11",
+      "name": "Novembro",
+      "year": 2026,
+      "reserve": 0.0,
+      "incomes": [],
+      "expenses": [
+        {
+          "id": "exp-1794280534508",
+          "person": "Leandro",
+          "category": "Alimentação",
+          "description": "Padaria",
+          "amount": 20.0,
+          "dueDate": "10/11",
+          "status": "pending",
+          "type": "pix",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1794280563639",
+          "person": "Leandro",
+          "category": "Alimentação",
+          "description": "Monster",
+          "amount": 13.99,
+          "dueDate": "10/11",
+          "status": "pending",
+          "type": "debit",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        }
+      ]
+    }
+  ]
+}
