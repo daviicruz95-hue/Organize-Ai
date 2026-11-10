@@ -214,47 +214,82 @@ async function startBot() {
 
             console.log(`📩 [Processando Gasto] Chat: ${remoteJid} | Remetente: ${senderJid} | Mensagem: "${text}"`);
 
-            // DETERMINE SENDER (Davi vs Nati)
+            // DETERMINE SENDER (Davi vs Nathalie)
             let determinedSender = 'Davi';
             const senderPush = (m.pushName || '').toLowerCase();
 
             if (isGroup) {
-                if (m.key.fromMe) {
+                if (m.key.fromMe || senderPush.includes('davi') || senderPush.includes('cruz') || senderPush.includes('costa')) {
                     determinedSender = 'Davi';
-                } else if (senderPush.includes('nat') || senderPush.includes('nati') || senderPush.includes('nathalie')) {
-                    determinedSender = 'Nati';
+                } else if (senderPush.includes('nat') || senderPush.includes('nati') || senderPush.includes('nathalie') || senderPush.includes('pezzarico') || senderPush.includes('pezarico')) {
+                    determinedSender = 'Nathalie';
                 } else {
-                    // In a couple's group, if it's not Davi, it's Nati!
-                    determinedSender = 'Nati';
+                    // Default to Davi unless message context says otherwise
+                    determinedSender = 'Davi';
                 }
             } else {
                 if (senderPush.includes('nat') || senderPush.includes('nati') || senderPush.includes('nathalie') || remoteJid.includes('nat')) {
-                    determinedSender = 'Nati';
+                    determinedSender = 'Nathalie';
                 } else {
                     determinedSender = 'Davi';
                 }
             }
 
             // Also check message content for explicit person hints
-            if (textLower.includes('nati') || textLower.includes('minha mulher') || textLower.includes('esposa')) {
-                determinedSender = 'Nati';
+            if (textLower.includes('nati') || textLower.includes('nathalie') || textLower.includes('minha mulher') || textLower.includes('esposa')) {
+                determinedSender = 'Nathalie';
             } else if (textLower.includes('davi') || textLower.includes('meu')) {
                 determinedSender = 'Davi';
             }
 
             const senderPhone = senderJid.replace('@s.whatsapp.net', '').replace('@g.us', '');
 
+            // Choose primary webhook: Production cloud URL first, or local container
+            const primaryWebhook = process.env.PORT 
+                ? `http://localhost:${process.env.PORT}/api/webhook/whatsapp` 
+                : 'https://apporganizeai.com.br/api/webhook/whatsapp';
+            const localFallback = 'http://localhost:5050/api/webhook/whatsapp';
+
             try {
-                const resp = await fetch('http://localhost:5050/api/webhook/whatsapp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        text: text,
-                        senderName: determinedSender,
-                        phone: senderPhone,
-                        isGroup: isGroup
-                    })
-                });
+                let resp;
+                try {
+                    resp = await fetch(primaryWebhook, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            text: text,
+                            senderName: determinedSender,
+                            phone: senderPhone,
+                            isGroup: isGroup
+                        })
+                    });
+                } catch (netErr) {
+                    console.log(`⚠️ Falha ao conectar em ${primaryWebhook}, tentando fallback local...`);
+                    resp = await fetch(localFallback, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            text: text,
+                            senderName: determinedSender,
+                            phone: senderPhone,
+                            isGroup: isGroup
+                        })
+                    });
+                }
+
+                // If on local machine and primary succeeded, also sync local
+                if (!process.env.PORT && primaryWebhook.startsWith('https://')) {
+                    fetch(localFallback, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            text: text,
+                            senderName: determinedSender,
+                            phone: senderPhone,
+                            isGroup: isGroup
+                        })
+                    }).catch(() => {});
+                }
 
                 const data = await resp.json();
                 if (data.reply) {

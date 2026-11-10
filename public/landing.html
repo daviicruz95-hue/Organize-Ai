@@ -517,7 +517,7 @@
       </button>
 
       <!-- Modal Tabs -->
-      <div class="flex gap-2 p-1 bg-line rounded-2xl mb-6">
+      <div id="modalTabsContainer" class="flex gap-2 p-1 bg-line rounded-2xl mb-6">
         <button id="tabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold rounded-xl bg-surface text-ink shadow-xs transition-all">
           Entrar
         </button>
@@ -526,9 +526,37 @@
         </button>
       </div>
 
+      <!-- Forgot Password View (Hidden by default) -->
+      <div id="forgotPasswordView" class="hidden space-y-4">
+        <div class="text-center">
+          <div class="w-12 h-12 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center text-xl mx-auto mb-2 font-bold">
+            🔑
+          </div>
+          <h3 class="text-base font-extrabold text-ink">Recuperar Minha Senha</h3>
+          <p class="text-xs text-ink-muted mt-1">Informe seu e-mail cadastrado e enviaremos sua senha de acesso na hora.</p>
+        </div>
+
+        <div id="forgotSuccess" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold text-center"></div>
+        <div id="forgotError" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold text-center"></div>
+
+        <div>
+          <label class="block text-xs font-bold text-ink mb-1">Seu E-mail Cadastrado</label>
+          <input type="email" id="inputForgotEmail" placeholder="seu@email.com" class="w-full px-3.5 py-2.5 rounded-xl border border-line-dark text-sm focus:outline-none focus:border-ink">
+        </div>
+
+        <button type="button" id="btnForgotSubmit" onclick="handleForgotPasswordSubmit()" class="w-full py-3 rounded-xl bg-ink text-white font-bold text-sm hover:bg-neutral-800 transition-all cursor-pointer">
+          Enviar Minha Senha por E-mail
+        </button>
+
+        <button type="button" onclick="hideForgotPassword()" class="w-full text-center text-xs text-ink-muted hover:text-ink font-semibold py-1">
+          ← Voltar para o Login
+        </button>
+      </div>
+
       <!-- Auth Form -->
-      <form onsubmit="handleAuthSubmit(event)" class="space-y-3.5">
+      <form id="authMainForm" onsubmit="handleAuthSubmit(event)" class="space-y-3.5">
         <div id="authError" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold text-center"></div>
+        <div id="authSuccess" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold text-center"></div>
 
         <div id="nameField" class="hidden">
           <label class="block text-xs font-bold text-ink mb-1">Seu Nome</label>
@@ -541,13 +569,26 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-ink mb-1">Senha</label>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-bold text-ink">Senha</label>
+            <button type="button" id="btnForgotTrigger" onclick="showForgotPassword()" class="text-[11px] text-emerald-700 hover:text-emerald-800 font-semibold hover:underline cursor-pointer">
+              Esqueceu a senha?
+            </button>
+          </div>
           <div class="relative">
             <input type="password" id="inputPassword" required placeholder="••••••••" class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-line-dark text-sm focus:outline-none focus:border-ink">
             <button type="button" onclick="togglePasswordVisibility('inputPassword', 'eyeIcon')" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink text-sm p-1 rounded-lg">
               <span id="eyeIcon">👁️</span>
             </button>
           </div>
+        </div>
+
+        <!-- Remember Me (Lembrar de Mim) -->
+        <div id="rememberMeRow" class="flex items-center justify-between pt-0.5">
+          <label class="flex items-center gap-2 cursor-pointer text-xs text-ink-muted hover:text-ink font-medium select-none">
+            <input type="checkbox" id="checkRememberMe" checked class="w-4 h-4 rounded border-line-dark text-ink focus:ring-ink accent-emerald-600">
+            <span>Lembrar de mim (manter conectado)</span>
+          </label>
         </div>
 
         <button type="submit" id="btnAuthSubmit" class="w-full py-3 rounded-xl bg-ink text-white font-bold text-sm hover:bg-neutral-800 transition-all mt-2 cursor-pointer">
@@ -581,6 +622,7 @@
     }
 
     function switchAuthTab(tab) {
+      hideForgotPassword();
       currentAuthMode = tab;
       const isLogin = tab === 'login';
       document.getElementById('tabLogin').className = isLogin 
@@ -592,8 +634,73 @@
         : 'flex-1 py-2 text-xs font-bold rounded-xl text-ink-muted hover:text-ink transition-all';
 
       document.getElementById('nameField').classList.toggle('hidden', isLogin);
+      document.getElementById('btnForgotTrigger').classList.toggle('hidden', !isLogin);
+      document.getElementById('rememberMeRow').classList.toggle('hidden', !isLogin);
       document.getElementById('btnAuthSubmit').innerText = isLogin ? 'Entrar no Organize Aí' : 'Criar Conta Gratuita';
       document.getElementById('authError').classList.add('hidden');
+      document.getElementById('authSuccess').classList.add('hidden');
+    }
+
+    function showForgotPassword() {
+      document.getElementById('authMainForm').classList.add('hidden');
+      document.getElementById('modalTabsContainer').classList.add('hidden');
+      document.getElementById('forgotPasswordView').classList.remove('hidden');
+      document.getElementById('forgotSuccess').classList.add('hidden');
+      document.getElementById('forgotError').classList.add('hidden');
+      
+      const currentEmail = document.getElementById('inputEmail').value.trim();
+      if (currentEmail) {
+        document.getElementById('inputForgotEmail').value = currentEmail;
+      }
+    }
+
+    function hideForgotPassword() {
+      document.getElementById('forgotPasswordView').classList.add('hidden');
+      document.getElementById('authMainForm').classList.remove('hidden');
+      document.getElementById('modalTabsContainer').classList.remove('hidden');
+    }
+
+    async function handleForgotPasswordSubmit() {
+      const email = document.getElementById('inputForgotEmail').value.trim();
+      const errBox = document.getElementById('forgotError');
+      const succBox = document.getElementById('forgotSuccess');
+      const btn = document.getElementById('btnForgotSubmit');
+
+      errBox.classList.add('hidden');
+      succBox.classList.add('hidden');
+
+      if (!email) {
+        errBox.textContent = 'Por favor, digite o seu e-mail cadastrado.';
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Enviando...';
+
+      try {
+        const res = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (data.success) {
+          succBox.innerHTML = `<strong>Sucesso!</strong> ${data.message || 'Sua senha foi enviada para o seu e-mail.'}`;
+          succBox.classList.remove('hidden');
+          btn.innerText = 'Senha Enviada!';
+        } else {
+          errBox.textContent = data.error || 'Não encontramos nenhuma conta com este e-mail.';
+          errBox.classList.remove('hidden');
+          btn.disabled = false;
+          btn.innerText = 'Enviar Minha Senha por E-mail';
+        }
+      } catch (err) {
+        errBox.textContent = 'Erro ao conectar ao servidor. Tente novamente.';
+        errBox.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerText = 'Enviar Minha Senha por E-mail';
+      }
     }
 
     function togglePasswordVisibility(inputId, iconId) {
@@ -629,8 +736,10 @@
         });
         const data = await res.json();
         if (data.success && data.user) {
+          const remember = document.getElementById('checkRememberMe') ? document.getElementById('checkRememberMe').checked : true;
           localStorage.setItem('organizeai_user', JSON.stringify(data.user));
           localStorage.setItem('organizeai_token', data.token);
+          localStorage.setItem('organizeai_remember', remember ? 'true' : 'false');
           window.location.href = '/app';
         } else {
           errBox.textContent = data.error || 'Erro na autenticação. Tente novamente.';
@@ -649,6 +758,35 @@
     // Close modal on click outside
     document.getElementById('authModal').addEventListener('click', (e) => {
       if (e.target.id === 'authModal') closeModal();
+    });
+
+    // Auto-detect saved session ("Lembrar de mim")
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const savedUserStr = localStorage.getItem('organizeai_user');
+        const remember = localStorage.getItem('organizeai_remember');
+        if (savedUserStr && remember !== 'false') {
+          const user = JSON.parse(savedUserStr);
+          const firstName = (user.name || 'Painel').split(' ')[0];
+          
+          // Update top login button
+          const navLoginBtn = document.querySelector('header button[onclick*="openModal"]');
+          if (navLoginBtn) {
+            navLoginBtn.innerHTML = `<span>Ir para o Painel (${firstName}) →</span>`;
+            navLoginBtn.onclick = () => { window.location.href = '/app'; };
+            navLoginBtn.className = "text-xs md:text-sm font-bold px-4 py-2 rounded-xl bg-ink text-white hover:bg-neutral-800 transition-colors shadow-xs";
+          }
+
+          // Update hero CTA button
+          const heroCtaBtn = document.querySelector('section button[onclick*="openModal"]');
+          if (heroCtaBtn) {
+            heroCtaBtn.innerHTML = `<span>Acessar Meu Painel (${firstName}) →</span>`;
+            heroCtaBtn.onclick = () => { window.location.href = '/app'; };
+          }
+        }
+      } catch (e) {
+        console.warn('Erro ao restaurar sessão salva:', e);
+      }
     });
   </script>
 

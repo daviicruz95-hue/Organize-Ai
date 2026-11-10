@@ -535,6 +535,34 @@
           "currentInstallment": 1,
           "installments": "À vista",
           "subItems": []
+        },
+        {
+          "id": "exp-1794263997037",
+          "person": "Nathalie",
+          "category": "Alimentação",
+          "description": "Almoço",
+          "amount": 78.0,
+          "dueDate": "09/11",
+          "status": "paid",
+          "type": "debit",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1794264044335",
+          "person": "Nathalie",
+          "category": "Variável",
+          "description": "Compra",
+          "amount": 8.0,
+          "dueDate": "09/11",
+          "status": "paid",
+          "type": "debit",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
         }
       ]
     }

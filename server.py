@@ -6,6 +6,9 @@ import os
 import re
 import random
 from datetime import datetime
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 PORT = int(os.environ.get("PORT", 5050))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -14,6 +17,106 @@ PUBLIC_DIR = os.path.join(BASE_DIR, "public")
 USERS_DIR = os.path.join(BASE_DIR, "users_data")
 USERS_FILE = os.path.join(BASE_DIR, "users.json")
 os.makedirs(USERS_DIR, exist_ok=True)
+
+# SMTP Config
+SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
+SMTP_PORT = int(os.environ.get("SMTP_PORT", 587))
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASS = os.environ.get("SMTP_PASS", "")
+SMTP_FROM = os.environ.get("SMTP_FROM", "Organize Aí <suporte@apporganizeai.com.br>")
+
+def send_system_email(to_email, subject, html_content):
+    print(f"📧 [Email Disparo] Destinatário: {to_email} | Assunto: {subject}")
+    if not SMTP_USER or not SMTP_PASS:
+        print(f"ℹ️ [Email Simulação] Enviando para {to_email} com sucesso (configure SMTP_USER e SMTP_PASS para envio real).")
+        return True
+    try:
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = subject
+        msg["From"] = SMTP_FROM
+        msg["To"] = to_email
+        msg.attach(MIMEText(html_content, "html", "utf-8"))
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10) as s:
+            s.starttls()
+            s.login(SMTP_USER, SMTP_PASS)
+            s.sendmail(SMTP_FROM, [to_email], msg.as_string())
+        print(f"✅ E-mail enviado com sucesso para {to_email}!")
+        return True
+    except Exception as e:
+        print(f"⚠️ Erro ao enviar e-mail via SMTP: {e}")
+        return False
+
+def send_welcome_email(email, name, password):
+    subject = "🎉 Bem-vindo ao Organize Aí! Seus dados de acesso"
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; padding: 24px; color: #1e293b;">
+      <div style="max-width: 540px; margin: 0 auto; background: #ffffff; border-radius: 20px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <div style="background: #18191D; padding: 24px; text-align: center; color: #ffffff;">
+          <h1 style="margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">Organize Aí</h1>
+          <p style="margin: 4px 0 0 0; font-size: 13px; color: #94a3b8;">Finanças Pessoais & Inteligência de Gastos</p>
+        </div>
+        <div style="padding: 28px;">
+          <h2 style="font-size: 18px; font-weight: 700; margin-top: 0; color: #0f172a;">Olá, {name}! 👋</h2>
+          <p style="font-size: 14px; line-height: 1.6; color: #475569;">
+            Sua conta no <strong>Organize Aí</strong> foi criada com sucesso! A partir de agora você tem o controle total das suas finanças, cartões e despesas diárias em um único lugar.
+          </p>
+          <div style="background: #f1f5f9; border-radius: 14px; padding: 18px; margin: 20px 0;">
+            <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748b;">Seus dados de acesso:</p>
+            <p style="margin: 4px 0; font-size: 14px;"><strong>E-mail:</strong> {email}</p>
+            <p style="margin: 4px 0; font-size: 14px;"><strong>Senha:</strong> {password}</p>
+          </div>
+          <div style="text-align: center; margin-top: 24px;">
+            <a href="https://apporganizeai.com.br" style="display: inline-block; background: #18191D; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: 12px;">Acessar Meu Painel</a>
+          </div>
+        </div>
+        <div style="background: #f8fafc; padding: 16px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #f1f5f9;">
+          © 2026 Organize Aí • apporganizeai.com.br
+        </div>
+      </div>
+    </body>
+    </html>
+    """
+    return send_system_email(email, subject, html)
+
+def send_password_recovery_email(email, name, password):
+    subject = "🔑 Recuperação de Senha - Organize Aí"
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; padding: 24px; color: #1e293b;">
+      <div style="max-width: 540px; margin: 0 auto; background: #ffffff; border-radius: 20px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <div style="background: #18191D; padding: 24px; text-align: center; color: #ffffff;">
+          <h1 style="margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">Organize Aí</h1>
+          <p style="margin: 4px 0 0 0; font-size: 13px; color: #94a3b8;">Recuperação de Acesso</p>
+        </div>
+        <div style="padding: 28px;">
+          <h2 style="font-size: 18px; font-weight: 700; margin-top: 0; color: #0f172a;">Olá, {name}!</h2>
+          <p style="font-size: 14px; line-height: 1.6; color: #475569;">
+            Recebemos uma solicitação de recuperação de senha para a sua conta no <strong>Organize Aí</strong>.
+          </p>
+          <div style="background: #f1f5f9; border-radius: 14px; padding: 18px; margin: 20px 0; border-left: 4px solid #10b981;">
+            <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748b;">Sua senha cadastrada é:</p>
+            <p style="margin: 4px 0; font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: 1px;">{password}</p>
+          </div>
+          <p style="font-size: 13px; color: #64748b; line-height: 1.5;">
+            Você já pode utilizar essa senha para entrar no seu painel.
+          </p>
+          <div style="text-align: center; margin-top: 24px;">
+            <a href="https://apporganizeai.com.br" style="display: inline-block; background: #18191D; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: 12px;">Entrar no Organize Aí</a>
+          </div>
+        </div>
+        <div style="background: #f8fafc; padding: 16px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #f1f5f9;">
+          Se você não solicitou este e-mail, pode desconsiderá-lo tranquilamente.
+        </div>
+      </div>
+    </body>
+    </html>
+    """
+    return send_system_email(email, subject, html)
 
 MASTER_USER_ID = "user-davi"
 
@@ -391,7 +494,27 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             blank_data = create_blank_user_data(name)
             save_data(blank_data, new_user_id)
 
+            # Send welcome & confirmation email
+            send_welcome_email(email, name, password)
+
             return self.send_json_response({"success": True, "user": new_user, "token": new_user_id})
+
+        elif self.path == "/api/auth/forgot-password":
+            email = req.get("email", "").strip().lower()
+            if not email:
+                return self.send_json_response({"error": "Informe o seu e-mail cadastrado."}, 400)
+
+            users = get_users()
+            user = next((u for u in users if u.get("email", "").lower() == email), None)
+            if not user:
+                return self.send_json_response({"error": "Nenhuma conta cadastrada com este e-mail."}, 404)
+
+            # Send email with current password
+            send_password_recovery_email(user["email"], user.get("name", "Usuário"), user.get("password", ""))
+            return self.send_json_response({
+                "success": True,
+                "message": f"Sua senha foi enviada com sucesso para o e-mail {user['email']}!"
+            })
 
         elif self.path == "/api/auth/login":
             email = req.get("email", "").strip().lower()
