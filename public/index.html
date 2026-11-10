@@ -582,13 +582,17 @@
 
       <div class="space-y-3.5 text-xs">
         <div id="personSelectorWrapper">
-          <label class="font-bold text-slate-700 block mb-1">De quem é a conta?</label>
-          <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="selectExpensePerson('Nathalie')" id="btnPersonNathalie" class="py-2 rounded-xl font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition cursor-pointer">Nathalie</button>
-            <button type="button" onclick="selectExpensePerson('Davi')" id="btnPersonDavi" class="py-2 rounded-xl font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition cursor-pointer">Davi</button>
-            <button type="button" onclick="selectExpensePerson('Casa')" id="btnPersonCasa" class="py-2 rounded-xl font-bold border border-slate-200 bg-[#18191D] text-white transition cursor-pointer">Casa (Ambos)</button>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="font-bold text-slate-700">Caderno de Destino</label>
+            <button type="button" onclick="openAddCadernoModal()" class="text-[11px] font-bold text-purple-700 hover:text-purple-900 flex items-center gap-1 cursor-pointer">
+              <i data-lucide="plus" class="w-3 h-3"></i><span>Criar Outro Caderno</span>
+            </button>
+          </div>
+          <div id="cadernosSelectorBtns" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <!-- Dynamically populated with active cadernos -->
           </div>
           <input type="hidden" id="formExpensePerson" value="Casa">
+          <input type="hidden" id="formExpenseCadernoId" value="">
         </div>
 
         <!-- 5 EXPLICIT ACCOUNT CLASSIFICATIONS -->
@@ -1913,154 +1917,346 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       document.getElementById('formExpenseDueDate').value = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
     }
 
-    // RENDER CADERNO COLUMNS (DYNAMIC SINGLE USER OR COUPLE)
+    // CADERNOS MANAGEMENT (CREATE, RENAME, EDIT, DELETE & MULTI-VIEW)
+    function getDefaultCadernos() {
+      if (isCoupleAccount()) {
+        return [
+          { id: "cad-nathalie", name: "Caderno Nathalie", description: "Contas fixas, recorrentes e faturas", color: "#7C3AED", bg: "#F0EDFF", icon: "N" },
+          { id: "cad-davi", name: "Caderno Davi", description: "Contas fixas, moto e parcelas", color: "#0284C7", bg: "#EDF5FF", icon: "D" }
+        ];
+      }
+      const myName = (currentUser && currentUser.name) ? currentUser.name : 'Meu Caderno';
+      return [
+        { id: "cad-1", name: `Caderno de ${myName}`, description: "Contas fixas, faturas e parcelas", color: "#18191D", bg: "#F1F5F9", icon: myName[0].toUpperCase() }
+      ];
+    }
+
+    function getActiveCadernos() {
+      if (appData && appData.cadernos && appData.cadernos.length > 0) {
+        return appData.cadernos;
+      }
+      return getDefaultCadernos();
+    }
+
+    function selectCadernoColor(color, bg) {
+      document.getElementById('formCadernoColor').value = color;
+      document.getElementById('formCadernoBg').value = bg;
+      document.querySelectorAll('.caderno-color-btn').forEach(btn => {
+        if (btn.dataset.color === color) {
+          btn.style.borderWidth = '2px';
+          btn.style.borderColor = color;
+        } else {
+          btn.style.borderWidth = '1px';
+          btn.style.borderColor = '#E2E8F0';
+        }
+      });
+    }
+
+    function openAddCadernoModal() {
+      document.getElementById('cadernoModalTitle').textContent = "Criar Novo Caderno de Contas";
+      document.getElementById('formCadernoId').value = "";
+      document.getElementById('formCadernoName').value = "";
+      document.getElementById('formCadernoDesc').value = "";
+      selectCadernoColor('#7C3AED', '#F0EDFF');
+      document.getElementById('btnDeleteCaderno').classList.add('hidden');
+      document.getElementById('btnSaveCaderno').innerText = "Criar Caderno";
+      document.getElementById('cadernoModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function openEditCadernoModal(cadId) {
+      const cadernos = getActiveCadernos();
+      const cad = cadernos.find(c => c.id === cadId);
+      if (!cad) return;
+
+      document.getElementById('cadernoModalTitle').textContent = "Editar / Renomear Caderno";
+      document.getElementById('formCadernoId').value = cad.id;
+      document.getElementById('formCadernoName').value = cad.name;
+      document.getElementById('formCadernoDesc').value = cad.description || "";
+      selectCadernoColor(cad.color || '#7C3AED', cad.bg || '#F0EDFF');
+
+      // Only allow delete if more than 1 caderno exists
+      if (cadernos.length > 1) {
+        document.getElementById('btnDeleteCaderno').classList.remove('hidden');
+      } else {
+        document.getElementById('btnDeleteCaderno').classList.add('hidden');
+      }
+
+      document.getElementById('btnSaveCaderno').innerText = "Salvar Alterações";
+      document.getElementById('cadernoModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeCadernoModal() {
+      document.getElementById('cadernoModal').classList.add('hidden');
+    }
+
+    async function submitCadernoForm() {
+      const id = document.getElementById('formCadernoId').value;
+      const name = document.getElementById('formCadernoName').value.trim();
+      const description = document.getElementById('formCadernoDesc').value.trim();
+      const color = document.getElementById('formCadernoColor').value;
+      const bg = document.getElementById('formCadernoBg').value;
+      const btn = document.getElementById('btnSaveCaderno');
+
+      if (!name) {
+        alert("Por favor, digite o nome do caderno.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = "Salvando...";
+
+      const endpoint = id ? '/api/cadernos/update' : '/api/cadernos/add';
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, name, description, color, bg })
+        });
+        const result = await res.json();
+        if (result.success) {
+          appData = result.data;
+          closeCadernoModal();
+          renderCadernoColumns(getActiveMonthData());
+          updatePersonSelectorUI();
+        } else {
+          alert(result.error || "Erro ao salvar caderno.");
+        }
+      } catch (err) {
+        alert("Erro ao conectar ao servidor.");
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Salvar Caderno";
+      }
+    }
+
+    async function confirmDeleteCaderno() {
+      const id = document.getElementById('formCadernoId').value;
+      if (!id) return;
+      if (!confirm("Tem certeza que deseja excluir este caderno? As contas serão desvinculadas.")) {
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/cadernos/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        const result = await res.json();
+        if (result.success) {
+          appData = result.data;
+          closeCadernoModal();
+          renderCadernoColumns(getActiveMonthData());
+          updatePersonSelectorUI();
+        } else {
+          alert(result.error || "Erro ao excluir caderno.");
+        }
+      } catch (err) {
+        alert("Erro ao conectar ao servidor.");
+      }
+    }
+
+    function selectExpenseCaderno(cadId, personName) {
+      document.getElementById('formExpenseCadernoId').value = cadId || '';
+      document.getElementById('formExpensePerson').value = personName;
+      updatePersonSelectorUI(cadId, personName);
+    }
+
+    function updatePersonSelectorUI(preSelectedCadernoId, preSelectedPerson) {
+      const container = document.getElementById('cadernosSelectorBtns');
+      if (!container) return;
+      const cadernos = getActiveCadernos();
+      
+      let selectedId = preSelectedCadernoId;
+      if (!selectedId && preSelectedPerson) {
+        const match = cadernos.find(c => c.name.toLowerCase().includes(preSelectedPerson.toLowerCase()) || preSelectedPerson.toLowerCase().includes(c.name.replace('Caderno', '').trim().toLowerCase()));
+        if (match) selectedId = match.id;
+      }
+      if (!selectedId && cadernos.length > 0) {
+        selectedId = cadernos[0].id;
+      }
+
+      let html = '';
+      cadernos.forEach(c => {
+        const isSel = c.id === selectedId && preSelectedPerson !== 'Casa';
+        html += `
+          <button type="button" onclick="selectExpenseCaderno('${c.id}', '${c.name.replace(/'/g, "\'")}')" class="py-2.5 px-3 rounded-xl text-xs font-bold border transition truncate cursor-pointer flex items-center justify-center gap-1.5 ${isSel ? 'bg-[#18191D] text-white border-[#18191D] shadow-xs' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'}">
+            <span class="w-2 h-2 rounded-full" style="background-color: ${c.color || '#7C3AED'};"></span>
+            <span class="truncate">${c.name}</span>
+          </button>
+        `;
+      });
+
+      if (isCoupleAccount()) {
+        const isCasa = preSelectedPerson === 'Casa';
+        html += `
+          <button type="button" onclick="selectExpenseCaderno('', 'Casa')" class="py-2.5 px-3 rounded-xl text-xs font-bold border transition truncate cursor-pointer flex items-center justify-center gap-1.5 ${isCasa ? 'bg-[#18191D] text-white border-[#18191D] shadow-xs' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'}">
+            <span>🏠 Casa (Ambos)</span>
+          </button>
+        `;
+      }
+
+      container.innerHTML = html;
+
+      const chosen = cadernos.find(c => c.id === selectedId);
+      if (preSelectedPerson === 'Casa') {
+        document.getElementById('formExpensePerson').value = 'Casa';
+        document.getElementById('formExpenseCadernoId').value = '';
+      } else if (chosen) {
+        document.getElementById('formExpensePerson').value = chosen.name.replace('Caderno ', '').trim();
+        document.getElementById('formExpenseCadernoId').value = chosen.id;
+      }
+    }
+
+    function openAddCardModal(targetCadernoName, targetCadernoId) {
+      updatePersonSelectorUI(targetCadernoId, targetCadernoName);
+      const titleName = targetCadernoName ? ` (${targetCadernoName})` : '';
+      document.getElementById('expenseModalTitle').textContent = `Novo Cartão de Crédito${titleName}`;
+      document.getElementById('formExpenseId').value = "";
+      document.getElementById('formExpenseDesc').value = targetCadernoName ? `Cartão ${targetCadernoName}` : "Cartão de Crédito";
+      document.getElementById('formExpenseAmount').value = "0";
+      document.getElementById('formExpenseDueDate').value = "10";
+      onExpenseTypeChange('card');
+      document.getElementById('expenseModal').classList.remove('hidden');
+    }
+
+    function openAddExpenseModal(targetCadernoName, targetCadernoId) {
+      updatePersonSelectorUI(targetCadernoId, targetCadernoName);
+      const titleName = targetCadernoName ? ` (${targetCadernoName})` : '';
+      document.getElementById('expenseModalTitle').textContent = `Nova Conta no Caderno${titleName}`;
+      document.getElementById('formExpenseId').value = "";
+      document.getElementById('formExpenseDesc').value = "";
+      document.getElementById('formExpenseAmount').value = "";
+      document.getElementById('formExpenseDueDate').value = "10";
+      onExpenseTypeChange('fixed');
+      document.getElementById('expenseModal').classList.remove('hidden');
+    }
+
+    // RENDER CADERNO COLUMNS (DYNAMIC MULTI-CADERNOS GRID)
     function renderCadernoColumns(monthData) {
       const container = document.getElementById('cadernoContainer');
       if (!container) return;
 
-      const couple = isCoupleAccount();
-      const myName = (currentUser && currentUser.name) ? currentUser.name : 'Meu Caderno';
-      const myInitial = myName.charAt(0).toUpperCase();
+      const cadernos = getActiveCadernos();
 
-      if (!couple) {
-        let total = 0;
+      // Top control bar
+      let topBarHtml = `
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100">
+          <div>
+            <h3 class="text-base md:text-lg font-extrabold text-slate-900 flex items-center gap-2">
+              <span>📚 Meus Cadernos de Contas</span>
+              <span class="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">${cadernos.length} ativo${cadernos.length > 1 ? 's' : ''}</span>
+            </h3>
+            <p class="text-xs text-slate-500 font-medium">Crie cadernos para esposa, cartões, despesas pessoais ou profissionais e renomeie quando quiser</p>
+          </div>
+          <button onclick="openAddCadernoModal()" class="self-start sm:self-auto px-4 py-2.5 rounded-2xl bg-[#18191D] hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition flex items-center gap-2 cursor-pointer active:scale-95">
+            <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-400"></i>
+            <span>+ Novo Caderno</span>
+          </button>
+        </div>
+      `;
+
+      let gridClass = "grid grid-cols-1 lg:grid-cols-2 gap-6";
+      if (cadernos.length === 1) {
+        gridClass = "max-w-4xl mx-auto space-y-6";
+      } else if (cadernos.length >= 3) {
+        gridClass = "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6";
+      }
+
+      let cardsHtml = '';
+
+      cadernos.forEach(cad => {
+        let totalCad = 0;
         let itemsHtml = '';
 
         (monthData.expenses || []).forEach(exp => {
-          total += (exp.amount || 0);
-          itemsHtml += buildExpenseCardHtml(exp);
+          let matches = false;
+          if (exp.cadernoId && exp.cadernoId === cad.id) {
+            matches = true;
+          } else if (exp.person) {
+            const expPerson = (exp.person || '').trim().toLowerCase();
+            const cadName = (cad.name || '').trim().toLowerCase();
+            const cadShort = cadName.replace('caderno', '').replace('de', '').trim();
+            if (expPerson === cadName || expPerson === cadShort || (cadShort && expPerson.includes(cadShort)) || (expPerson && cadName.includes(expPerson))) {
+              matches = true;
+            } else if (isCoupleAccount() && exp.person === 'Casa' && (cad.id === 'cad-nathalie' || cad.id === 'cad-davi')) {
+              // Split Casa expenses between first two couple notebooks
+              matches = true;
+            }
+          }
+
+          if (matches) {
+            const shareAmount = (isCoupleAccount() && exp.person === 'Casa') ? (exp.amount / 2) : exp.amount;
+            totalCad += shareAmount;
+            itemsHtml += buildExpenseCardHtml(exp);
+          }
         });
 
         if (!itemsHtml) {
           itemsHtml = `
-            <div class="py-12 px-4 text-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50">
-              <div class="w-10 h-10 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center mx-auto mb-2 text-lg">✨</div>
-              <p class="text-sm font-bold text-slate-800">Seu caderno está zerado e pronto para começar!</p>
-              <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Adicione suas primeiras contas fixas, faturas de cartão ou parcelas clicando nos botões acima.</p>
+            <div class="py-10 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
+              <div class="w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto mb-2 text-sm font-bold">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+              </div>
+              <p class="text-xs font-bold text-slate-700">Nenhuma conta em ${cad.name} ainda.</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Clique em "+ Nova Conta" ou "+ Cartão" acima para adicionar.</p>
             </div>
           `;
         }
 
-        container.innerHTML = `
-          <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4 max-w-4xl mx-auto">
-            <div class="pb-3 border-b border-slate-100 space-y-2.5">
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <div class="w-10 h-10 rounded-2xl bg-[#18191D] text-white flex items-center justify-center font-black text-sm shrink-0">
-                    ${myInitial}
-                  </div>
-                  <div class="min-w-0">
-                    <h2 class="text-base md:text-lg font-bold text-slate-900 truncate">Caderno de ${myName}</h2>
-                    <p class="text-xs text-slate-500 font-medium truncate">Contas fixas, faturas de cartão e parcelas</p>
-                  </div>
-                </div>
-                <div class="text-right shrink-0">
-                  <span class="text-xs md:text-sm font-black bg-[#18191D] text-white px-3.5 py-1.5 rounded-xl shadow-xs inline-block">
-                    ${formatBRL(total)}
-                  </span>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-2 gap-2 w-full">
-                <button onclick="openAddCardModal('${myName}')" title="Criar Cartão / Fatura" class="text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
-                  <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
-                  <span>+ Cartão</span>
-                </button>
-                <button onclick="openAddExpenseModal('${myName}')" title="Adicionar conta ao caderno" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
-                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                  <span>+ Nova Conta</span>
-                </button>
-              </div>
-            </div>
-
+        cardsHtml += `
+          <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4 flex flex-col justify-between">
             <div class="space-y-3">
-              ${itemsHtml}
+              <div class="pb-3 border-b border-slate-100 space-y-2.5">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center font-black text-sm shrink-0 border shadow-xs" style="background-color: ${cad.bg || '#F0EDFF'}; color: ${cad.color || '#7C3AED'}; border-color: ${cad.color || '#DDD5FE'}33;">
+                      ${cad.icon || cad.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="min-w-0">
+                      <div class="flex items-center gap-1.5">
+                        <h2 class="text-sm md:text-base font-bold text-slate-900 truncate">${cad.name}</h2>
+                        <button onclick="openEditCadernoModal('${cad.id}')" title="Renomear ou editar este caderno" class="p-1 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer">
+                          <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                        </button>
+                      </div>
+                      <p class="text-[11px] text-slate-500 font-medium truncate">${cad.description || 'Contas fixas, faturas e parcelas'}</p>
+                    </div>
+                  </div>
+                  <div class="text-right shrink-0">
+                    <span class="text-xs md:text-sm font-black bg-[#18191D] text-white px-3 py-1.5 rounded-xl shadow-xs inline-block">
+                      ${formatBRL(totalCad)}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 w-full">
+                  <button onclick="openAddCardModal('${cad.name.replace(/'/g, "\'")}', '${cad.id}')" title="Criar Cartão / Fatura neste caderno" class="text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
+                    <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+                    <span>+ Cartão</span>
+                  </button>
+                  <button onclick="openAddExpenseModal('${cad.name.replace(/'/g, "\'")}', '${cad.id}')" title="Adicionar conta neste caderno" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                    <span>+ Nova Conta</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- ITEMS LIST -->
+              <div class="space-y-3">
+                ${itemsHtml}
+              </div>
             </div>
           </div>
         `;
-        lucide.createIcons();
-        return;
-      }
-
-      // COUPLE ACCOUNT
-      const p1Name = (currentUser.id === 'user-davi' || currentUser.email === 'davi@organizeai.com') ? 'Nathalie' : (currentUser.name || 'Você');
-      const p2Name = (currentUser.id === 'user-davi' || currentUser.email === 'davi@organizeai.com') ? 'Davi' : (currentUser.partner ? currentUser.partner.name : 'Parceiro(a)');
-
-      let totalP1 = 0;
-      let totalP2 = 0;
-      let listP1Html = '';
-      let listP2Html = '';
-
-      (monthData.expenses || []).forEach(exp => {
-        const itemHtml = buildExpenseCardHtml(exp);
-        const personLower = (exp.person || '').toLowerCase();
-        if (personLower.includes('nat') || personLower === p1Name.toLowerCase()) {
-          totalP1 += exp.amount;
-          listP1Html += itemHtml;
-        } else if (personLower.includes('davi') || personLower === p2Name.toLowerCase()) {
-          totalP2 += exp.amount;
-          listP2Html += itemHtml;
-        } else {
-          totalP1 += exp.amount / 2;
-          totalP2 += exp.amount / 2;
-          listP1Html += itemHtml;
-        }
       });
 
-      if (!listP1Html) {
-        listP1Html = `
-          <div class="py-8 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
-            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mx-auto mb-2"><i data-lucide="plus" class="w-4 h-4"></i></div>
-            <p class="text-xs font-bold text-slate-700">Nenhuma conta para ${p1Name}.</p>
-            <p class="text-[11px] text-slate-500 mt-0.5">Clique no botão "+" acima para adicionar.</p>
-          </div>
-        `;
-      }
-      if (!listP2Html) {
-        listP2Html = `
-          <div class="py-8 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
-            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mx-auto mb-2"><i data-lucide="plus" class="w-4 h-4"></i></div>
-            <p class="text-xs font-bold text-slate-700">Nenhuma conta para ${p2Name}.</p>
-            <p class="text-[11px] text-slate-500 mt-0.5">Clique no botão "+" acima para adicionar.</p>
-          </div>
-        `;
-      }
-
       container.innerHTML = `
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
-            <div class="pb-3 border-b border-slate-100 space-y-2.5">
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <div class="w-9 h-9 rounded-2xl bg-[#F0EDFF] text-[#5B21B6] border border-[#DDD5FE] flex items-center justify-center font-black text-sm shrink-0">${p1Name.charAt(0).toUpperCase()}</div>
-                  <div class="min-w-0"><h2 class="text-sm md:text-base font-bold text-slate-900 truncate">Caderno ${p1Name}</h2><p class="text-[11px] text-slate-500 font-medium truncate">Contas fixas, recorrentes e faturas</p></div>
-                </div>
-                <div class="text-right shrink-0"><span class="text-xs md:text-sm font-black bg-[#18191D] text-white px-3 py-1.5 rounded-xl shadow-xs inline-block">${formatBRL(totalP1)}</span></div>
-              </div>
-              <div class="grid grid-cols-2 gap-2 w-full">
-                <button onclick="openAddCardModal('${p1Name}')" class="text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="credit-card" class="w-3.5 h-3.5"></i> <span>+ Cartão</span></button>
-                <button onclick="openAddExpenseModal('${p1Name}')" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="plus" class="w-3.5 h-3.5"></i> <span>+ Nova Conta</span></button>
-              </div>
-            </div>
-            <div class="space-y-3">${listP1Html}</div>
-          </div>
-
-          <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
-            <div class="pb-3 border-b border-slate-100 space-y-2.5">
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <div class="w-9 h-9 rounded-2xl bg-[#EDF5FF] text-[#0369A1] border border-[#BAE6FD] flex items-center justify-center font-black text-sm shrink-0">${p2Name.charAt(0).toUpperCase()}</div>
-                  <div class="min-w-0"><h2 class="text-sm md:text-base font-bold text-slate-900 truncate">Caderno ${p2Name}</h2><p class="text-[11px] text-slate-500 font-medium truncate">Contas fixas, moto e parcelas</p></div>
-                </div>
-                <div class="text-right shrink-0"><span class="text-xs md:text-sm font-black bg-[#18191D] text-white px-3 py-1.5 rounded-xl shadow-xs inline-block">${formatBRL(totalP2)}</span></div>
-              </div>
-              <div class="grid grid-cols-2 gap-2 w-full">
-                <button onclick="openAddCardModal('${p2Name}')" class="text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="credit-card" class="w-3.5 h-3.5"></i> <span>+ Cartão</span></button>
-                <button onclick="openAddExpenseModal('${p2Name}')" class="text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200 py-2 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"><i data-lucide="plus" class="w-3.5 h-3.5"></i> <span>+ Nova Conta</span></button>
-              </div>
-            </div>
-            <div class="space-y-3">${listP2Html}</div>
-          </div>
+        ${topBarHtml}
+        <div class="${gridClass}">
+          ${cardsHtml}
         </div>
       `;
       lucide.createIcons();
@@ -3010,7 +3206,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       document.getElementById('formExpenseDesc').value = exp.description;
       document.getElementById('formExpenseAmount').value = exp.amount;
       document.getElementById('formExpenseDueDate').value = exp.dueDate || "10";
-      selectExpensePerson((exp.person === 'Nat' || exp.person === 'Nathalie') ? 'Nathalie' : (exp.person || 'Casa'));
+      updatePersonSelectorUI(exp.cadernoId, exp.person);
       onExpenseTypeChange(exp.type || "fixed");
 
       if (exp.type === 'installment') {
@@ -3129,6 +3325,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       const currInst = parseInt(document.getElementById('formExpenseCurrInst').value) || 1;
 
       const endpoint = id ? '/api/expenses/update' : '/api/expenses/add';
+      const cadernoId = document.getElementById('formExpenseCadernoId') ? document.getElementById('formExpenseCadernoId').value : '';
       try {
         const res = await fetch(endpoint, {
           method: 'POST',
@@ -3137,6 +3334,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
             id,
             monthId: activeMonthId,
             person,
+            cadernoId,
             description: desc,
             amount,
             dueDate,
@@ -3572,5 +3770,57 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       }
     }
   </script>
+  <!-- 6. CADERNO MODAL (CREATE / EDIT CADERNO) -->
+  <div id="cadernoModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 max-w-md w-full space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-sm">
+            <i data-lucide="book-marked" class="w-4 h-4"></i>
+          </div>
+          <h3 id="cadernoModalTitle" class="text-base font-bold text-slate-900">Novo Caderno de Contas</h3>
+        </div>
+        <button onclick="closeCadernoModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="formCadernoId">
+      <div class="space-y-3.5 text-xs">
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Nome do Caderno *</label>
+          <input type="text" id="formCadernoName" placeholder="Ex: Caderno Esposa, Cartão Black, Empresa..." class="w-full bg-slate-50 border border-slate-200 focus:bg-white rounded-xl px-3.5 py-2.5 text-slate-800 text-xs font-semibold focus:outline-none">
+        </div>
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Subtítulo / Descrição</label>
+          <input type="text" id="formCadernoDesc" placeholder="Ex: Contas fixas, compras e faturas pessoais" class="w-full bg-slate-50 border border-slate-200 focus:bg-white rounded-xl px-3.5 py-2.5 text-slate-800 text-xs focus:outline-none">
+        </div>
+        <div>
+          <label class="font-bold text-slate-700 block mb-1.5">Cor de Destaque</label>
+          <div id="cadernoColorPalette" class="grid grid-cols-6 gap-2">
+            <button type="button" onclick="selectCadernoColor('#7C3AED', '#F0EDFF')" data-color="#7C3AED" class="caderno-color-btn h-9 rounded-xl bg-[#F0EDFF] border-2 border-[#7C3AED] flex items-center justify-center font-black text-[#7C3AED] text-xs cursor-pointer shadow-xs">Roxo</button>
+            <button type="button" onclick="selectCadernoColor('#0284C7', '#EDF5FF')" data-color="#0284C7" class="caderno-color-btn h-9 rounded-xl bg-[#EDF5FF] border border-slate-200 flex items-center justify-center font-black text-[#0284C7] text-xs cursor-pointer shadow-xs">Azul</button>
+            <button type="button" onclick="selectCadernoColor('#0D683E', '#E8F8F0')" data-color="#0D683E" class="caderno-color-btn h-9 rounded-xl bg-[#E8F8F0] border border-slate-200 flex items-center justify-center font-black text-[#0D683E] text-xs cursor-pointer shadow-xs">Verde</button>
+            <button type="button" onclick="selectCadernoColor('#D97706', '#FEF3C7')" data-color="#D97706" class="caderno-color-btn h-9 rounded-xl bg-[#FEF3C7] border border-slate-200 flex items-center justify-center font-black text-[#D97706] text-xs cursor-pointer shadow-xs">Âmbar</button>
+            <button type="button" onclick="selectCadernoColor('#BE123C', '#FFF1F2')" data-color="#BE123C" class="caderno-color-btn h-9 rounded-xl bg-[#FFF1F2] border border-slate-200 flex items-center justify-center font-black text-[#BE123C] text-xs cursor-pointer shadow-xs">Rosa</button>
+            <button type="button" onclick="selectCadernoColor('#18191D', '#F1F5F9')" data-color="#18191D" class="caderno-color-btn h-9 rounded-xl bg-[#F1F5F9] border border-slate-200 flex items-center justify-center font-black text-[#18191D] text-xs cursor-pointer shadow-xs">Grafite</button>
+          </div>
+          <input type="hidden" id="formCadernoColor" value="#7C3AED">
+          <input type="hidden" id="formCadernoBg" value="#F0EDFF">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-2 pt-3 border-t border-slate-100">
+        <button type="button" id="btnDeleteCaderno" onclick="confirmDeleteCaderno()" class="hidden px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 border border-rose-200 transition cursor-pointer flex items-center gap-1">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <span>Excluir</span>
+        </button>
+        <div class="flex items-center gap-2 ml-auto">
+          <button type="button" onclick="closeCadernoModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer">Cancelar</button>
+          <button type="button" id="btnSaveCaderno" onclick="submitCadernoForm()" class="px-5 py-2 rounded-xl text-xs font-bold bg-[#18191D] hover:bg-slate-800 text-white shadow-xs transition cursor-pointer">Salvar Caderno</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

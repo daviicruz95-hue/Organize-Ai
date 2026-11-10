@@ -375,17 +375,70 @@ def rollover_month(data, from_month_id):
     save_data(data, user_id)
     return new_month
 
+def ensure_cadernos(data, user_name="Usuário"):
+    if not isinstance(data, dict):
+        return []
+    if "cadernos" not in data or not data["cadernos"]:
+        persons = set()
+        for m in data.get("months", []):
+            for e in m.get("expenses", []):
+                p = e.get("person")
+                if p and p not in ["Casa", "casa"]:
+                    persons.add(p)
+
+        cadernos = []
+        if "Nathalie" in persons or "Davi" in persons:
+            cadernos = [
+                {"id": "cad-nathalie", "name": "Caderno Nathalie", "description": "Contas fixas, recorrentes e faturas", "color": "#7C3AED", "bg": "#F0EDFF", "icon": "N"},
+                {"id": "cad-davi", "name": "Caderno Davi", "description": "Contas fixas, moto e parcelas", "color": "#0284C7", "bg": "#EDF5FF", "icon": "D"}
+            ]
+        elif persons:
+            palette = [
+                ("#7C3AED", "#F0EDFF"),
+                ("#0284C7", "#EDF5FF"),
+                ("#0D683E", "#E8F8F0"),
+                ("#D97706", "#FEF3C7"),
+                ("#BE123C", "#FFF1F2")
+            ]
+            for i, p in enumerate(sorted(persons)):
+                color, bg = palette[i % len(palette)]
+                c_name = p if p.lower().startswith("caderno") else f"Caderno {p}"
+                cadernos.append({
+                    "id": f"cad-{i+1}",
+                    "name": c_name,
+                    "description": "Contas fixas, faturas e parcelas",
+                    "color": color,
+                    "bg": bg,
+                    "icon": p[0].upper()
+                })
+        else:
+            c_name = f"Caderno de {user_name}" if user_name != "Usuário" else "Meu Caderno"
+            cadernos = [
+                {"id": "cad-1", "name": c_name, "description": "Contas fixas, faturas e parcelas", "color": "#18191D", "bg": "#F1F5F9", "icon": user_name[0].upper() if user_name else "📑"}
+            ]
+        data["cadernos"] = cadernos
+    return data["cadernos"]
+
 def load_data(user_id=MASTER_USER_ID):
     file_path = get_user_file_path(user_id)
+    users = get_users()
+    u = next((x for x in users if x.get("id") == user_id), None)
+    u_name = u.get("name", "Usuário") if u else "Usuário"
+
     if not os.path.exists(file_path):
-        blank = create_blank_user_data("Usuário")
+        blank = create_blank_user_data(u_name)
+        ensure_cadernos(blank, u_name)
         save_data(blank, user_id)
         return blank
     try:
         with open(file_path, "r", encoding="utf-8") as f:
-            return json.load(f)
+            d = json.load(f)
+            ensure_cadernos(d, u_name)
+            return d
     except Exception:
-        return {"activeMonth": "2026-11", "months": [], "futureInstallments": [], "savingsGoal": {}}
+        d = {"activeMonth": "2026-11", "months": [], "futureInstallments": [], "savingsGoal": {}}
+        ensure_cadernos(d, u_name)
+        return d
 
 def save_data(data, user_id=MASTER_USER_ID):
     file_path = get_user_file_path(user_id)
@@ -762,6 +815,71 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             except Exception as e:
                 return self.send_json_response({"error": str(e)}, 500)
 
+                # CADERNOS MANAGEMENT (CREATE, RENAME, UPDATE, DELETE)
+        if self.path == "/api/cadernos/add":
+            name = req.get("name", "").strip() or "Novo Caderno"
+            desc = req.get("description", "Contas fixas, faturas e parcelas").strip()
+            color = req.get("color", "#7C3AED")
+            bg = req.get("bg", "#F0EDFF")
+            icon = req.get("icon", name[0].upper() if name else "📑")
+            new_cad = {
+                "id": f"cad-{int(datetime.now().timestamp()*1000)}",
+                "name": name,
+                "description": desc,
+                "color": color,
+                "bg": bg,
+                "icon": icon
+            }
+            ensure_cadernos(data)
+            data.setdefault("cadernos", []).append(new_cad)
+            save_data(data, user_id)
+            return self.send_json_response({"success": True, "caderno": new_cad, "cadernos": data["cadernos"], "data": data})
+
+        elif self.path == "/api/cadernos/update":
+            cad_id = req.get("id")
+            new_name = req.get("name", "").strip()
+            ensure_cadernos(data)
+            target = next((c for c in data.get("cadernos", []) if c.get("id") == cad_id), None)
+            if not target:
+                return self.send_json_response({"error": "Caderno não encontrado"}, 404)
+
+            old_name = target.get("name")
+            if new_name:
+                target["name"] = new_name
+            if "description" in req:
+                target["description"] = req["description"].strip()
+            if "color" in req:
+                target["color"] = req["color"]
+            if "bg" in req:
+                target["bg"] = req["bg"]
+            if "icon" in req and req["icon"]:
+                target["icon"] = req["icon"]
+            elif new_name:
+                target["icon"] = new_name[0].upper()
+
+            # Synchronize matching expenses across months if name changed
+            if old_name and new_name and old_name != new_name:
+                short_old = old_name.replace("Caderno ", "").strip().lower()
+                short_new = new_name.replace("Caderno ", "").strip()
+                for m in data.get("months", []):
+                    for e in m.get("expenses", []):
+                        p = (e.get("person") or "").strip().lower()
+                        if p == short_old or p == old_name.lower() or e.get("cadernoId") == cad_id:
+                            e["person"] = short_new
+                            e["cadernoId"] = cad_id
+
+            save_data(data, user_id)
+            return self.send_json_response({"success": True, "caderno": target, "cadernos": data["cadernos"], "data": data})
+
+        elif self.path == "/api/cadernos/delete":
+            cad_id = req.get("id")
+            ensure_cadernos(data)
+            if len(data.get("cadernos", [])) <= 1:
+                return self.send_json_response({"error": "Você precisa manter pelo menos um caderno ativo."}, 400)
+            data["cadernos"] = [c for c in data["cadernos"] if c.get("id") != cad_id]
+            save_data(data, user_id)
+            return self.send_json_response({"success": True, "cadernos": data["cadernos"], "data": data})
+
         # 1. EXPENSES: TOGGLE
         if self.path == "/api/expenses/toggle":
             exp_id = req.get("id")
@@ -788,6 +906,7 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             new_exp = {
                 "id": f"exp-{int(datetime.now().timestamp()*1000)}",
                 "person": req.get("person", "Casa"),
+                "cadernoId": req.get("cadernoId", ""),
                 "category": req.get("category", "Geral"),
                 "description": req.get("description", "Sem descrição"),
                 "amount": float(req.get("amount", 0.0)),
