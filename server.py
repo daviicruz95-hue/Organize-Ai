@@ -278,7 +278,7 @@ def get_next_month_info(curr_id):
     next_name = MONTH_NAMES[next_month - 1]
     return next_id, next_name, next_year
 
-def rollover_month(data, from_month_id):
+def rollover_month(data, from_month_id, user_id=None, set_active=True):
     from_m = next((m for m in data.get("months", []) if m["id"] == from_month_id), None)
     if not from_m:
         if data.get("months"):
@@ -289,11 +289,12 @@ def rollover_month(data, from_month_id):
 
     next_id, next_name, next_year = get_next_month_info(from_month_id)
 
-    # If already exists, just switch to it
+    # If already exists, return it
     existing = next((m for m in data.get("months", []) if m["id"] == next_id), None)
     if existing:
-        data["activeMonth"] = next_id
-        save_data(data, user_id)
+        if set_active:
+            data["activeMonth"] = next_id
+            save_data(data, user_id or MASTER_USER_ID)
         return existing
 
     new_expenses = []
@@ -349,7 +350,7 @@ def rollover_month(data, from_month_id):
             new_card["amount"] = round(sum(s.get("amount", 0.0) for s in new_subitems), 2)
             new_expenses.append(new_card)
 
-        # 4. VARIABLE / AVULSA: Not replicated!
+        # 4. VARIABLE / DEBIT / PIX: Not replicated to next month (starts fresh)
 
     # INCOMES: Replicate fixed/recurrent incomes, reset status to pending
     new_incomes = []
@@ -371,9 +372,22 @@ def rollover_month(data, from_month_id):
 
     # Insert at beginning so newest month is first
     data.setdefault("months", []).insert(0, new_month)
-    data["activeMonth"] = next_id
-    save_data(data, user_id)
+    if set_active:
+        data["activeMonth"] = next_id
+    save_data(data, user_id or MASTER_USER_ID)
     return new_month
+
+def ensure_future_months(data, user_id=None, months_ahead=2):
+    if not isinstance(data, dict) or not data.get("months"):
+        return
+    active_id = data.get("activeMonth", "2026-11")
+    last_id = active_id
+    for _ in range(months_ahead):
+        next_id, _, _ = get_next_month_info(last_id)
+        existing = next((m for m in data.get("months", []) if m["id"] == next_id), None)
+        if not existing:
+            rollover_month(data, last_id, user_id=user_id, set_active=False)
+        last_id = next_id
 
 def ensure_cadernos(data, user_name="Usuário"):
     if not isinstance(data, dict):
@@ -428,16 +442,19 @@ def load_data(user_id=MASTER_USER_ID):
     if not os.path.exists(file_path):
         blank = create_blank_user_data(u_name)
         ensure_cadernos(blank, u_name)
+        ensure_future_months(blank, user_id=user_id, months_ahead=2)
         save_data(blank, user_id)
         return blank
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             d = json.load(f)
             ensure_cadernos(d, u_name)
+            ensure_future_months(d, user_id=user_id, months_ahead=2)
             return d
     except Exception:
         d = {"activeMonth": "2026-11", "months": [], "futureInstallments": [], "savingsGoal": {}}
         ensure_cadernos(d, u_name)
+        ensure_future_months(d, user_id=user_id, months_ahead=2)
         return d
 
 def save_data(data, user_id=MASTER_USER_ID):
@@ -816,9 +833,42 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                     target_month = fam_data["months"][0]
 
                 if target_month:
+                    # Match target caderno
+                    target_cad_id = ""
+                    cadernos = fam_data.get("cadernos", [])
+                    p_lower = parsed["person"].lower()
+                    for c in cadernos:
+                        c_name_lower = c.get("name", "").lower()
+                        if p_lower in c_name_lower or c_name_lower in p_lower:
+                            target_cad_id = c.get("id")
+                            break
+                    if not target_cad_id and cadernos:
+                        target_cad_id = cadernos[0].get("id")
+
+                    # If type is card, add to existing card's subitems if found
+                    if parsed["type"] == "card":
+                        existing_card = next((e for e in target_month.get("expenses", []) if e.get("type") == "card" and (e.get("cadernoId") == target_cad_id or e.get("person") == parsed["person"])), None)
+                        if existing_card:
+                            sub_id = f"sub-{int(datetime.now().timestamp()*1000)}"
+                            new_sub = {
+                                "id": sub_id,
+                                "description": parsed["description"],
+                                "amount": parsed["amount"],
+                                "category": parsed["category"],
+                                "dueDate": parsed["dueDate"],
+                                "type": "variable",
+                                "installments": "À vista"
+                            }
+                            existing_card.setdefault("subItems", []).append(new_sub)
+                            existing_card["amount"] = round(sum(s.get("amount", 0.0) for s in existing_card["subItems"]), 2)
+                            save_data(fam_data, fam_user_id)
+                            reply_text = bot.generate_reply(parsed)
+                            return self.send_json_response({"success": True, "reply": reply_text, "expense": existing_card})
+
                     new_exp = {
                         "id": f"exp-{int(datetime.now().timestamp()*1000)}",
                         "person": parsed["person"],
+                        "cadernoId": target_cad_id,
                         "category": parsed["category"],
                         "description": parsed["description"],
                         "amount": parsed["amount"],
@@ -869,6 +919,8 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             old_name = target.get("name")
             if new_name:
                 target["name"] = new_name
+            if "blockOrder" in req:
+                target["blockOrder"] = req["blockOrder"]
             if "description" in req:
                 target["description"] = req["description"].strip()
             if "color" in req:

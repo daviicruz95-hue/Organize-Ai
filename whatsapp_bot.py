@@ -61,19 +61,22 @@ class WhatsAppFinancialBot:
                 except ValueError:
                     pass
 
-        # 3. Detect payment method (Pix, Débito, Crédito)
+        # 3. Detect payment method (Pix, Débito, Crédito, Fixa)
+        is_fixed = bool(re.search(r'\b(fixa|fixo|recorrente|mensal|aluguel|condominio|condomínio|internet|copasa|enel|luz|agua|água|plano)\b', text_lower))
         is_pix = bool(re.search(r'\b(pix|chave|qr|qrcode)\b', text_lower))
         is_debit = bool(re.search(r'\b(debito|débito|devido|deb|maquininha)\b', text_lower))
         is_card = bool(re.search(r'\b(credito|crédito|cartao|cartão|fatura|parcela)\b', text_lower))
 
-        if is_pix:
+        if is_fixed:
+            pay_type = "fixed"
+        elif is_pix:
             pay_type = "pix"
         elif is_debit:
             pay_type = "debit"
         elif is_card:
             pay_type = "card"
         else:
-            pay_type = "pix"
+            pay_type = "debit"
 
         # 4. Detect Category
         if any(w in text_lower for w in ["igreja", "churrasco da igreja", "dizimo", "dízimo", "oferta", "doacao", "doação"]):
@@ -138,8 +141,17 @@ class WhatsAppFinancialBot:
     def generate_reply(self, parsed):
         if not parsed or parsed.get("amount", 0) <= 0 or not parsed.get("valid", True):
             return None
-        type_icon = "⚡ PIX (À vista)" if parsed["type"] == "pix" else ("💳 Débito (À vista)" if parsed["type"] == "debit" else "💳 Cartão de Crédito")
+        if parsed["type"] == "pix":
+            type_icon = "⚡ PIX (No Caderno)"
+        elif parsed["type"] == "debit":
+            type_icon = "💳 Débito (No Caderno)"
+        elif parsed["type"] == "fixed":
+            type_icon = "📌 Conta Fixa (No Caderno)"
+        else:
+            type_icon = "💳 Cartão de Crédito"
+
         person_name = "Nati" if "nat" in parsed['person'].lower() else "Davi"
+        status_text = f"Pago no ato ({parsed['dueDate']})" if parsed['status'] == 'paid' else f"A vencer ({parsed['dueDate']})"
         return (
             f"✅ *Lançado com sucesso no Organize Aí!*\n\n"
             f"👤 *Caderno:* {person_name}\n"
@@ -147,7 +159,7 @@ class WhatsAppFinancialBot:
             f"💰 *Valor:* R$ {parsed['amount']:.2f}\n"
             f"🏷️ *Forma:* {type_icon}\n"
             f"📁 *Categoria:* {parsed['category']}\n"
-            f"📅 *Status:* Pago no ato ({parsed['dueDate']})"
+            f"📅 *Status:* {status_text}"
         )
 
 if __name__ == "__main__":

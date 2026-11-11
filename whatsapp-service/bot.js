@@ -56,7 +56,6 @@ const FINANCE_KEYWORDS = [
 ];
 
 async function isGroupAuthorized(sock, remoteJid) {
-    if (allowedGroups.has(remoteJid)) return true;
     let subject = groupSubjectsCache.get(remoteJid);
     if (!subject) {
         try {
@@ -67,10 +66,8 @@ async function isGroupAuthorized(sock, remoteJid) {
             return false;
         }
     }
-    if (subject && FINANCE_KEYWORDS.some(kw => subject.includes(kw))) {
-        allowedGroups.add(remoteJid);
-        saveAllowedGroups();
-        console.log(`✅ Grupo financeiro reconhecido e autorizado: "${subject}" (${remoteJid})`);
+    // EXCLUSIVE: ONLY allow group with name "Organize aí" / "Organize ai"
+    if (subject && (subject.includes('organize a') || subject.includes('organize aí') || subject.includes('organize ai'))) {
         return true;
     }
     return false;
@@ -264,8 +261,8 @@ async function startBot() {
 
             // STRICT CHAT AUTHORIZATION:
             if (isGroup) {
-                // In groups: ONLY process if user explicitly called Zeca OR it's an authorized finance group
-                if (!isZecaCall && !isAuthGroup) {
+                // EXCLUSIVELY allow the "Organize aí" group! No other group is allowed!
+                if (!isAuthGroup) {
                     continue;
                 }
             } else if (!isSelfChat) {
@@ -358,14 +355,6 @@ async function startBot() {
                 }
 
                 const data = await resp.json();
-                if (data.reply) {
-                    console.log(`🤖 Zeca respondendo no chat ${remoteJid}...`);
-                    await sock.sendMessage(remoteJid, { text: data.reply }, { quoted: m });
-                }
-                if (data.groupActivated && isGroup) {
-                    allowedGroups.add(remoteJid);
-                    saveAllowedGroups();
-                }
                 if (data.reply) {
                     console.log(`🤖 Zeca respondendo no chat ${remoteJid}...`);
                     await sock.sendMessage(remoteJid, { text: data.reply }, { quoted: m });
