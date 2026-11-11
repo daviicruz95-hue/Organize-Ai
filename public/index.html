@@ -159,13 +159,6 @@
           <span id="userNamePill" class="hidden sm:inline max-w-[110px] truncate">Carregando...</span>
           <i data-lucide="settings" class="w-3.5 h-3.5 text-slate-400"></i>
         </button>
-
-        <!-- Quick Entry Trigger (High-contrast Dark Pill) -->
-        <button onclick="openQuickModal()" class="bg-[#18191D] hover:bg-slate-800 text-white text-xs md:text-sm font-bold px-3.5 py-2.5 rounded-2xl shadow-sm flex items-center gap-2 transition active:scale-95 cursor-pointer">
-          <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
-          <span class="hidden sm:inline">Entrada Rápida</span>
-          <span class="sm:hidden">Novo</span>
-        </button>
       </div>
 
     </div>
@@ -345,7 +338,7 @@
         <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3 gap-2">
             <div class="min-w-0">
-              <h3 class="text-sm md:text-base font-bold text-slate-900 truncate">Distribuição pelas 3 Tags Principais</h3>
+              <h3 class="text-sm md:text-base font-bold text-slate-900 truncate">Gastos Gerais do Mês (Por Grupo)</h3>
               <p class="text-[11px] text-slate-500 truncate">Fixas • Cartões • Débito & PIX</p>
             </div>
             <span id="chartMonthLabel" class="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-xl shrink-0"></span>
@@ -356,24 +349,115 @@
           <div id="categoryBreakdownList" class="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar pt-2">
             <!-- Dynamically populated -->
           </div>
+          <p class="text-[11px] text-slate-500 font-medium text-center pt-2.5 border-t border-slate-100">
+            💡 <strong>Entenda as porcentagens:</strong> Mostram exatamente quanto cada grupo representa de <strong>tudo o que saiu do seu bolso</strong> neste mês.
+          </p>
         </div>
 
         <!-- BAR CHART -->
         <div class="bg-white border border-slate-200/80 rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div>
-              <h3 class="text-base font-bold text-slate-900">Comparativo & Economia Mensal</h3>
-              <p class="text-xs text-slate-500">Média de Economia por mês: <strong id="generalAvgExpense" class="text-emerald-700 font-extrabold">R$ 0,00</strong></p>
+              <h3 class="text-base font-bold text-slate-900">Comparativo com Meses Anteriores</h3>
+              <p class="text-xs text-slate-500">Média de Economia Real: <strong id="generalAvgExpense" class="text-emerald-700 font-extrabold">R$ 0,00</strong></p>
             </div>
           </div>
           <div class="h-64 relative">
             <canvas id="comparisonBarChart"></canvas>
           </div>
           <p class="text-xs text-slate-500 text-center font-medium pt-2">
-            Comparativo mensal entre Entradas, Gastos e Economia real acumulada.
+            Comparativo mês a mês entre o que entrou, o que saiu e quanto sobrou na conta.
           </p>
         </div>
 
+      </div>
+
+      <!-- 3. PROJEÇÃO DE FUTURO (SIMULADOR DE RITMO DE ECONOMIA) -->
+      <div class="bg-gradient-to-br from-[#18191D] to-[#26282E] text-white rounded-3xl p-6 sm:p-7 shadow-lg space-y-6 border border-slate-800">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center justify-center font-black text-xl shadow-xs">
+              🚀
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-base sm:text-lg font-black text-white">Projeção de Futuro do Organize Aí</h3>
+                <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Visão Inteligente</span>
+              </div>
+              <p class="text-xs text-slate-300 font-medium mt-0.5">Se você mantiver o seu ritmo atual de economia mensal, veja quanto dinheiro terá acumulado nos próximos anos:</p>
+            </div>
+          </div>
+          <div class="text-left sm:text-right bg-white/5 border border-white/10 rounded-2xl p-3 shrink-0">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Sua Economia no Mês Atual</span>
+            <span id="projMonthlyRate" class="text-base sm:text-lg font-black text-emerald-400">R$ 0,00 / mês</span>
+          </div>
+        </div>
+
+        <!-- 4 CARDS DE METAS / MARCOS TEMPORAIS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <!-- Marco 1: 6 Meses -->
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-sky-400/50 transition flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-sky-300 uppercase tracking-wider">🗓️ Em 6 Meses</span>
+              <span class="text-[9px] font-bold bg-sky-500/20 text-sky-200 px-1.5 py-0.5 rounded">Reserva</span>
+            </div>
+            <div class="my-3">
+              <span id="proj6Months" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
+              <p id="proj6MonthsYield" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
+            </div>
+            <p class="text-[10px] text-slate-400 font-medium">Meta ideal para construir sua reserva de emergência com tranquilidade.</p>
+          </div>
+
+          <!-- Marco 2: 1 Ano -->
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-400/50 transition flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-emerald-300 uppercase tracking-wider">🎯 Em 1 Ano</span>
+              <span class="text-[9px] font-bold bg-emerald-500/20 text-emerald-200 px-1.5 py-0.5 rounded">Conquista</span>
+            </div>
+            <div class="my-3">
+              <span id="proj1Year" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
+              <p id="proj1YearYield" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
+            </div>
+            <p class="text-[10px] text-slate-400 font-medium">Viagem dos sonhos, quitação de pendências ou novo patamar financeiro.</p>
+          </div>
+
+          <!-- Marco 3: 2 Anos -->
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-400/50 transition flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-purple-300 uppercase tracking-wider">🏆 Em 2 Anos</span>
+              <span class="text-[9px] font-bold bg-purple-500/20 text-purple-200 px-1.5 py-0.5 rounded">Crescimento</span>
+            </div>
+            <div class="my-3">
+              <span id="proj2Years" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
+              <p id="proj2YearsYield" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
+            </div>
+            <p class="text-[10px] text-slate-400 font-medium">Troca de veículo, reforma da casa ou expansão de patrimônio.</p>
+          </div>
+
+          <!-- Marco 4: 5 Anos -->
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-400/50 transition flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-amber-300 uppercase tracking-wider">💎 Em 5 Anos</span>
+              <span class="text-[9px] font-bold bg-amber-500/20 text-amber-200 px-1.5 py-0.5 rounded">Liberdade</span>
+            </div>
+            <div class="my-3">
+              <span id="proj5Years" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
+              <p id="proj5YearsYield" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
+            </div>
+            <p class="text-[10px] text-slate-400 font-medium">Entrada de imóvel próprio ou segurança de longo prazo consolidada.</p>
+          </div>
+        </div>
+
+        <!-- NOTA DIDÁTICA E SIMPLES -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3 text-xs text-slate-300">
+          <i data-lucide="info" class="w-5 h-5 text-amber-300 shrink-0 mt-0.5"></i>
+          <div>
+            <p class="font-bold text-white mb-0.5">Como esse cálculo funciona de verdade?</p>
+            <p id="projExplanationText" class="text-slate-300">
+              O cálculo considera que você continue poupando a sua média mensal e aplique esse valor em uma opção segura com rendimento de 100% do CDI (~10% ao ano, como no Nubank, PicPay ou Tesouro Selic). O poder dos juros compostos trabalha por você sem esforço extra!
+            </p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1067,17 +1151,17 @@
     </div>
   </div>
 
-  <!-- MODAL: DETALHAMENTO DE GASTOS DO MÊS (CARD 2) -->
+  <!-- MODAL: DETALHAMENTO DE GASTOS DO MÊS (MACRO: 3 GRANDES GRUPOS + TOTAL CONSOLIDADO) -->
   <div id="expensesSummaryModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 sm:p-7 max-w-lg w-full space-y-4 max-h-[90vh] flex flex-col">
+    <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 sm:p-7 max-w-md w-full space-y-4 flex flex-col">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3 shrink-0">
         <div class="flex items-center gap-2.5">
           <div class="w-10 h-10 rounded-2xl bg-[#FFF1F2] text-[#BE123C] border border-[#FECDD3] flex items-center justify-center font-black">
-            <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+            <i data-lucide="pie-chart" class="w-5 h-5"></i>
           </div>
           <div>
             <h3 class="text-base font-extrabold text-slate-900">Total de Gastos do Mês</h3>
-            <p class="text-[11px] text-slate-500 font-medium">Distribuição por Contas Fixas, Cartões e Débito/PIX</p>
+            <p class="text-[11px] text-slate-500 font-medium">Visão consolidada pelos 3 grandes grupos de saída</p>
           </div>
         </div>
         <button onclick="closeExpensesSummaryModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer">
@@ -1085,32 +1169,68 @@
         </button>
       </div>
 
-      <div class="grid grid-cols-3 gap-2.5 shrink-0 text-center">
-        <div class="p-2.5 rounded-2xl bg-[#EDF5FF] border border-[#BAE6FD]">
-          <span class="text-[9px] font-black uppercase text-sky-800">📌 Fixas</span>
-          <p id="expensesModalFixedTotal" class="text-xs md:text-sm font-black text-sky-950 mt-0.5">R$ 0,00</p>
+      <!-- 3 GRANDES GRUPOS VISUAIS -->
+      <div class="space-y-3">
+        <!-- Grupo 1: Contas Fixas -->
+        <div class="p-4 rounded-2xl bg-[#EDF5FF] border border-[#BAE6FD] flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-sky-200/80 text-sky-900 flex items-center justify-center font-black text-base shrink-0">
+              📌
+            </div>
+            <div>
+              <h4 class="text-xs font-black uppercase tracking-wider text-sky-900">Contas Fixas</h4>
+              <p id="expensesModalFixedPct" class="text-[11px] text-sky-700 font-semibold mt-0.5">0% dos gastos</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="expensesModalFixedTotal" class="text-base md:text-lg font-black text-sky-950">R$ 0,00</span>
+          </div>
         </div>
-        <div class="p-2.5 rounded-2xl bg-[#F0EDFF] border border-[#DDD5FE]">
-          <span class="text-[9px] font-black uppercase text-purple-800">💳 Cartões</span>
-          <p id="expensesModalCardsTotal" class="text-xs md:text-sm font-black text-purple-950 mt-0.5">R$ 0,00</p>
+
+        <!-- Grupo 2: Cartões de Crédito -->
+        <div class="p-4 rounded-2xl bg-[#F0EDFF] border border-[#DDD5FE] flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-200/80 text-purple-900 flex items-center justify-center font-black text-base shrink-0">
+              💳
+            </div>
+            <div>
+              <h4 class="text-xs font-black uppercase tracking-wider text-purple-900">Cartões de Crédito</h4>
+              <p id="expensesModalCardsPct" class="text-[11px] text-purple-700 font-semibold mt-0.5">0% dos gastos</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="expensesModalCardsTotal" class="text-base md:text-lg font-black text-purple-950">R$ 0,00</span>
+          </div>
         </div>
-        <div class="p-2.5 rounded-2xl bg-[#E8F8F0] border border-[#C2EBCE]">
-          <span class="text-[9px] font-black uppercase text-emerald-800">⚡ Débito/PIX</span>
-          <p id="expensesModalDebitTotal" class="text-xs md:text-sm font-black text-emerald-950 mt-0.5">R$ 0,00</p>
+
+        <!-- Grupo 3: Débito & PIX -->
+        <div class="p-4 rounded-2xl bg-[#E8F8F0] border border-[#C2EBCE] flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-200/80 text-emerald-900 flex items-center justify-center font-black text-base shrink-0">
+              ⚡
+            </div>
+            <div>
+              <h4 class="text-xs font-black uppercase tracking-wider text-[#0D683E]">Débito & PIX</h4>
+              <p id="expensesModalDebitPct" class="text-[11px] text-[#0D683E] font-semibold mt-0.5">0% dos gastos</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="expensesModalDebitTotal" class="text-base md:text-lg font-black text-emerald-950">R$ 0,00</span>
+          </div>
         </div>
       </div>
 
-      <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between shrink-0">
-        <span class="text-xs font-extrabold text-slate-700 uppercase">Total Consolidado:</span>
-        <span id="expensesModalGrandTotal" class="text-base font-black text-slate-900">R$ 0,00</span>
+      <!-- TOTAL CONSOLIDADO -->
+      <div class="p-4 rounded-2xl bg-[#18191D] text-white flex items-center justify-between shadow-xs">
+        <div>
+          <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Consolidado</span>
+          <p class="text-[11px] text-slate-300 font-medium">Soma de todas as saídas do mês</p>
+        </div>
+        <span id="expensesModalGrandTotal" class="text-xl md:text-2xl font-black text-white">R$ 0,00</span>
       </div>
 
-      <div class="overflow-y-auto space-y-2 flex-1 custom-scrollbar pr-1" id="expensesSummaryList">
-        <!-- Rendered dynamically -->
-      </div>
-
-      <div class="flex items-center justify-end pt-3 border-t border-slate-100 shrink-0">
-        <button type="button" onclick="closeExpensesSummaryModal()" class="px-5 py-2 rounded-xl text-xs font-bold bg-[#18191D] hover:bg-slate-800 text-white shadow-xs transition">Fechar</button>
+      <div class="flex items-center justify-end pt-2 border-t border-slate-100 shrink-0">
+        <button type="button" onclick="closeExpensesSummaryModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Fechar</button>
       </div>
     </div>
   </div>
@@ -1160,7 +1280,7 @@
             <i data-lucide="zap" class="w-4 h-4"></i>
           </div>
           <div>
-            <h3 class="text-sm font-bold text-slate-900">Novo Débito ou PIX</h3>
+            <h3 id="addDebitModalTitle" class="text-sm font-bold text-slate-900">Novo Débito ou PIX</h3>
             <p id="addDebitCadernoDisplay" class="text-[11px] text-emerald-800 font-semibold truncate">No Caderno</p>
           </div>
         </div>
@@ -1169,6 +1289,7 @@
         </button>
       </div>
 
+      <input type="hidden" id="formDebitId">
       <input type="hidden" id="formDebitCadernoId">
       <input type="hidden" id="formDebitPerson">
       <input type="hidden" id="formDebitType" value="pix">
@@ -1211,7 +1332,7 @@
 
       <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
         <button type="button" onclick="closeAddDebitModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition">Cancelar</button>
-        <button type="button" onclick="submitAddDebitForm()" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition">Lançar no Caderno</button>
+        <button type="button" id="btnSubmitDebit" onclick="submitAddDebitForm()" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition">Lançar no Caderno</button>
       </div>
     </div>
   </div>
@@ -1853,16 +1974,16 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
     function buildFixedCardHtml(exp) {
       const isPaid = exp.status === 'paid';
       return `
-        <div class="rounded-2xl border ${isPaid ? 'bg-slate-50 border-slate-200' : 'bg-[#EDF5FF] border-[#BAE6FD]'} p-3.5 md:p-4 space-y-2 hover:border-sky-300 transition shadow-xs">
+        <div class="rounded-2xl border ${isPaid ? 'bg-[#F2F8FF] border-[#BAE6FD]/80' : 'bg-[#EDF5FF] border-[#BAE6FD]'} p-3.5 md:p-4 space-y-2 hover:border-sky-300 transition shadow-xs">
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2.5 min-w-0">
               <button onclick="toggleExpenseStatus('${exp.id}')" title="Marcar como Paga / Pendente" class="w-7 h-7 shrink-0 rounded-xl flex items-center justify-center transition cursor-pointer ${isPaid ? 'bg-emerald-500 text-white shadow-xs' : 'bg-white border border-sky-300 text-transparent hover:text-sky-600'}">
                 <i data-lucide="check" class="w-4 h-4 font-black"></i>
               </button>
               <div class="min-w-0">
-                <div class="flex items-center gap-1.5">
+                <div class="flex items-center gap-1.5 cursor-pointer" onclick="openEditExpenseModal('${exp.id}')" title="Clique para editar conta fixa">
                   <span class="bg-sky-200/80 text-sky-900 text-[10px] font-black px-2 py-0.5 rounded-md shrink-0">📌 Fixa</span>
-                  <h4 class="text-xs md:text-sm font-bold text-slate-900 truncate ${isPaid ? 'line-through text-slate-400' : ''}">${exp.description}</h4>
+                  <h4 class="text-xs md:text-sm font-bold text-slate-900 truncate hover:text-sky-800 ${isPaid ? 'line-through text-slate-400' : ''}">${exp.description}</h4>
                 </div>
               </div>
             </div>
@@ -1882,7 +2003,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
                 ${isPaid ? 'PAGO' : 'PENDENTE'}
               </span>
               <div class="flex items-center gap-0.5 pl-1 border-l border-sky-200">
-                <button onclick="openEditExpenseModal('${exp.id}')" title="Editar conta fixa" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer">
+                <button onclick="openEditExpenseModal('${exp.id}')" title="Editar conta fixa" class="p-1 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-white transition cursor-pointer">
                   <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                 </button>
                 <button onclick="deleteExpense('${exp.id}', '${exp.description.replace(/'/g, "\\'")}')" title="Excluir conta fixa" class="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer">
@@ -1950,19 +2071,22 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
             <div class="space-y-1.5">
               ${debitPixList.length === 0 ? '<p class="text-xs text-slate-400 text-center py-3">Nenhum gasto em débito ou PIX neste caderno ainda.</p>' : debitPixList.map(item => `
                 <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-slate-100/80 transition text-xs border border-slate-100">
-                  <div class="min-w-0 pr-2">
+                  <div class="min-w-0 pr-2 cursor-pointer" onclick="openEditDebitExpenseModal('${item.id}')" title="Clique para editar este gasto">
                     <div class="flex items-center gap-1.5">
                       <span class="text-[9px] font-black px-1.5 py-0.5 rounded ${item.type === 'pix' || (item.description || '').toLowerCase().includes('pix') ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}">
                         ${item.type === 'pix' || (item.description || '').toLowerCase().includes('pix') ? '⚡ PIX' : '💳 DÉBITO'}
                       </span>
-                      <p class="font-bold text-slate-900 truncate">${item.description}</p>
+                      <p class="font-bold text-slate-900 truncate hover:text-emerald-700">${item.description}</p>
                     </div>
                     <p class="text-[10px] text-slate-500 mt-0.5">${item.category || 'Geral'} • ${item.dueDate || 'Hoje'}</p>
                   </div>
-                  <div class="flex items-center gap-2 shrink-0">
+                  <div class="flex items-center gap-1 shrink-0">
                     <span class="font-black text-slate-900">${formatBRL(item.amount)}</span>
-                    <button onclick="deleteExpense('${item.id}', '${item.description.replace(/'/g, "\\'")}')" title="Excluir gasto" class="text-slate-400 hover:text-rose-600 transition p-1 cursor-pointer">
-                      <i data-lucide="trash-2" class="w-3 h-3"></i>
+                    <button onclick="openEditDebitExpenseModal('${item.id}')" title="Editar gasto" class="p-1 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-200/60 transition cursor-pointer">
+                      <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button onclick="deleteExpense('${item.id}', '${item.description.replace(/'/g, "\\'")}')" title="Excluir gasto" class="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer">
+                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                     </button>
                   </div>
                 </div>
@@ -2026,7 +2150,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
 
       if (isCard) {
         return `
-          <div class="rounded-3xl border ${isPaid ? 'bg-slate-50 border-slate-200' : 'bg-[#F0EDFF] border-[#DDD5FE]'} overflow-hidden transition shadow-xs">
+          <div class="rounded-3xl border ${isPaid ? 'bg-[#F7F4FF] border-[#DDD5FE]/80' : 'bg-[#F0EDFF] border-[#DDD5FE]'} overflow-hidden transition shadow-xs">
             <div class="p-3.5 md:p-4 space-y-2.5">
               <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-2.5 min-w-0">
@@ -2087,14 +2211,17 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
               <div class="space-y-1.5">
                 ${subItems.length === 0 ? '<p class="text-xs text-slate-400 text-center py-3">Nenhuma compra adicionada nesta fatura ainda.</p>' : subItems.map(sub => `
                   <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-slate-100/80 transition text-xs border border-slate-100">
-                    <div class="min-w-0 pr-2">
-                      <p class="font-bold text-slate-900 truncate">${sub.description}</p>
+                    <div class="min-w-0 pr-2 cursor-pointer" onclick="openEditSubItemModal('${exp.id}', '${sub.id}')" title="Clique para editar esta compra">
+                      <p class="font-bold text-slate-900 truncate hover:text-purple-700">${sub.description}</p>
                       <p class="text-[10px] text-slate-500">${sub.category || 'Geral'} • ${sub.dueDate || exp.dueDate || '10'}</p>
                     </div>
-                    <div class="flex items-center gap-2 shrink-0">
+                    <div class="flex items-center gap-1 shrink-0">
                       <span class="font-black text-slate-900">${formatBRL(sub.amount)}</span>
-                      <button onclick="deleteSubItem('${exp.id}', '${sub.id}')" title="Excluir compra" class="text-slate-400 hover:text-rose-600 transition p-1 cursor-pointer">
-                        <i data-lucide="trash-2" class="w-3 h-3"></i>
+                      <button onclick="openEditSubItemModal('${exp.id}', '${sub.id}')" title="Editar compra" class="p-1 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-200/60 transition cursor-pointer">
+                        <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                      </button>
+                      <button onclick="deleteSubItem('${exp.id}', '${sub.id}')" title="Excluir compra" class="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                       </button>
                     </div>
                   </div>
@@ -2639,17 +2766,17 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
             const totalFixed = fixedList.reduce((acc, e) => acc + (e.amount || 0), 0);
             blocksHtml += `
               <div class="space-y-2">
-                <div class="flex items-center justify-between text-xs font-extrabold text-slate-700 uppercase tracking-wider px-1">
+                <div class="flex items-center justify-between text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-2xl bg-sky-50 border border-sky-200/80">
                   <div class="flex items-center gap-1.5">
-                    <span class="text-sky-800">📌 Contas Fixas</span>
-                    <span class="text-[10px] font-black bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full">${fixedList.length}</span>
+                    <span class="text-sky-900">📌 Contas Fixas</span>
+                    <span class="text-[10px] font-black bg-sky-200/80 text-sky-950 px-2 py-0.5 rounded-full">${fixedList.length}</span>
                     <span class="text-[11px] font-black text-sky-950 ml-1">(${formatBRL(totalFixed)})</span>
                   </div>
                   <div class="flex items-center gap-1">
-                    <button onclick="moveCadernoBlock('${cad.id}', 'fixed', 'up')" title="Mover bloco para cima" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer">
+                    <button onclick="moveCadernoBlock('${cad.id}', 'fixed', 'up')" title="Mover bloco para cima" class="w-6 h-6 rounded-lg bg-white hover:bg-sky-100 text-sky-800 flex items-center justify-center transition cursor-pointer">
                       <i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>
                     </button>
-                    <button onclick="moveCadernoBlock('${cad.id}', 'fixed', 'down')" title="Mover bloco para baixo" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer">
+                    <button onclick="moveCadernoBlock('${cad.id}', 'fixed', 'down')" title="Mover bloco para baixo" class="w-6 h-6 rounded-lg bg-white hover:bg-sky-100 text-sky-800 flex items-center justify-center transition cursor-pointer">
                       <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
                     </button>
                   </div>
@@ -2669,17 +2796,17 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
             const totalCards = cardList.reduce((acc, e) => acc + (e.amount || 0), 0);
             blocksHtml += `
               <div class="space-y-2">
-                <div class="flex items-center justify-between text-xs font-extrabold text-slate-700 uppercase tracking-wider px-1">
+                <div class="flex items-center justify-between text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-2xl bg-purple-50 border border-purple-200/80">
                   <div class="flex items-center gap-1.5">
-                    <span class="text-purple-800">💳 Cartões de Crédito</span>
-                    <span class="text-[10px] font-black bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">${cardList.length}</span>
+                    <span class="text-purple-900">💳 Cartões de Crédito</span>
+                    <span class="text-[10px] font-black bg-purple-200/80 text-purple-950 px-2 py-0.5 rounded-full">${cardList.length}</span>
                     <span class="text-[11px] font-black text-purple-950 ml-1">(${formatBRL(totalCards)})</span>
                   </div>
                   <div class="flex items-center gap-1">
-                    <button onclick="moveCadernoBlock('${cad.id}', 'cards', 'up')" title="Mover bloco para cima" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer">
+                    <button onclick="moveCadernoBlock('${cad.id}', 'cards', 'up')" title="Mover bloco para cima" class="w-6 h-6 rounded-lg bg-white hover:bg-purple-100 text-purple-800 flex items-center justify-center transition cursor-pointer">
                       <i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>
                     </button>
-                    <button onclick="moveCadernoBlock('${cad.id}', 'cards', 'down')" title="Mover bloco para baixo" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer">
+                    <button onclick="moveCadernoBlock('${cad.id}', 'cards', 'down')" title="Mover bloco para baixo" class="w-6 h-6 rounded-lg bg-white hover:bg-purple-100 text-purple-800 flex items-center justify-center transition cursor-pointer">
                       <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
                     </button>
                   </div>
@@ -2700,17 +2827,17 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
             const isDebitOpen = openDebitAccordions.has(cad.id);
             blocksHtml += `
               <div class="space-y-2">
-                <div class="flex items-center justify-between text-xs font-extrabold text-slate-700 uppercase tracking-wider px-1">
+                <div class="flex items-center justify-between text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-2xl bg-emerald-50 border border-emerald-200/80">
                   <div class="flex items-center gap-1.5">
-                    <span class="text-emerald-800">⚡ Débito & PIX</span>
-                    <span class="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">${debitPixList.length}</span>
+                    <span class="text-emerald-900">⚡ Débito & PIX</span>
+                    <span class="text-[10px] font-black bg-emerald-200/80 text-emerald-950 px-2 py-0.5 rounded-full">${debitPixList.length}</span>
                     <span class="text-[11px] font-black text-emerald-950 ml-1">(${formatBRL(totalDebit)})</span>
                   </div>
                   <div class="flex items-center gap-1">
-                    <button onclick="moveCadernoBlock('${cad.id}', 'debit', 'up')" title="Mover bloco para cima" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer">
+                    <button onclick="moveCadernoBlock('${cad.id}', 'debit', 'up')" title="Mover bloco para cima" class="w-6 h-6 rounded-lg bg-white hover:bg-emerald-100 text-emerald-800 flex items-center justify-center transition cursor-pointer">
                       <i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>
                     </button>
-                    <button onclick="moveCadernoBlock('${cad.id}', 'debit', 'down')" title="Mover bloco para baixo" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer">
+                    <button onclick="moveCadernoBlock('${cad.id}', 'debit', 'down')" title="Mover bloco para baixo" class="w-6 h-6 rounded-lg bg-white hover:bg-emerald-100 text-emerald-800 flex items-center justify-center transition cursor-pointer">
                       <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
                     </button>
                   </div>
@@ -2722,17 +2849,17 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
             const totalOther = otherList.reduce((acc, e) => acc + (e.amount || 0), 0);
             blocksHtml += `
               <div class="space-y-2">
-                <div class="flex items-center justify-between text-xs font-extrabold text-slate-700 uppercase tracking-wider px-1">
+                <div class="flex items-center justify-between text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-2xl bg-amber-50 border border-amber-200/80">
                   <div class="flex items-center gap-1.5">
-                    <span class="text-slate-700">🔢 Parcelas & Outras</span>
-                    <span class="text-[10px] font-black bg-slate-100 text-slate-800 px-2 py-0.5 rounded-full">${otherList.length}</span>
-                    <span class="text-[11px] font-black text-slate-900 ml-1">(${formatBRL(totalOther)})</span>
+                    <span class="text-amber-900">🔢 Parcelas & Outras</span>
+                    <span class="text-[10px] font-black bg-amber-200/80 text-amber-950 px-2 py-0.5 rounded-full">${otherList.length}</span>
+                    <span class="text-[11px] font-black text-amber-950 ml-1">(${formatBRL(totalOther)})</span>
                   </div>
                   <div class="flex items-center gap-1">
-                    <button onclick="moveCadernoBlock('${cad.id}', 'others', 'up')" title="Mover bloco para cima" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer">
+                    <button onclick="moveCadernoBlock('${cad.id}', 'others', 'up')" title="Mover bloco para cima" class="w-6 h-6 rounded-lg bg-white hover:bg-amber-100 text-amber-800 flex items-center justify-center transition cursor-pointer">
                       <i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>
                     </button>
-                    <button onclick="moveCadernoBlock('${cad.id}', 'others', 'down')" title="Mover bloco para baixo" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition cursor-pointer">
+                    <button onclick="moveCadernoBlock('${cad.id}', 'others', 'down')" title="Mover bloco para baixo" class="w-6 h-6 rounded-lg bg-white hover:bg-amber-100 text-amber-800 flex items-center justify-center transition cursor-pointer">
                       <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
                     </button>
                   </div>
@@ -3544,15 +3671,15 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
           tagData.forEach(item => {
             const pct = grandTotal > 0 ? ((item.value / grandTotal) * 100).toFixed(1) : '0.0';
             breakdownContainer.insertAdjacentHTML('beforeend', `
-              <div class="flex items-center justify-between text-xs py-2 px-3 rounded-2xl hover:bg-slate-50 transition border border-slate-100 mb-1.5">
+              <div class="flex items-center justify-between text-xs py-2.5 px-3 rounded-2xl hover:bg-slate-50 transition border border-slate-100 mb-1.5">
                 <div class="flex items-center gap-2 truncate">
                   <span class="w-3.5 h-3.5 rounded-full shrink-0" style="background-color: ${item.color}"></span>
                   <span class="text-slate-800 font-bold truncate">${item.label}</span>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
                   <span class="text-slate-900 font-black">${formatBRL(item.value)}</span>
-                  <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-slate-100 text-slate-800">
-                    ${pct}%
+                  <span class="text-[10px] font-black px-2.5 py-1 rounded-full bg-slate-100 text-slate-800" title="Porcentagem sobre os gastos totais do mês">
+                    ${pct}% do total
                   </span>
                 </div>
               </div>
@@ -3590,7 +3717,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
                 label: function(context) {
                   const val = context.raw || 0;
                   const pct = grandTotal > 0 ? ((val / grandTotal) * 100).toFixed(1) : 0;
-                  return ` ${context.label}: ${formatBRL(val)} (${pct}%)`;
+                  return ` ${context.label}: ${formatBRL(val)} (${pct}% do total)`;
                 }
               }
             },
@@ -3607,8 +3734,28 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
         }
       });
 
-      // 2. MONTHLY COMPARISON: ENTRADAS, GASTOS & ECONOMIA
-      const sortedMonths = [...(appData.months || [])].reverse().slice(-5);
+      // 2. MONTHLY COMPARISON: ENTRADAS, GASTOS & ECONOMIA (SOMENTE HISTÓRICO REAL E MÊS ATUAL)
+      const allMonths = [...(appData.months || [])];
+      // Ordena cronologicamente do mais antigo para o mais recente
+      allMonths.sort((a, b) => {
+        const [yA, mA] = (a.id || '').split('-').map(Number);
+        const [yB, mB] = (b.id || '').split('-').map(Number);
+        if (yA !== yB) return (yA || 0) - (yB || 0);
+        return (mA || 0) - (mB || 0);
+      });
+
+      // Filtra para manter meses anteriores e atual, ignorando meses futuros sem entradas
+      const activeIdx = allMonths.findIndex(m => m.id === activeMonthId);
+      const filteredMonths = allMonths.filter((m, idx) => {
+        const inc = (m.incomes || []).filter(i => i.status === 'received' || i.received === true).reduce((a, i) => a + (i.amount || 0), 0);
+        const paidExp = (m.expenses || []).filter(e => e.status === 'paid').reduce((a, e) => a + (e.amount || 0), 0);
+        if (m.id === activeMonthId) return true;
+        if (activeIdx >= 0 && idx <= activeIdx) return true;
+        if (inc > 0 || paidExp > 0) return true;
+        return false;
+      });
+
+      const sortedMonths = filteredMonths.slice(-5);
       const barLabels = sortedMonths.map(m => `${m.name.slice(0, 3)}/${String(m.year).slice(2)}`);
       
       const incomesPerMonth = [];
@@ -3689,6 +3836,70 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
           }
         }
       });
+
+      // 3. PROJEÇÃO DE FUTURO (SIMULADOR DE RITMO DE ECONOMIA E PATRIMÔNIO)
+      const currentMonthInc = (monthData.incomes || []).filter(i => i.status === 'received' || i.received === true).reduce((a, i) => a + (i.amount || 0), 0);
+      const currentMonthExp = totalExpenses || (monthData.expenses || []).reduce((a, e) => a + (e.amount || 0), 0);
+      let activeMonthSavings = currentMonthInc - currentMonthExp;
+
+      let baseMonthlySavings = activeMonthSavings > 0 ? activeMonthSavings : (avgEconomy > 0 ? avgEconomy : 500);
+
+      const projRateEl = document.getElementById('projMonthlyRate');
+      if (projRateEl) {
+        if (activeMonthSavings > 0) {
+          projRateEl.textContent = `${formatBRL(activeMonthSavings)} / mês`;
+          projRateEl.className = "text-base sm:text-lg font-black text-emerald-400";
+        } else if (avgEconomy > 0) {
+          projRateEl.textContent = `${formatBRL(avgEconomy)} / mês (média)`;
+          projRateEl.className = "text-base sm:text-lg font-black text-emerald-400";
+        } else {
+          projRateEl.textContent = `${formatBRL(baseMonthlySavings)} / mês (simulado)`;
+          projRateEl.className = "text-base sm:text-lg font-black text-amber-300";
+        }
+      }
+
+      // Cálculo de juros compostos com rendimento de 100% do CDI (~10% a.a.)
+      const r = Math.pow(1 + 0.10, 1 / 12) - 1;
+      function calcFutureValue(months, monthlyDeposit) {
+        const fv = monthlyDeposit * ((Math.pow(1 + r, months) - 1) / r) * (1 + r);
+        const invested = monthlyDeposit * months;
+        const yieldAmount = Math.max(0, fv - invested);
+        return { total: Math.round(fv), yieldAmount: Math.round(yieldAmount) };
+      }
+
+      const p6 = calcFutureValue(6, baseMonthlySavings);
+      const p12 = calcFutureValue(12, baseMonthlySavings);
+      const p24 = calcFutureValue(24, baseMonthlySavings);
+      const p60 = calcFutureValue(60, baseMonthlySavings);
+
+      const el6 = document.getElementById('proj6Months');
+      const el6Y = document.getElementById('proj6MonthsYield');
+      if (el6) el6.textContent = formatBRL(p6.total);
+      if (el6Y) el6Y.textContent = `+ ${formatBRL(p6.yieldAmount)} em rendimentos`;
+
+      const el12 = document.getElementById('proj1Year');
+      const el12Y = document.getElementById('proj1YearYield');
+      if (el12) el12.textContent = formatBRL(p12.total);
+      if (el12Y) el12Y.textContent = `+ ${formatBRL(p12.yieldAmount)} em rendimentos`;
+
+      const el24 = document.getElementById('proj2Years');
+      const el24Y = document.getElementById('proj2YearsYield');
+      if (el24) el24.textContent = formatBRL(p24.total);
+      if (el24Y) el24Y.textContent = `+ ${formatBRL(p24.yieldAmount)} em rendimentos`;
+
+      const el60 = document.getElementById('proj5Years');
+      const el60Y = document.getElementById('proj5YearsYield');
+      if (el60) el60.textContent = formatBRL(p60.total);
+      if (el60Y) el60Y.textContent = `+ ${formatBRL(p60.yieldAmount)} em rendimentos`;
+
+      const expTxt = document.getElementById('projExplanationText');
+      if (expTxt) {
+        if (activeMonthSavings > 0) {
+          expTxt.innerHTML = `Poupando <strong>${formatBRL(activeMonthSavings)} todo mês</strong> (sua sobra atual) e aplicando em opções seguras a 100% do CDI (~10% ao ano, como Nubank, Tesouro Selic ou CDB), você acumulará <strong>${formatBRL(p12.total)} em apenas 1 ano</strong>, sendo <strong>${formatBRL(p12.yieldAmount)} de puro rendimento</strong> sem esforço.`;
+        } else {
+          expTxt.innerHTML = `Neste mês suas saídas empataram ou superaram as entradas. Se você ajustar pequenos gastos para guardar <strong>${formatBRL(baseMonthlySavings)} por mês</strong> a 100% do CDI, em 1 ano você terá <strong>${formatBRL(p12.total)}</strong> e em 5 anos alcançará <strong>${formatBRL(p60.total)}</strong>!`;
+        }
+      }
     }
 
     // TABS SWITCHER
@@ -3773,16 +3984,18 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       const monthData = getActiveMonthData();
       if (!monthData) return;
 
-      const fixedList = (monthData.expenses || []).filter(e => e.type === 'fixed' || e.type === 'recurrent');
       const cardList = (monthData.expenses || []).filter(e => e.type === 'card' || e.isCard);
       const debitList = (monthData.expenses || []).filter(e => e.type === 'debit' || e.type === 'pix' || isDebitPixExpense(e));
-      const otherList = (monthData.expenses || []).filter(e => !fixedList.includes(e) && !cardList.includes(e) && !debitList.includes(e));
+      const fixedList = (monthData.expenses || []).filter(e => !cardList.includes(e) && !debitList.includes(e));
 
       const totalFixed = fixedList.reduce((a, e) => a + (e.amount || 0), 0);
       const totalCards = cardList.reduce((a, e) => a + (e.amount || 0), 0);
       const totalDebit = debitList.reduce((a, e) => a + (e.amount || 0), 0);
-      const totalOther = otherList.reduce((a, e) => a + (e.amount || 0), 0);
-      const grandTotal = totalFixed + totalCards + totalDebit + totalOther;
+      const grandTotal = totalFixed + totalCards + totalDebit;
+
+      const pctFixed = grandTotal > 0 ? ((totalFixed / grandTotal) * 100).toFixed(0) : '0';
+      const pctCards = grandTotal > 0 ? ((totalCards / grandTotal) * 100).toFixed(0) : '0';
+      const pctDebit = grandTotal > 0 ? ((totalDebit / grandTotal) * 100).toFixed(0) : '0';
 
       const fEl = document.getElementById('expensesModalFixedTotal');
       const cEl = document.getElementById('expensesModalCardsTotal');
@@ -3793,40 +4006,12 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       if (dEl) dEl.textContent = formatBRL(totalDebit);
       if (gEl) gEl.textContent = formatBRL(grandTotal);
 
-      const listEl = document.getElementById('expensesSummaryList');
-      if (listEl) {
-        if (!monthData.expenses || monthData.expenses.length === 0) {
-          listEl.innerHTML = '<div class="text-center py-8 text-xs text-slate-400">Nenhum gasto lançado neste mês.</div>';
-        } else {
-          listEl.innerHTML = monthData.expenses.map(exp => {
-            const isPaid = exp.status === 'paid';
-            let tagBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-black bg-slate-100 text-slate-700">Outro</span>';
-            if (exp.type === 'fixed' || exp.type === 'recurrent') {
-              tagBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-black bg-sky-100 text-sky-800">📌 Fixa</span>';
-            } else if (exp.type === 'card' || exp.isCard) {
-              tagBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-black bg-purple-100 text-purple-800">💳 Cartão</span>';
-            } else if (exp.type === 'debit' || exp.type === 'pix' || isDebitPixExpense(exp)) {
-              tagBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-black bg-emerald-100 text-emerald-800">⚡ Débito/PIX</span>';
-            }
-
-            return `
-              <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition text-xs">
-                <div class="min-w-0 pr-2">
-                  <div class="flex items-center gap-1.5">
-                    ${tagBadge}
-                    <p class="font-bold text-slate-900 truncate">${exp.description}</p>
-                  </div>
-                  <p class="text-[10px] text-slate-500 mt-0.5">${exp.person || 'Geral'} • Venc: ${exp.dueDate || '10'}</p>
-                </div>
-                <div class="text-right shrink-0">
-                  <span class="font-black text-slate-900">${formatBRL(exp.amount)}</span>
-                  <p class="text-[9px] font-black ${isPaid ? 'text-emerald-700' : 'text-amber-700'}">${isPaid ? 'PAGO' : 'ABERTO'}</p>
-                </div>
-              </div>
-            `;
-          }).join('');
-        }
-      }
+      const fPct = document.getElementById('expensesModalFixedPct');
+      const cPct = document.getElementById('expensesModalCardsPct');
+      const dPct = document.getElementById('expensesModalDebitPct');
+      if (fPct) fPct.textContent = `${pctFixed}% de tudo o que você gastou`;
+      if (cPct) cPct.textContent = `${pctCards}% de tudo o que você gastou`;
+      if (dPct) dPct.textContent = `${pctDebit}% de tudo o que você gastou`;
 
       const modal = document.getElementById('expensesSummaryModal');
       if (modal) modal.classList.remove('hidden');
@@ -3912,13 +4097,48 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
     }
 
     function openAddDebitExpenseModal(cadName, cadId) {
+      if (document.getElementById('formDebitId')) document.getElementById('formDebitId').value = '';
       document.getElementById('formDebitCadernoId').value = cadId || '';
       document.getElementById('formDebitPerson').value = cadName || '';
       document.getElementById('addDebitCadernoDisplay').textContent = `No Caderno: ${cadName}`;
+      const titleEl = document.getElementById('addDebitModalTitle');
+      if (titleEl) titleEl.textContent = 'Novo Débito ou PIX';
+      const btnSubmit = document.getElementById('btnSubmitDebit');
+      if (btnSubmit) btnSubmit.textContent = 'Lançar no Caderno';
       document.getElementById('formDebitDesc').value = '';
       document.getElementById('formDebitAmount').value = '';
       document.getElementById('formDebitCategory').value = 'Alimentação';
       selectDebitType('pix');
+      document.getElementById('addDebitModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function openEditDebitExpenseModal(expenseId) {
+      const monthData = getActiveMonthData();
+      const exp = (monthData.expenses || []).find(e => e.id === expenseId);
+      if (!exp) return;
+
+      const cad = (appData.cadernos || []).find(c => c.id === exp.cadernoId) || { name: exp.person || 'Geral' };
+
+      if (document.getElementById('formDebitId')) document.getElementById('formDebitId').value = exp.id;
+      document.getElementById('formDebitCadernoId').value = exp.cadernoId || '';
+      document.getElementById('formDebitPerson').value = exp.person || cad.name || '';
+      document.getElementById('addDebitCadernoDisplay').textContent = `No Caderno: ${cad.name || exp.person || 'Geral'}`;
+      const titleEl = document.getElementById('addDebitModalTitle');
+      if (titleEl) titleEl.textContent = 'Editar Débito ou PIX';
+      const btnSubmit = document.getElementById('btnSubmitDebit');
+      if (btnSubmit) btnSubmit.textContent = 'Salvar Alterações';
+
+      document.getElementById('formDebitDesc').value = exp.description || '';
+      document.getElementById('formDebitAmount').value = exp.amount || '';
+      const catSelect = document.getElementById('formDebitCategory');
+      if (catSelect) {
+        catSelect.value = exp.category || 'Outros';
+      }
+
+      const isPix = exp.type === 'pix' || (exp.description || '').toLowerCase().includes('pix');
+      selectDebitType(isPix ? 'pix' : 'debit');
+
       document.getElementById('addDebitModal').classList.remove('hidden');
       lucide.createIcons();
     }
@@ -3928,6 +4148,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
     }
 
     async function submitAddDebitForm() {
+      const id = document.getElementById('formDebitId') ? document.getElementById('formDebitId').value : '';
       const desc = document.getElementById('formDebitDesc').value.trim();
       const amount = parseFloat(document.getElementById('formDebitAmount').value);
       const category = document.getElementById('formDebitCategory').value;
@@ -3945,6 +4166,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       }
 
       const payload = {
+        id: id || undefined,
         monthId: activeMonthId,
         description: desc,
         amount: amount,
@@ -3956,15 +4178,20 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
         person: person
       };
 
+      const endpoint = id ? '/api/expenses/update' : '/api/expenses/add';
       try {
-        const res = await fetch('/api/expenses/create', {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
         if (res.ok) {
-          const data = await res.json();
-          appData = data;
+          const resJson = await res.json();
+          if (resJson.data) {
+            appData = resJson.data;
+          } else {
+            await fetchAppData();
+          }
           closeAddDebitModal();
           if (cadernoId) openDebitAccordions.add(cadernoId);
           renderAll();
@@ -3973,8 +4200,8 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
           alert('Erro ao salvar gasto no caderno.');
         }
       } catch (err) {
-        console.error('Erro ao adicionar débito:', err);
-        alert('Erro de conexão ao salvar gasto.');
+        console.error(err);
+        alert('Erro ao salvar gasto no caderno.');
       }
     }
 
@@ -4067,6 +4294,12 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
 
       document.getElementById('expenseModalTitle').textContent = "Editar Conta do Caderno";
       document.getElementById('formExpenseId').value = exp.id;
+      if (document.getElementById('formExpenseCadernoId')) {
+        document.getElementById('formExpenseCadernoId').value = exp.cadernoId || '';
+      }
+      if (document.getElementById('formExpensePerson')) {
+        document.getElementById('formExpensePerson').value = exp.person || '';
+      }
       document.getElementById('formExpenseDesc').value = exp.description;
       document.getElementById('formExpenseAmount').value = exp.amount;
       document.getElementById('formExpenseDueDate').value = exp.dueDate || "10";

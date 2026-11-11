@@ -966,10 +966,13 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                         return self.send_json_response({"success": True, "data": data})
             return self.send_json_response({"error": "Expense not found"}, 404)
 
-        # 2. EXPENSES: ADD
-        elif self.path == "/api/expenses/add":
+        # 2. EXPENSES: ADD / CREATE
+        elif self.path in ["/api/expenses/add", "/api/expenses/create"]:
             if not month:
-                return self.send_json_response({"error": "Month not found"}, 404)
+                if data.get("months"):
+                    month = data["months"][0]
+                else:
+                    return self.send_json_response({"error": "Month not found"}, 404)
 
             exp_type = req.get("type", "variable")
             total_inst = int(req.get("totalInstallments", 1))
@@ -1015,15 +1018,24 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
         # 3. EXPENSES: UPDATE (EDIT)
         elif self.path == "/api/expenses/update":
             exp_id = req.get("id")
-            if month:
-                for exp in month.get("expenses", []):
+            target_months = [month] if month else data.get("months", [])
+            for m in target_months:
+                for exp in m.get("expenses", []):
                     if exp.get("id") == exp_id:
-                        exp["description"] = req.get("description", exp.get("description"))
-                        exp["amount"] = float(req.get("amount", exp.get("amount")))
-                        exp["dueDate"] = req.get("dueDate", exp.get("dueDate"))
-                        exp["person"] = req.get("person", exp.get("person"))
-                        exp["category"] = req.get("category", exp.get("category"))
-                        exp["type"] = req.get("type", exp.get("type"))
+                        if "description" in req:
+                            exp["description"] = req.get("description", exp.get("description"))
+                        if "amount" in req:
+                            exp["amount"] = float(req.get("amount", exp.get("amount")))
+                        if "dueDate" in req:
+                            exp["dueDate"] = req.get("dueDate", exp.get("dueDate"))
+                        if "person" in req:
+                            exp["person"] = req.get("person", exp.get("person"))
+                        if "cadernoId" in req:
+                            exp["cadernoId"] = req.get("cadernoId", exp.get("cadernoId"))
+                        if "category" in req:
+                            exp["category"] = req.get("category", exp.get("category"))
+                        if "type" in req:
+                            exp["type"] = req.get("type", exp.get("type"))
                         if "status" in req:
                             exp["status"] = req["status"]
                         if "totalInstallments" in req:

@@ -563,6 +563,34 @@
           "currentInstallment": 1,
           "installments": "À vista",
           "subItems": []
+        },
+        {
+          "id": "exp-1794320867259",
+          "person": "Davi",
+          "category": "Transporte",
+          "description": "Gasolina na Mota",
+          "amount": 50.0,
+          "dueDate": "10/11",
+          "status": "paid",
+          "type": "pix",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
+        },
+        {
+          "id": "exp-1794327814159",
+          "person": "Davi",
+          "category": "Alimentação",
+          "description": "Almoço",
+          "amount": 45.0,
+          "dueDate": "10/11",
+          "status": "paid",
+          "type": "debit",
+          "totalInstallments": 1,
+          "currentInstallment": 1,
+          "installments": "À vista",
+          "subItems": []
         }
       ]
     }
@@ -607,6 +635,24 @@
       "currentAmount": 800.0,
       "targetAmount": 800.0,
       "notes": ""
+    }
+  ],
+  "cadernos": [
+    {
+      "id": "cad-nathalie",
+      "name": "Caderno Nathalie",
+      "description": "Contas fixas, recorrentes e faturas",
+      "color": "#7C3AED",
+      "bg": "#F0EDFF",
+      "icon": "N"
+    },
+    {
+      "id": "cad-davi",
+      "name": "Caderno Davi",
+      "description": "Contas fixas, moto e parcelas",
+      "color": "#0284C7",
+      "bg": "#EDF5FF",
+      "icon": "D"
     }
   ]
 }
