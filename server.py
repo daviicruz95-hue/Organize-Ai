@@ -389,6 +389,41 @@ def ensure_future_months(data, user_id=None, months_ahead=2):
             rollover_month(data, last_id, user_id=user_id, set_active=False)
         last_id = next_id
 
+def ensure_month_exists(data, target_id, user_id=None):
+    if not isinstance(data, dict) or not target_id:
+        return None
+    months = data.get("months", [])
+    existing = next((m for m in months if m["id"] == target_id), None)
+    if existing:
+        return existing
+
+    def m_sort_key(m):
+        try:
+            y, mo = map(int, m["id"].split("-"))
+            return y * 12 + mo
+        except Exception:
+            return 0
+
+    sorted_months = sorted(months, key=m_sort_key)
+    if not sorted_months:
+        return None
+
+    current_latest = sorted_months[-1]["id"]
+    curr_y, curr_mo = map(int, current_latest.split("-"))
+    target_y, target_mo = map(int, target_id.split("-"))
+    curr_val = curr_y * 12 + curr_mo
+    target_val = target_y * 12 + target_mo
+
+    while curr_val < target_val:
+        new_m = rollover_month(data, current_latest, user_id=user_id, set_active=False)
+        if not new_m:
+            break
+        current_latest = new_m["id"]
+        curr_y, curr_mo = map(int, current_latest.split("-"))
+        curr_val = curr_y * 12 + curr_mo
+
+    return next((m for m in data.get("months", []) if m["id"] == target_id), None)
+
 def ensure_cadernos(data, user_name="Usuário"):
     if not isinstance(data, dict):
         return []
@@ -806,7 +841,12 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                 elif "davi" in sender_name.lower():
                     sender_name = "Davi"
 
-                parsed = bot.parse_message(message_text, sender_phone=sender_phone, sender_name=sender_name)
+                # Load family account to check active month
+                fam_user_id = "fam-davi-nathalie"
+                fam_data = load_data(fam_user_id)
+                active_m_id = fam_data.get("activeMonth", "2026-11")
+
+                parsed = bot.parse_message(message_text, sender_phone=sender_phone, sender_name=sender_name, ref_month_id=active_m_id)
 
                 # If no financial amount was detected:
                 if not parsed or parsed.get("amount", 0) <= 0:
@@ -817,6 +857,7 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                             "💬 *Você pode mandar por texto ou áudio, por exemplo:*\n"
                             "• _\"Almoço 35 no débito\"_\n"
                             "• _\"Gasolina 50 reais no crédito\"_\n"
+                            "• _\"compra no crédito para a fatura de dezembro 68,79 na farmácia\"_\n"
                             "• _\"Uber 22 no Pix\"_\n"
                             "• Ou manda um **áudio** falando o valor e o que foi!\n\n"
                             "Manda aí que eu lanço na hora no seu caderno! 📊"
@@ -824,13 +865,14 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                         return self.send_json_response({"success": True, "reply": help_reply, "ignored": False})
                     return self.send_json_response({"success": False, "reply": None, "ignored": True})
 
-                # Save directly into family account
-                fam_user_id = "fam-davi-nathalie"
-                fam_data = load_data(fam_user_id)
-                active_m_id = fam_data.get("activeMonth", "2026-11")
-                target_month = next((m for m in fam_data.get("months", []) if m["id"] == active_m_id), None)
+                # Determine target month (if user specified a target invoice/month, use it; otherwise default to active month)
+                target_m_id = parsed.get("target_month_id") or active_m_id
+                target_month = next((m for m in fam_data.get("months", []) if m["id"] == target_m_id), None)
+                if not target_month:
+                    target_month = ensure_month_exists(fam_data, target_m_id, user_id=fam_user_id)
+
                 if not target_month and fam_data.get("months"):
-                    target_month = fam_data["months"][0]
+                    target_month = next((m for m in fam_data.get("months", []) if m["id"] == active_m_id), fam_data["months"][0])
 
                 if target_month:
                     # Match target caderno
@@ -845,25 +887,50 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                     if not target_cad_id and cadernos:
                         target_cad_id = cadernos[0].get("id")
 
-                    # If type is card, add to existing card's subitems if found
+                    # If type is card, add to existing card's subitems in target month
                     if parsed["type"] == "card":
                         existing_card = next((e for e in target_month.get("expenses", []) if e.get("type") == "card" and (e.get("cadernoId") == target_cad_id or e.get("person") == parsed["person"])), None)
+                        total_inst = parsed.get("totalInstallments", 1)
+                        curr_inst = parsed.get("currentInstallment", 1)
+                        inst_label = parsed.get("installments") or ("À vista" if total_inst == 1 else f"{curr_inst}/{total_inst}")
+
+                        sub_id = f"sub-{int(datetime.now().timestamp()*1000)}"
+                        new_sub = {
+                            "id": sub_id,
+                            "description": parsed["description"],
+                            "amount": parsed["amount"],
+                            "category": parsed["category"],
+                            "dueDate": parsed.get("dueDate", "10"),
+                            "type": "variable",
+                            "totalInstallments": total_inst,
+                            "currentInstallment": curr_inst,
+                            "installments": inst_label
+                        }
+
                         if existing_card:
-                            sub_id = f"sub-{int(datetime.now().timestamp()*1000)}"
-                            new_sub = {
-                                "id": sub_id,
-                                "description": parsed["description"],
-                                "amount": parsed["amount"],
-                                "category": parsed["category"],
-                                "dueDate": parsed["dueDate"],
-                                "type": "variable",
-                                "installments": "À vista"
-                            }
                             existing_card.setdefault("subItems", []).append(new_sub)
                             existing_card["amount"] = round(sum(s.get("amount", 0.0) for s in existing_card["subItems"]), 2)
-                            save_data(fam_data, fam_user_id)
-                            reply_text = bot.generate_reply(parsed)
-                            return self.send_json_response({"success": True, "reply": reply_text, "expense": existing_card})
+                        else:
+                            existing_card = {
+                                "id": f"card-{int(datetime.now().timestamp()*1000)}",
+                                "person": parsed["person"],
+                                "cadernoId": target_cad_id,
+                                "category": "Cartão de Crédito",
+                                "description": f"Cartão {parsed['person']}",
+                                "amount": parsed["amount"],
+                                "dueDate": "10",
+                                "status": "pending",
+                                "type": "card",
+                                "totalInstallments": 1,
+                                "currentInstallment": 1,
+                                "installments": "À vista",
+                                "subItems": [new_sub]
+                            }
+                            target_month.setdefault("expenses", []).append(existing_card)
+
+                        save_data(fam_data, fam_user_id)
+                        reply_text = bot.generate_reply(parsed, active_month_name=target_month.get("name", "Novembro"))
+                        return self.send_json_response({"success": True, "reply": reply_text, "expense": existing_card})
 
                     new_exp = {
                         "id": f"exp-{int(datetime.now().timestamp()*1000)}",
@@ -882,7 +949,7 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                     }
                     target_month.setdefault("expenses", []).append(new_exp)
                     save_data(fam_data, fam_user_id)
-                    reply_text = bot.generate_reply(parsed)
+                    reply_text = bot.generate_reply(parsed, active_month_name=target_month.get("name", "Novembro"))
                     return self.send_json_response({"success": True, "reply": reply_text, "expense": new_exp})
                 return self.send_json_response({"error": "No active month found"}, 400)
             except Exception as e:
