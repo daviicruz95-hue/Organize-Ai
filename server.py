@@ -1342,8 +1342,12 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                     curr = float(box.get("currentAmount", 0.0))
                     if action == "deposit":
                         box["currentAmount"] = round(curr + amount, 2)
+                        if month and "accountBalance" in month:
+                            month["accountBalance"] = max(0.0, round(float(month["accountBalance"]) - amount, 2))
                     else:
                         box["currentAmount"] = max(0.0, round(curr - amount, 2))
+                        if month and "accountBalance" in month:
+                            month["accountBalance"] = round(float(month["accountBalance"]) + amount, 2)
                     save_data(data, user_id)
                     return self.send_json_response({"success": True, "box": box, "data": data})
             return self.send_json_response({"error": "Box not found"}, 404)
@@ -1358,7 +1362,20 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                 return self.send_json_response({"success": True, "data": data})
             return self.send_json_response({"error": "Box not found"}, 404)
 
-        # 20. FULL SAVE
+        # 20. ACCOUNT BALANCE: UPDATE (DEFINIR / AJUSTAR SALDO REAL DA CONTA CORRENTE)
+        elif self.path == "/api/account/balance/update":
+            month_id = req.get("monthId")
+            balance = req.get("balance")
+            target_m = next((m for m in data.get("months", []) if m.get("id") == month_id), None)
+            if not target_m and data.get("months"):
+                target_m = data["months"][0]
+            if target_m and balance is not None:
+                target_m["accountBalance"] = float(balance)
+                save_data(data, user_id)
+                return self.send_json_response({"success": True, "data": data})
+            return self.send_json_response({"error": "Month not found"}, 404)
+
+        # 21. FULL SAVE
         elif self.path == "/api/save":
             save_data(req)
             return self.send_json_response({"success": True})

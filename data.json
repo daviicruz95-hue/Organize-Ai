@@ -592,7 +592,8 @@
           "installments": "À vista",
           "subItems": []
         }
-      ]
+      ],
+      "accountBalance": 1217.17
     }
   ],
   "savingsBoxes": [
@@ -602,7 +603,7 @@
       "category": "Segurança",
       "icon": "shield-check",
       "color": "emerald",
-      "currentAmount": 3156.0,
+      "currentAmount": 5579.27,
       "targetAmount": 18000.0,
       "notes": "Segurança essencial para 3 a 6 meses de despesas da família"
     },
