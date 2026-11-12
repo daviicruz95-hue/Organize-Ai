@@ -374,94 +374,6 @@
         </div>
 
       </div>
-
-      <!-- 3. PROJEÇÃO DE FUTURO (SIMULADOR DE RITMO DE ECONOMIA) -->
-      <div class="bg-gradient-to-br from-[#18191D] to-[#26282E] text-white rounded-3xl p-6 sm:p-7 shadow-lg space-y-6 border border-slate-800">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-          <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center justify-center font-black text-xl shadow-xs">
-              🚀
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h3 class="text-base sm:text-lg font-black text-white">Projeção de Futuro do Organize Aí</h3>
-                <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Visão Inteligente</span>
-              </div>
-              <p class="text-xs text-slate-300 font-medium mt-0.5">Se você mantiver o seu ritmo atual de economia mensal, veja quanto dinheiro terá acumulado nos próximos anos:</p>
-            </div>
-          </div>
-          <div class="text-left sm:text-right bg-white/5 border border-white/10 rounded-2xl p-3 shrink-0">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Sua Economia no Mês Atual</span>
-            <span id="projMonthlyRate" class="text-base sm:text-lg font-black text-emerald-400">R$ 0,00 / mês</span>
-          </div>
-        </div>
-
-        <!-- 4 CARDS DE METAS / MARCOS TEMPORAIS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          <!-- Marco 1: 6 Meses -->
-          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-sky-400/50 transition flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-black text-sky-300 uppercase tracking-wider">🗓️ Em 6 Meses</span>
-              <span class="text-[9px] font-bold bg-sky-500/20 text-sky-200 px-1.5 py-0.5 rounded">Reserva</span>
-            </div>
-            <div class="my-3">
-              <span id="proj6Months" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
-              <p id="proj6MonthsYield" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
-            </div>
-            <p class="text-[10px] text-slate-400 font-medium">Meta ideal para construir sua reserva de emergência com tranquilidade.</p>
-          </div>
-
-          <!-- Marco 2: 1 Ano -->
-          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-400/50 transition flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-black text-emerald-300 uppercase tracking-wider">🎯 Em 1 Ano</span>
-              <span class="text-[9px] font-bold bg-emerald-500/20 text-emerald-200 px-1.5 py-0.5 rounded">Conquista</span>
-            </div>
-            <div class="my-3">
-              <span id="proj1Year" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
-              <p id="proj1YearYield" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
-            </div>
-            <p class="text-[10px] text-slate-400 font-medium">Viagem dos sonhos, quitação de pendências ou novo patamar financeiro.</p>
-          </div>
-
-          <!-- Marco 3: 2 Anos -->
-          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-400/50 transition flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-black text-purple-300 uppercase tracking-wider">🏆 Em 2 Anos</span>
-              <span class="text-[9px] font-bold bg-purple-500/20 text-purple-200 px-1.5 py-0.5 rounded">Crescimento</span>
-            </div>
-            <div class="my-3">
-              <span id="proj2Years" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
-              <p id="proj2YearsYield" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
-            </div>
-            <p class="text-[10px] text-slate-400 font-medium">Troca de veículo, reforma da casa ou expansão de patrimônio.</p>
-          </div>
-
-          <!-- Marco 4: 5 Anos -->
-          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-400/50 transition flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-black text-amber-300 uppercase tracking-wider">💎 Em 5 Anos</span>
-              <span class="text-[9px] font-bold bg-amber-500/20 text-amber-200 px-1.5 py-0.5 rounded">Liberdade</span>
-            </div>
-            <div class="my-3">
-              <span id="proj5Years" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
-              <p id="proj5YearsYield" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
-            </div>
-            <p class="text-[10px] text-slate-400 font-medium">Entrada de imóvel próprio ou segurança de longo prazo consolidada.</p>
-          </div>
-        </div>
-
-        <!-- NOTA DIDÁTICA E SIMPLES -->
-        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3 text-xs text-slate-300">
-          <i data-lucide="info" class="w-5 h-5 text-amber-300 shrink-0 mt-0.5"></i>
-          <div>
-            <p class="font-bold text-white mb-0.5">Como esse cálculo funciona de verdade?</p>
-            <p id="projExplanationText" class="text-slate-300">
-              O cálculo considera que você continue poupando a sua média mensal e aplique esse valor em uma opção segura com rendimento de 100% do CDI (~10% ao ano, como no Nubank, PicPay ou Tesouro Selic). O poder dos juros compostos trabalha por você sem esforço extra!
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- TAB 6: CAIXINHAS, COFRINHOS & RESERVAS -->
@@ -516,40 +428,245 @@
           <!-- Dynamically populated -->
         </div>
 
-        <!-- SAVINGS SIMULATOR -->
-        <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 space-y-4 mt-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-slate-900">Simulador de Meta de Poupança</h3>
-              <p class="text-xs text-slate-500">Defina quanto querem economizar todo mês e veja o orçamento flexível diário</p>
+        <!-- NEW SAVINGS SIMULATOR & PROJECTION (REALISTIC WORKFLOW) -->
+        <div class="bg-slate-50 border border-slate-200/90 rounded-3xl p-5 sm:p-6 space-y-6 mt-4 shadow-xs">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-amber-400/20 text-amber-600 border border-amber-300 flex items-center justify-center font-black text-xl shadow-xs">
+                🎯
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base sm:text-lg font-black text-slate-900">Simulador de Metas & Projeção Realista</h3>
+                  <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">Visão Realista</span>
+                </div>
+                <p class="text-xs text-slate-500 font-medium">Defina sua meta baseada na sobra real do seu dinheiro, sem chutes ou ilusões.</p>
+              </div>
             </div>
-            <div class="text-right">
-              <span class="text-xs text-slate-500">Meta Desejada:</span>
-              <span id="savingsTargetDisplay" class="text-lg font-black text-[#0369A1] ml-1">R$ 1.000,00</span>
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] font-bold text-slate-500 bg-white border border-slate-200 px-3 py-1.5 rounded-xl shadow-2xs">
+                Mês Ativo: <strong id="simCurrentMonthBadge" class="text-slate-800">Novembro / 2026</strong>
+              </span>
             </div>
           </div>
 
-          <input id="savingsSlider" type="range" min="200" max="3000" step="50" value="1000" oninput="updateSavingsSimulation(this.value)" class="w-full accent-[#18191D] cursor-pointer">
+          <!-- STEP 1, 2 & 3: ENTRADAS, GASTOS & SOBRA REAL -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- 1. ENTRADAS -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="arrow-down-left" class="w-4 h-4 text-emerald-600"></i>
+                  1. Quanto você recebe por mês
+                </span>
+                <span class="text-[10px] font-bold text-slate-400">Entradas</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">R$</span>
+                <input id="simIncomeInput" type="number" step="10" placeholder="0.00" oninput="onSimValuesChanged()" class="w-full bg-slate-50 focus:bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-sm font-black text-slate-900 transition focus:ring-2 focus:ring-emerald-500 outline-none">
+              </div>
+              <p class="text-[10px] text-slate-400 font-medium">Puxado das entradas do mês atual (100% editável para simulações).</p>
+            </div>
 
-          <div class="grid grid-cols-3 gap-3 text-center pt-2">
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <span class="text-[10px] text-slate-400 font-bold block uppercase">Status da Meta</span>
-              <span id="simStatus" class="text-sm font-bold text-emerald-700">100% Alcançável!</span>
+            <!-- 2. GASTOS DO MÊS -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="arrow-up-right" class="w-4 h-4 text-rose-600"></i>
+                  2. Contas & Gastos do mês
+                </span>
+                <span class="text-[10px] font-bold text-slate-400">Saídas</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">R$</span>
+                <input id="simExpenseInput" type="number" step="10" placeholder="0.00" oninput="onSimValuesChanged()" class="w-full bg-slate-50 focus:bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-sm font-black text-slate-900 transition focus:ring-2 focus:ring-rose-500 outline-none">
+              </div>
+              <p class="text-[10px] text-slate-400 font-medium">Total de despesas (fixas + cartões) registradas (editável).</p>
             </div>
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <span class="text-[10px] text-slate-400 font-bold block uppercase">Limite Semanal Flexível</span>
-              <span id="simWeeklyBudget" class="text-sm font-bold text-slate-800">R$ 0,00 / sem</span>
+
+            <!-- 3. SOBRA REAL VISÍVEL -->
+            <div id="simSurplusBox" class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
+                    <i data-lucide="wallet" class="w-4 h-4 text-emerald-600"></i>
+                    3. Sobra Real do seu dinheiro
+                  </span>
+                  <span id="simSurplusBadge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-800">Margem Livre</span>
+                </div>
+                <div class="mt-1">
+                  <span id="simSurplusDisplay" class="text-2xl font-black text-emerald-800 tracking-tight">R$ 0,00</span>
+                </div>
+              </div>
+              <p id="simSurplusSubtext" class="text-[11px] text-emerald-700 font-medium mt-1">Este é o valor real disponível para poupança e metas.</p>
             </div>
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <span class="text-[10px] text-slate-400 font-bold block uppercase">Limite Diário Flexível</span>
-              <span id="simDailyBudget" class="text-sm font-bold text-slate-800">R$ 0,00 / dia</span>
+          </div>
+
+          <!-- DECISÃO: OBJETIVO + QUANTO GUARDAR -->
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+              <div>
+                <h4 class="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <i data-lucide="compass" class="w-4 h-4 text-sky-600"></i>
+                  Definição da Meta: Quanto desse valor você quer guardar por mês?
+                </h4>
+                <p class="text-[11px] text-slate-500">Escolha o seu objetivo e estipule a quantia mensal a ser guardada.</p>
+              </div>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-[10px] text-slate-400 font-bold uppercase mr-1">Sugestões rápidas:</span>
+                <button onclick="setSimSavingsPct(0.20)" class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-1 rounded-lg transition cursor-pointer">20% da sobra</button>
+                <button onclick="setSimSavingsPct(0.30)" class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-1 rounded-lg transition cursor-pointer">30% da sobra</button>
+                <button onclick="setSimSavingsPct(0.50)" class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-1 rounded-lg transition cursor-pointer">50% da sobra</button>
+                <button onclick="setSimSavingsPct(1.00)" class="text-[10px] font-bold bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-2 py-1 rounded-lg transition cursor-pointer">100% da sobra</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
+              <!-- NOME DO OBJETIVO -->
+              <div class="space-y-1 sm:col-span-1">
+                <label class="text-[11px] font-bold text-slate-700 block">Objetivo / Conquista:</label>
+                <input id="simGoalNameInput" type="text" placeholder="Ex: Reserva de Emergência da Família" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none">
+              </div>
+
+              <!-- META TOTAL DESEJADA (OPCIONAL, EX: 18.000) -->
+              <div class="space-y-1 sm:col-span-1">
+                <label class="text-[11px] font-bold text-slate-700 block">Valor Alvo da Meta (Opcional):</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">R$</span>
+                  <input id="simGoalTargetAmount" type="number" step="100" placeholder="Ex: 18000" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-xs sm:text-sm font-semibold text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none">
+                </div>
+              </div>
+
+              <!-- QUANTO GUARDAR POR MÊS -->
+              <div class="space-y-1 sm:col-span-1">
+                <label class="text-[11px] font-bold text-emerald-800 block">Guardar todo mês:</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-2 text-xs font-bold text-emerald-600">R$</span>
+                  <input id="simMonthlySaveInput" type="number" step="50" placeholder="0.00" oninput="onSimMonthlySaveChanged()" class="w-full bg-emerald-50/50 border-2 border-emerald-400 rounded-xl pl-8 pr-3 py-2 text-sm font-black text-emerald-900 focus:bg-white focus:ring-2 focus:ring-emerald-600 outline-none">
+                </div>
+              </div>
+            </div>
+
+            <!-- RESULTADO DE IMPACTO IMEDIATO -->
+            <div id="simFlexRemainingNotice" class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <span id="simFlexRemainingText">Defina quanto quer guardar para ver o impacto no seu orçamento diário.</span>
+              <span id="simTargetEtaBadge" class="hidden text-[11px] font-black bg-sky-100 text-sky-800 border border-sky-200 px-2.5 py-1 rounded-lg"></span>
+            </div>
+
+            <!-- BOTÕES DE AÇÃO -->
+            <div class="flex flex-col sm:flex-row items-center justify-end gap-2.5 pt-2">
+              <button onclick="generateSavingsSimulation()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#18191D] hover:bg-slate-800 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i> Gerar Simulação & Projeção
+              </button>
+              <button onclick="applySimToActiveMonth()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                <i data-lucide="check-circle" class="w-4 h-4"></i> Salvar na Reserva deste Mês
+              </button>
+            </div>
+          </div>
+
+          <!-- PROJEÇÃO FUTURA (CARDS COM JUROS COMPOSTOS A 100% DO CDI) -->
+          <div id="simProjectionCard" class="bg-gradient-to-br from-[#18191D] to-[#26282E] text-white rounded-3xl p-5 sm:p-6 shadow-lg space-y-5 border border-slate-800">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center justify-center font-black text-xl shadow-xs">
+                  🚀
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h4 class="text-base font-black text-white">Projeção de Futuro</h4>
+                    <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">100% CDI</span>
+                  </div>
+                  <p class="text-xs text-slate-300 font-medium">Veja quanto você terá acumulado nos próximos meses e anos com base no ritmo definido:</p>
+                </div>
+              </div>
+              <div class="text-left sm:text-right bg-white/5 border border-white/10 rounded-2xl p-2.5 shrink-0">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Ritmo de Poupança</span>
+                <span id="projMonthlyRateDisplay" class="text-base font-black text-emerald-400">R$ 0,00 / mês</span>
+              </div>
+            </div>
+
+            <!-- MARCOS TEMPORAIS: 6 MESES, 1 ANO, 2 ANOS, 5 ANOS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              <!-- 6 Meses -->
+              <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-sky-400/50 transition flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black text-sky-300 uppercase tracking-wider">🗓️ Em 6 Meses</span>
+                  <span class="text-[9px] font-bold bg-sky-500/20 text-sky-200 px-1.5 py-0.5 rounded">Reserva</span>
+                </div>
+                <div class="my-2.5">
+                  <span id="proj6MonthsVal" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
+                  <p id="proj6MonthsYieldVal" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
+                </div>
+                <p class="text-[10px] text-slate-400 font-medium">Fase inicial de segurança e tranquilidade para emergências da família.</p>
+              </div>
+
+              <!-- 1 Ano -->
+              <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-400/50 transition flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black text-emerald-300 uppercase tracking-wider">🎯 Em 1 Ano</span>
+                  <span class="text-[9px] font-bold bg-emerald-500/20 text-emerald-200 px-1.5 py-0.5 rounded">Conquista</span>
+                </div>
+                <div class="my-2.5">
+                  <span id="proj1YearVal" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
+                  <p id="proj1YearYieldVal" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
+                </div>
+                <p class="text-[10px] text-slate-400 font-medium">Viagem da família, reformas necessárias ou novo patamar de estabilidade.</p>
+              </div>
+
+              <!-- 2 Anos -->
+              <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-400/50 transition flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black text-purple-300 uppercase tracking-wider">🏆 Em 2 Anos</span>
+                  <span class="text-[9px] font-bold bg-purple-500/20 text-purple-200 px-1.5 py-0.5 rounded">Crescimento</span>
+                </div>
+                <div class="my-2.5">
+                  <span id="proj2YearsVal" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
+                  <p id="proj2YearsYieldVal" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
+                </div>
+                <p class="text-[10px] text-slate-400 font-medium">Troca planejada de veículo, patrimônio sólido e liberdade de escolha.</p>
+              </div>
+
+              <!-- 5 Anos -->
+              <div class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-400/50 transition flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black text-amber-300 uppercase tracking-wider">💎 Em 5 Anos</span>
+                  <span class="text-[9px] font-bold bg-amber-500/20 text-amber-200 px-1.5 py-0.5 rounded">Liberdade</span>
+                </div>
+                <div class="my-2.5">
+                  <span id="proj5YearsVal" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</span>
+                  <p id="proj5YearsYieldVal" class="text-[11px] text-emerald-400 font-medium mt-0.5">+ R$ 0,00 em rendimentos</p>
+                </div>
+                <p class="text-[10px] text-slate-400 font-medium">Entrada de imóvel próprio, grandes investimentos ou segurança perpétua.</p>
+              </div>
+            </div>
+
+            <!-- EXPLICATIVO DIDÁTICO -->
+            <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3 text-xs text-slate-300">
+              <i data-lucide="info" class="w-5 h-5 text-amber-300 shrink-0 mt-0.5"></i>
+              <div>
+                <p class="font-bold text-white mb-0.5">Cálculo com juros compostos a 100% do CDI (~10% ao ano)</p>
+                <p id="projSimExplanationText" class="text-slate-300">
+                  O Organize Aí calcula o efeito dos juros sobre juros aplicados em investimentos de liquidez diária e baixo risco (como Nubank, Tesouro Selic ou CDB 100% CDI).
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- HISTORICAL TABLE -->
-        <div class="pt-4 border-t border-slate-100">
-          <h3 class="text-sm font-bold text-slate-900 mb-2">Histórico dos Meses</h3>
+        <!-- HISTORICAL TABLE & MONTHLY RESERVE -->
+        <div class="pt-5 border-t border-slate-100 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Histórico dos Meses & Reserva Guardada</h3>
+              <p class="text-xs text-slate-500">Acompanhe entradas, saídas, saldo na conta e ajuste o valor guardado na reserva em cada mês.</p>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] font-bold uppercase text-slate-400">Total Acumulado em Reservas:</span>
+              <span id="totalHistoricalReserveDisplay" class="text-sm font-black text-emerald-700 ml-1">R$ 0,00</span>
+            </div>
+          </div>
+
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-100 text-slate-600 font-bold">
@@ -558,8 +675,8 @@
                   <th class="py-2.5 px-3">Total Entradas</th>
                   <th class="py-2.5 px-3">Total Saídas</th>
                   <th class="py-2.5 px-3">Saldo Líquido</th>
-                  <th class="py-2.5 px-3">Reserva Guardada</th>
-                  <th class="py-2.5 px-3 rounded-r-xl">Ação</th>
+                  <th class="py-2.5 px-3">Guardado na Reserva</th>
+                  <th class="py-2.5 px-3 rounded-r-xl text-center">Ações</th>
                 </tr>
               </thead>
               <tbody id="monthsTableBody" class="divide-y divide-slate-100">
@@ -3252,27 +3369,40 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       });
     }
 
-    // RENDER HISTORICAL TABLE
+    // RENDER HISTORICAL TABLE WITH EDITABLE RESERVES
     function renderHistoricalTable() {
       const tbody = document.getElementById('monthsTableBody');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
+      let totalHistoricalReserve = 0;
+
       appData.months.forEach(m => {
-        const totalInc = m.incomes.reduce((acc, i) => acc + i.amount, 0);
-        const totalExp = m.expenses.reduce((acc, e) => acc + e.amount, 0);
+        const receivedIncs = (m.incomes || []).filter(i => i.status === 'received' || i.received === true);
+        const totalInc = receivedIncs.reduce((acc, i) => acc + (i.amount || 0), 0);
+        const totalExp = (m.expenses || []).reduce((acc, e) => acc + (e.amount || 0), 0);
         const diff = totalInc - totalExp;
+        const reserveVal = parseFloat(m.reserve) || 0;
+        totalHistoricalReserve += reserveVal;
 
         tbody.insertAdjacentHTML('beforeend', `
           <tr class="hover:bg-slate-50 transition">
             <td class="py-2.5 px-3 font-bold text-slate-900 flex items-center gap-1.5">
               ${m.name} / ${m.year}
-              ${m.id === activeMonthId ? '<span class="w-2 h-2 rounded-full bg-emerald-500"></span>' : ''}
+              ${m.id === activeMonthId ? '<span class="text-[9px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200">Ativo</span>' : ''}
             </td>
             <td class="py-2.5 px-3 font-bold text-emerald-700">${formatBRL(totalInc)}</td>
             <td class="py-2.5 px-3 font-bold text-rose-700">${formatBRL(totalExp)}</td>
             <td class="py-2.5 px-3 font-black ${diff >= 0 ? 'text-sky-700' : 'text-rose-700'}">${formatBRL(diff)}</td>
-            <td class="py-2.5 px-3 text-slate-600 font-medium">${formatBRL(m.reserve || 0)}</td>
             <td class="py-2.5 px-3">
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold ${reserveVal > 0 ? 'text-emerald-700' : 'text-slate-400'}">${formatBRL(reserveVal)}</span>
+                <button onclick="promptEditMonthReserve('${m.id}', ${reserveVal})" title="Editar reserva deste mês" class="text-[10px] font-bold text-slate-500 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded-md shadow-2xs transition inline-flex items-center gap-1 cursor-pointer">
+                  <i data-lucide="pencil" class="w-3 h-3 text-sky-600"></i> Editar
+                </button>
+              </div>
+            </td>
+            <td class="py-2.5 px-3 text-center">
               <button onclick="changeActiveMonth('${m.id}')" class="text-xs font-bold text-slate-700 hover:text-slate-900 px-2.5 py-1 rounded-xl bg-white border border-slate-200 shadow-xs cursor-pointer">
                 Ver Mês
               </button>
@@ -3280,6 +3410,34 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
           </tr>
         `);
       });
+
+      const totalResEl = document.getElementById('totalHistoricalReserveDisplay');
+      if (totalResEl) totalResEl.textContent = formatBRL(totalHistoricalReserve);
+    }
+
+    async function promptEditMonthReserve(monthId, currentReserve) {
+      const targetMonth = (appData.months || []).find(m => m.id === monthId);
+      const monthName = targetMonth ? `${targetMonth.name}/${targetMonth.year}` : monthId;
+      const input = prompt(`Quanto você guardou na reserva no mês de ${monthName}? (R$)`, currentReserve > 0 ? currentReserve : '');
+      if (input === null) return;
+      const val = parseFloat(input.replace(',', '.')) || 0;
+
+      try {
+        const res = await fetch('/api/months/reserve/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ monthId, reserve: val })
+        });
+        const result = await res.json();
+        if (result.success) {
+          appData = result.data;
+          renderAll();
+          confetti({ particleCount: 30, spread: 50 });
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao salvar reserva do mês.');
+      }
     }
 
 
@@ -3595,7 +3753,7 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
             </p>
           </div>
         `;
-        updateSavingsSimulation(document.getElementById('savingsSlider').value);
+        populateSavingsSimulator(monthData);
         return;
       }
 
@@ -3654,33 +3812,238 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
       `;
 
       container.innerHTML = cardsHtml;
-      updateSavingsSimulation(document.getElementById('savingsSlider').value);
+      if (monthData) populateSavingsSimulator(monthData);
     }
 
-    function updateSavingsSimulation(target) {
-      document.getElementById('savingsTargetDisplay').textContent = formatBRL(parseFloat(target));
+    // ==========================================
+    // SIMULADOR DE METAS & PROJEÇÃO REALISTA
+    // ==========================================
+    let simCurrentIncome = 0;
+    let simCurrentExpense = 0;
+    let simCurrentMonthlySave = 0;
+
+    function populateSavingsSimulator(monthData) {
+      if (!monthData) return;
+      const badge = document.getElementById('simCurrentMonthBadge');
+      if (badge) badge.textContent = `${monthData.name} / ${monthData.year}`;
+
+      const receivedIncs = (monthData.incomes || []).filter(i => i.status === 'received' || i.received === true);
+      const totalInc = receivedIncs.reduce((acc, i) => acc + (i.amount || 0), 0);
+      const totalExp = (monthData.expenses || []).reduce((acc, e) => acc + (e.amount || 0), 0);
+
+      const incomeInput = document.getElementById('simIncomeInput');
+      const expenseInput = document.getElementById('simExpenseInput');
+      const goalInput = document.getElementById('simGoalNameInput');
+      const targetInput = document.getElementById('simGoalTargetAmount');
+      const monthlySaveInput = document.getElementById('simMonthlySaveInput');
+
+      if (incomeInput && (!incomeInput.value || incomeInput.dataset.monthId !== monthData.id)) {
+        incomeInput.value = totalInc > 0 ? totalInc : '';
+        incomeInput.dataset.monthId = monthData.id;
+      }
+      if (expenseInput && (!expenseInput.value || expenseInput.dataset.monthId !== monthData.id)) {
+        expenseInput.value = totalExp > 0 ? totalExp : '';
+        expenseInput.dataset.monthId = monthData.id;
+      }
+
+      if (goalInput && monthData.savingsGoalName) {
+        goalInput.value = monthData.savingsGoalName;
+      }
+      if (targetInput && monthData.savingsTarget) {
+        targetInput.value = monthData.savingsTarget;
+      }
+      if (monthlySaveInput && (!monthlySaveInput.value || monthlySaveInput.dataset.monthId !== monthData.id)) {
+        monthlySaveInput.value = (monthData.reserve && monthData.reserve > 0) ? monthData.reserve : (monthData.savingsMonthly || '');
+        monthlySaveInput.dataset.monthId = monthData.id;
+      }
+
+      onSimValuesChanged();
+    }
+
+    function onSimValuesChanged() {
+      const inc = parseFloat(document.getElementById('simIncomeInput')?.value) || 0;
+      const exp = parseFloat(document.getElementById('simExpenseInput')?.value) || 0;
+      simCurrentIncome = inc;
+      simCurrentExpense = exp;
+
+      const surplus = inc - exp;
+      const surplusDisplay = document.getElementById('simSurplusDisplay');
+      const surplusBox = document.getElementById('simSurplusBox');
+      const surplusBadge = document.getElementById('simSurplusBadge');
+      const surplusSubtext = document.getElementById('simSurplusSubtext');
+
+      if (surplusDisplay) {
+        surplusDisplay.textContent = formatBRL(surplus);
+      }
+
+      if (surplus >= 0) {
+        if (surplusBox) {
+          surplusBox.className = "p-4 rounded-2xl bg-emerald-50 border border-emerald-200 shadow-2xs flex flex-col justify-between";
+        }
+        if (surplusBadge) {
+          surplusBadge.className = "text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-800";
+          surplusBadge.textContent = "Sobra Livre";
+        }
+        if (surplusSubtext) {
+          surplusSubtext.className = "text-[11px] text-emerald-700 font-medium mt-1";
+          surplusSubtext.textContent = "Este é o valor real disponível para poupança e metas.";
+        }
+      } else {
+        if (surplusBox) {
+          surplusBox.className = "p-4 rounded-2xl bg-rose-50 border border-rose-200 shadow-2xs flex flex-col justify-between";
+        }
+        if (surplusBadge) {
+          surplusBadge.className = "text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-200 text-rose-800";
+          surplusBadge.textContent = "Déficit";
+        }
+        if (surplusSubtext) {
+          surplusSubtext.className = "text-[11px] text-rose-700 font-medium mt-1";
+          surplusSubtext.textContent = "Atenção: seus gastos superam as entradas. Revise contas para equilibrar.";
+        }
+      }
+
+      onSimMonthlySaveChanged();
+    }
+
+    function setSimSavingsPct(pct) {
+      const surplus = simCurrentIncome - simCurrentExpense;
+      const monthlySaveInput = document.getElementById('simMonthlySaveInput');
+      if (surplus > 0 && monthlySaveInput) {
+        const val = Math.round(surplus * pct);
+        monthlySaveInput.value = val;
+        onSimMonthlySaveChanged();
+      } else if (monthlySaveInput) {
+        monthlySaveInput.value = 100;
+        onSimMonthlySaveChanged();
+      }
+    }
+
+    function onSimMonthlySaveChanged() {
+      const surplus = simCurrentIncome - simCurrentExpense;
+      const toSave = parseFloat(document.getElementById('simMonthlySaveInput')?.value) || 0;
+      simCurrentMonthlySave = toSave;
+
+      const remainingFlex = surplus - toSave;
+      const dailyFlex = Math.round(Math.max(0, remainingFlex) / 30);
+      const weeklyFlex = Math.round(Math.max(0, remainingFlex) / 4.2);
+
+      const noticeText = document.getElementById('simFlexRemainingText');
+      if (noticeText) {
+        if (toSave <= 0) {
+          noticeText.innerHTML = `Defina quanto quer guardar para calcular os marcos da sua família.`;
+        } else if (remainingFlex >= 0) {
+          noticeText.innerHTML = `Guardando <strong>${formatBRL(toSave)}/mês</strong>, ainda sobrarão <strong>${formatBRL(remainingFlex)} livres</strong> no mês (~<strong>${formatBRL(dailyFlex)}/dia</strong> ou ~<strong>${formatBRL(weeklyFlex)}/semana</strong>).`;
+        } else {
+          noticeText.innerHTML = `<span class="text-rose-600 font-bold">⚠️ Atenção:</span> Guardar <strong>${formatBRL(toSave)}</strong> supera a sobra real de ${formatBRL(surplus)} em ${formatBRL(Math.abs(remainingFlex))}.`;
+        }
+      }
+
+      const targetAmount = parseFloat(document.getElementById('simGoalTargetAmount')?.value) || 0;
+      const goalName = document.getElementById('simGoalNameInput')?.value?.trim() || 'sua meta';
+      const etaBadge = document.getElementById('simTargetEtaBadge');
+      if (etaBadge) {
+        if (targetAmount > 0 && toSave > 0) {
+          const monthsNeeded = Math.ceil(targetAmount / toSave);
+          etaBadge.classList.remove('hidden');
+          etaBadge.innerHTML = `🎯 <strong>${goalName} (${formatBRL(targetAmount)}):</strong> Conquista em <strong>~${monthsNeeded} meses</strong>!`;
+        } else {
+          etaBadge.classList.add('hidden');
+        }
+      }
+
+      // Auto update projection cards
+      updateProjectionCards(toSave);
+    }
+
+    function updateProjectionCards(monthlyDeposit) {
+      const rateDisplay = document.getElementById('projMonthlyRateDisplay');
+      if (rateDisplay) {
+        rateDisplay.textContent = `${formatBRL(monthlyDeposit)} / mês`;
+      }
+
+      // Cálculo de juros compostos com rendimento de 100% do CDI (~10% a.a.)
+      const r = Math.pow(1 + 0.10, 1 / 12) - 1;
+      function calcFutureVal(months, deposit) {
+        if (deposit <= 0) return { total: 0, yieldAmount: 0 };
+        const fv = deposit * ((Math.pow(1 + r, months) - 1) / r) * (1 + r);
+        const invested = deposit * months;
+        const yieldAmount = Math.max(0, fv - invested);
+        return { total: Math.round(fv), yieldAmount: Math.round(yieldAmount) };
+      }
+
+      const p6 = calcFutureVal(6, monthlyDeposit);
+      const p12 = calcFutureVal(12, monthlyDeposit);
+      const p24 = calcFutureVal(24, monthlyDeposit);
+      const p60 = calcFutureVal(60, monthlyDeposit);
+
+      const el6 = document.getElementById('proj6MonthsVal');
+      const el6Y = document.getElementById('proj6MonthsYieldVal');
+      if (el6) el6.textContent = formatBRL(p6.total);
+      if (el6Y) el6Y.textContent = `+ ${formatBRL(p6.yieldAmount)} em rendimentos`;
+
+      const el12 = document.getElementById('proj1YearVal');
+      const el12Y = document.getElementById('proj1YearYieldVal');
+      if (el12) el12.textContent = formatBRL(p12.total);
+      if (el12Y) el12Y.textContent = `+ ${formatBRL(p12.yieldAmount)} em rendimentos`;
+
+      const el24 = document.getElementById('proj2YearsVal');
+      const el24Y = document.getElementById('proj2YearsYieldVal');
+      if (el24) el24.textContent = formatBRL(p24.total);
+      if (el24Y) el24Y.textContent = `+ ${formatBRL(p24.yieldAmount)} em rendimentos`;
+
+      const el60 = document.getElementById('proj5YearsVal');
+      const el60Y = document.getElementById('proj5YearsYieldVal');
+      if (el60) el60.textContent = formatBRL(p60.total);
+      if (el60Y) el60Y.textContent = `+ ${formatBRL(p60.yieldAmount)} em rendimentos`;
+
+      const expTxt = document.getElementById('projSimExplanationText');
+      if (expTxt) {
+        if (monthlyDeposit > 0) {
+          expTxt.innerHTML = `Guardando <strong>${formatBRL(monthlyDeposit)} todo mês</strong> a 100% do CDI (~10% ao ano, em opções seguras como Nubank, Tesouro Selic ou CDB), você acumulará <strong>${formatBRL(p12.total)} em 1 ano</strong> (${formatBRL(p12.yieldAmount)} só de juros) e <strong>${formatBRL(p60.total)} em 5 anos</strong>!`;
+        } else {
+          expTxt.textContent = `Defina um valor no campo "Guardar todo mês" para calcular os rendimentos acumulados.`;
+        }
+      }
+    }
+
+    function generateSavingsSimulation() {
+      onSimMonthlySaveChanged();
+      const card = document.getElementById('simProjectionCard');
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      confetti({ particleCount: 50, spread: 60 });
+    }
+
+    async function applySimToActiveMonth() {
       const monthData = getActiveMonthData();
       if (!monthData) return;
 
-      const totalInc = monthData.incomes.reduce((acc, i) => acc + i.amount, 0);
-      const totalExp = monthData.expenses.reduce((acc, e) => acc + e.amount, 0);
-      const surplus = totalInc - totalExp;
+      const toSave = parseFloat(document.getElementById('simMonthlySaveInput')?.value) || 0;
+      const targetGoal = parseFloat(document.getElementById('simGoalTargetAmount')?.value) || 0;
+      const goalName = document.getElementById('simGoalNameInput')?.value?.trim() || '';
 
-      const remainingFlex = Math.max(0, surplus - parseFloat(target));
-      const weekly = Math.round(remainingFlex / 4.2);
-      const daily = Math.round(remainingFlex / 30);
-
-      document.getElementById('simWeeklyBudget').textContent = `${formatBRL(weekly)} / sem`;
-      document.getElementById('simDailyBudget').textContent = `${formatBRL(daily)} / dia`;
-
-      const simStatus = document.getElementById('simStatus');
-      if (surplus >= parseFloat(target)) {
-        simStatus.textContent = "100% Alcançável!";
-        simStatus.className = "text-sm font-bold text-emerald-700";
-      } else {
-        const gap = parseFloat(target) - surplus;
-        simStatus.textContent = `Ajustar R$ ${Math.round(gap)} em compras`;
-        simStatus.className = "text-sm font-bold text-amber-700";
+      try {
+        const res = await fetch('/api/months/reserve/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            monthId: monthData.id,
+            reserve: toSave,
+            savingsTarget: targetGoal,
+            savingsGoalName: goalName
+          })
+        });
+        const result = await res.json();
+        if (result.success) {
+          appData = result.data;
+          renderAll();
+          alert(`Meta de ${formatBRL(toSave)} salva na reserva de ${monthData.name}/${monthData.year}!`);
+          confetti({ particleCount: 60, spread: 70 });
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao salvar meta na reserva.');
       }
     }
 
@@ -3938,70 +4301,6 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
           }
         }
       });
-
-      // 3. PROJEÇÃO DE FUTURO (SIMULADOR DE RITMO DE ECONOMIA E PATRIMÔNIO)
-      const currentMonthInc = (monthData.incomes || []).filter(i => i.status === 'received' || i.received === true).reduce((a, i) => a + (i.amount || 0), 0);
-      const currentMonthExp = totalExpenses || (monthData.expenses || []).reduce((a, e) => a + (e.amount || 0), 0);
-      let activeMonthSavings = currentMonthInc - currentMonthExp;
-
-      let baseMonthlySavings = activeMonthSavings > 0 ? activeMonthSavings : (avgEconomy > 0 ? avgEconomy : 500);
-
-      const projRateEl = document.getElementById('projMonthlyRate');
-      if (projRateEl) {
-        if (activeMonthSavings > 0) {
-          projRateEl.textContent = `${formatBRL(activeMonthSavings)} / mês`;
-          projRateEl.className = "text-base sm:text-lg font-black text-emerald-400";
-        } else if (avgEconomy > 0) {
-          projRateEl.textContent = `${formatBRL(avgEconomy)} / mês (média)`;
-          projRateEl.className = "text-base sm:text-lg font-black text-emerald-400";
-        } else {
-          projRateEl.textContent = `${formatBRL(baseMonthlySavings)} / mês (simulado)`;
-          projRateEl.className = "text-base sm:text-lg font-black text-amber-300";
-        }
-      }
-
-      // Cálculo de juros compostos com rendimento de 100% do CDI (~10% a.a.)
-      const r = Math.pow(1 + 0.10, 1 / 12) - 1;
-      function calcFutureValue(months, monthlyDeposit) {
-        const fv = monthlyDeposit * ((Math.pow(1 + r, months) - 1) / r) * (1 + r);
-        const invested = monthlyDeposit * months;
-        const yieldAmount = Math.max(0, fv - invested);
-        return { total: Math.round(fv), yieldAmount: Math.round(yieldAmount) };
-      }
-
-      const p6 = calcFutureValue(6, baseMonthlySavings);
-      const p12 = calcFutureValue(12, baseMonthlySavings);
-      const p24 = calcFutureValue(24, baseMonthlySavings);
-      const p60 = calcFutureValue(60, baseMonthlySavings);
-
-      const el6 = document.getElementById('proj6Months');
-      const el6Y = document.getElementById('proj6MonthsYield');
-      if (el6) el6.textContent = formatBRL(p6.total);
-      if (el6Y) el6Y.textContent = `+ ${formatBRL(p6.yieldAmount)} em rendimentos`;
-
-      const el12 = document.getElementById('proj1Year');
-      const el12Y = document.getElementById('proj1YearYield');
-      if (el12) el12.textContent = formatBRL(p12.total);
-      if (el12Y) el12Y.textContent = `+ ${formatBRL(p12.yieldAmount)} em rendimentos`;
-
-      const el24 = document.getElementById('proj2Years');
-      const el24Y = document.getElementById('proj2YearsYield');
-      if (el24) el24.textContent = formatBRL(p24.total);
-      if (el24Y) el24Y.textContent = `+ ${formatBRL(p24.yieldAmount)} em rendimentos`;
-
-      const el60 = document.getElementById('proj5Years');
-      const el60Y = document.getElementById('proj5YearsYield');
-      if (el60) el60.textContent = formatBRL(p60.total);
-      if (el60Y) el60Y.textContent = `+ ${formatBRL(p60.yieldAmount)} em rendimentos`;
-
-      const expTxt = document.getElementById('projExplanationText');
-      if (expTxt) {
-        if (activeMonthSavings > 0) {
-          expTxt.innerHTML = `Poupando <strong>${formatBRL(activeMonthSavings)} todo mês</strong> (sua sobra atual) e aplicando em opções seguras a 100% do CDI (~10% ao ano, como Nubank, Tesouro Selic ou CDB), você acumulará <strong>${formatBRL(p12.total)} em apenas 1 ano</strong>, sendo <strong>${formatBRL(p12.yieldAmount)} de puro rendimento</strong> sem esforço.`;
-        } else {
-          expTxt.innerHTML = `Neste mês suas saídas empataram ou superaram as entradas. Se você ajustar pequenos gastos para guardar <strong>${formatBRL(baseMonthlySavings)} por mês</strong> a 100% do CDI, em 1 ano você terá <strong>${formatBRL(p12.total)}</strong> e em 5 anos alcançará <strong>${formatBRL(p60.total)}</strong>!`;
-        }
-      }
     }
 
     // TABS SWITCHER

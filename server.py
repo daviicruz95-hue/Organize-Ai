@@ -1365,6 +1365,23 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                 return self.send_json_response({"success": True, "data": data})
             return self.send_json_response({"error": "Cannot delete month"}, 400)
 
+        # 15b. MONTH RESERVE / SAVINGS UPDATE
+        elif self.path == "/api/months/reserve/update":
+            month_id = req.get("monthId")
+            reserve = float(req.get("reserve", 0))
+            savings_target = float(req.get("savingsTarget", 0)) if "savingsTarget" in req else None
+            savings_goal_name = req.get("savingsGoalName")
+            target_m = next((m for m in data.get("months", []) if m["id"] == month_id), None)
+            if target_m:
+                target_m["reserve"] = reserve
+                if savings_target is not None:
+                    target_m["savingsTarget"] = savings_target
+                if savings_goal_name is not None:
+                    target_m["savingsGoalName"] = savings_goal_name
+                save_data(data, user_id)
+                return self.send_json_response({"success": True, "data": data})
+            return self.send_json_response({"error": "Month not found"}, 404)
+
         # 16. SAVINGS BOX: ADD
         elif self.path == "/api/savings/box/add":
             new_box = {
