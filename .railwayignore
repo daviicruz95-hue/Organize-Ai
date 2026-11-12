@@ -1,0 +1,10 @@
+node_modules
+nodejs
+cloudflared
+temp_audio*
+*.log
+.git
+.DS_Store
+whatsapp-service/node_modules
+__pycache__
+*.pyc

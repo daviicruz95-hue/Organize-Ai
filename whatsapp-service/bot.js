@@ -19,14 +19,38 @@ const execPromise = util.promisify(exec);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..');
 const STATUS_FILE = path.join(__dirname, '..', 'public', 'whatsapp_status.json');
-const AUTH_DIR = path.join(__dirname, 'auth_info_baileys');
+const AUTH_DIR = path.join(DATA_DIR, 'auth_info_baileys');
 const TRANSCRIBE_SCRIPT = path.join(__dirname, '..', 'transcribe_audio.py');
+
+// Ensure AUTH_DIR exists in persistent storage
+if (!fs.existsSync(AUTH_DIR)) {
+    fs.mkdirSync(AUTH_DIR, { recursive: true });
+}
+
+// Seed persistent AUTH_DIR from local container files if empty
+const localAuthDir = path.join(__dirname, 'auth_info_baileys');
+if (fs.existsSync(localAuthDir) && path.resolve(AUTH_DIR) !== path.resolve(localAuthDir)) {
+    const credsFile = path.join(AUTH_DIR, 'creds.json');
+    const localCreds = path.join(localAuthDir, 'creds.json');
+    if (!fs.existsSync(credsFile) && fs.existsSync(localCreds)) {
+        try {
+            console.log('📦 Migrando credenciais do WhatsApp para o volume persistente...');
+            const files = fs.readdirSync(localAuthDir);
+            for (const f of files) {
+                fs.copyFileSync(path.join(localAuthDir, f), path.join(AUTH_DIR, f));
+            }
+        } catch (copyErr) {
+            console.error('Erro ao migrar credenciais:', copyErr.message);
+        }
+    }
+}
 
 const processedIds = new Set();
 let currentSock = null;
 
-const ALLOWED_GROUPS_FILE = path.join(__dirname, 'allowed_groups.json');
+const ALLOWED_GROUPS_FILE = path.join(DATA_DIR, 'allowed_groups.json');
 const allowedGroups = new Set(['120363431136155849@g.us']);
 const groupSubjectsCache = new Map();
 
