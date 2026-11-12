@@ -184,6 +184,7 @@ class WhatsAppFinancialBot:
         cleaned = text
         patterns = [
             r'\b(?:fala\s+)?(?:z[eé]ca|zeck|zac|jack)\b',
+            r'\b(?:caderno\s+(?:do\s+|da\s+)?(?:davi|nati|nathalie)|caderno)\b',
             r'\b(?:comprei|paguei|gastei|mandei|peguei|compra|compras|despesa|gasto|lan[cç]a|registra|anota|coloca|botei|bota|anote)\s*(?:um|uma|o|a|os|as)?\b',
             r'\b(?:para\s+(?:a\s+)?fatura\s+(?:de\s+)?|pra\s+fatura\s+(?:de\s+)?|fatura\s+(?:de\s+)?|fatura\s+(?:do\s+)?m[eê]s\s+que\s+vem|m[eê]s\s+que\s+vem|pr[oó]ximo\s+m[eê]s|pr[oó]xima\s+fatura|fatura)\b',
             r'\b(?:pro\s+m[eê]s\s+(?:de\s+)?|no\s+m[eê]s\s+(?:de\s+)?)\b',
@@ -237,48 +238,67 @@ class WhatsAppFinancialBot:
             "installments": f"1/{total_installments}" if total_installments > 1 else "À vista"
         }
 
-    def generate_reply(self, parsed, active_month_name="Novembro"):
+    def generate_reply(self, parsed, active_month_name="Novembro", current_balance=None):
         if not parsed or parsed.get("amount", 0) <= 0 or not parsed.get("valid", True):
             return None
 
         person_name = "Nati" if "nat" in parsed['person'].lower() else "Davi"
 
+        def fmt_brl(val):
+            if val is None:
+                return "0,00"
+            try:
+                return f"{float(val):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+            except Exception:
+                return str(val)
+
+        amt_str = fmt_brl(parsed['amount'])
+
         if parsed["type"] == "pix":
             type_icon = "⚡ PIX (No Caderno)"
             status_text = f"Pago no ato ({parsed['dueDate']})"
-            return (
+            reply = (
                 f"✅ *Lançado com sucesso no Organize Aí!*\n\n"
                 f"👤 *Caderno:* {person_name}\n"
                 f"📝 *Item:* {parsed['description']}\n"
-                f"💰 *Valor:* R$ {parsed['amount']:.2f}\n"
+                f"💰 *Valor:* R$ {amt_str}\n"
                 f"🏷️ *Forma:* {type_icon}\n"
                 f"📁 *Categoria:* {parsed['category']}\n"
                 f"📅 *Status:* {status_text}"
             )
+            if current_balance is not None:
+                reply += f"\n🏦 *Saldo em Conta:* R$ {fmt_brl(current_balance)}"
+            return reply
         elif parsed["type"] == "debit":
             type_icon = "💳 Débito (No Caderno)"
             status_text = f"Pago no ato ({parsed['dueDate']})"
-            return (
+            reply = (
                 f"✅ *Lançado com sucesso no Organize Aí!*\n\n"
                 f"👤 *Caderno:* {person_name}\n"
                 f"📝 *Item:* {parsed['description']}\n"
-                f"💰 *Valor:* R$ {parsed['amount']:.2f}\n"
+                f"💰 *Valor:* R$ {amt_str}\n"
                 f"🏷️ *Forma:* {type_icon}\n"
                 f"📁 *Categoria:* {parsed['category']}\n"
                 f"📅 *Status:* {status_text}"
             )
+            if current_balance is not None:
+                reply += f"\n🏦 *Saldo em Conta:* R$ {fmt_brl(current_balance)}"
+            return reply
         elif parsed["type"] == "fixed":
             type_icon = "📌 Conta Fixa (No Caderno)"
             status_text = f"A vencer ({parsed['dueDate']})"
-            return (
+            reply = (
                 f"✅ *Lançado com sucesso no Organize Aí!*\n\n"
                 f"👤 *Caderno:* {person_name}\n"
                 f"📝 *Item:* {parsed['description']}\n"
-                f"💰 *Valor:* R$ {parsed['amount']:.2f}\n"
+                f"💰 *Valor:* R$ {amt_str}\n"
                 f"🏷️ *Forma:* {type_icon}\n"
                 f"📁 *Categoria:* {parsed['category']}\n"
                 f"📅 *Status:* {status_text}"
             )
+            if current_balance is not None:
+                reply += f"\n🏦 *Saldo em Conta Atual:* R$ {fmt_brl(current_balance)}"
+            return reply
         else:
             # Credit Card purchase
             inv_name = parsed.get("target_month_name") or active_month_name
@@ -286,16 +306,17 @@ class WhatsAppFinancialBot:
             inv_label = f"{inv_name}/{inv_year}"
             inst_label = parsed.get("installments", "À vista")
 
-            return (
+            reply = (
                 f"✅ *Lançado com sucesso no Organize Aí!*\n\n"
                 f"👤 *Caderno:* {person_name}\n"
                 f"📝 *Item:* {parsed['description']}\n"
-                f"💰 *Valor:* R$ {parsed['amount']:.2f}\n"
+                f"💰 *Valor:* R$ {amt_str}\n"
                 f"🏷️ *Forma:* 💳 Cartão de Crédito\n"
                 f"📅 *Fatura:* {inv_label}\n"
                 f"📁 *Categoria:* {parsed['category']}\n"
                 f"📊 *Parcelamento:* {inst_label}"
             )
+            return reply
 
 if __name__ == "__main__":
     bot = WhatsAppFinancialBot()

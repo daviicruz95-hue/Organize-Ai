@@ -1732,13 +1732,31 @@
       syncUserPill();
       await fetchAppData();
       initSpeechRecognition();
+
+      // Auto-refresh when user returns to tab / window from WhatsApp
+      window.addEventListener('focus', () => {
+        fetchAppData(true);
+      });
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          fetchAppData(true);
+        }
+      });
+      // Soft periodic polling (every 12 seconds) so dashboard stays live if left open
+      setInterval(() => {
+        if (!document.hidden) {
+          fetchAppData(true);
+        }
+      }, 12000);
     });
 
-    async function fetchAppData() {
+    async function fetchAppData(keepSelection = false) {
       try {
         const res = await fetch('/api/data');
         appData = await res.json();
-        activeMonthId = appData.activeMonth || (appData.months[0] ? appData.months[0].id : '2026-11');
+        if (!keepSelection || !activeMonthId || !appData.months || !appData.months.some(m => m.id === activeMonthId)) {
+          activeMonthId = appData.activeMonth || (appData.months[0] ? appData.months[0].id : '2026-11');
+        }
         renderMonthSelect();
         renderAll();
       } catch (err) {
@@ -4667,6 +4685,13 @@ As contas fixas, recorrentes e parcelas foram transferidas e calculadas automati
         cadernoId: cadernoId,
         person: person
       };
+
+      // Optimistic balance update for instant feedback
+      const currentM = getActiveMonthData();
+      if (!id && currentM && currentM.accountBalance !== undefined && currentM.accountBalance !== null) {
+        currentM.accountBalance = Math.max(0, Math.round((parseFloat(currentM.accountBalance) - amount) * 100) / 100);
+        renderAll();
+      }
 
       const endpoint = id ? '/api/expenses/update' : '/api/expenses/add';
       try {

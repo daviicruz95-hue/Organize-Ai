@@ -468,6 +468,20 @@ def ensure_cadernos(data, user_name="Usuário"):
         data["cadernos"] = cadernos
     return data["cadernos"]
 
+def reconcile_data(data):
+    if not isinstance(data, dict):
+        return False
+    modified = False
+    for m in data.get("months", []):
+        if m.get("id") == "2026-11":
+            # Reconcile if accountBalance is 1217.17 and 'chefe' (20.00 PIX) was already registered
+            if abs(float(m.get("accountBalance") or 0.0) - 1217.17) < 0.001:
+                has_chefe = any(e.get("id") == "exp-1794497675628" or ("chefe" in e.get("description", "").lower() and float(e.get("amount", 0.0)) == 20.0) for e in m.get("expenses", []))
+                if has_chefe:
+                    m["accountBalance"] = 1197.17
+                    modified = True
+    return modified
+
 def load_data(user_id=MASTER_USER_ID):
     file_path = get_user_file_path(user_id)
     users = get_users()
@@ -483,6 +497,8 @@ def load_data(user_id=MASTER_USER_ID):
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             d = json.load(f)
+            if reconcile_data(d):
+                save_data(d, user_id)
             ensure_cadernos(d, u_name)
             ensure_future_months(d, user_id=user_id, months_ahead=2)
             return d
@@ -929,7 +945,7 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                             target_month.setdefault("expenses", []).append(existing_card)
 
                         save_data(fam_data, fam_user_id)
-                        reply_text = bot.generate_reply(parsed, active_month_name=target_month.get("name", "Novembro"))
+                        reply_text = bot.generate_reply(parsed, active_month_name=target_month.get("name", "Novembro"), current_balance=target_month.get("accountBalance"))
                         return self.send_json_response({"success": True, "reply": reply_text, "expense": existing_card})
 
                     new_exp = {
@@ -948,8 +964,14 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                         "subItems": []
                     }
                     target_month.setdefault("expenses", []).append(new_exp)
+
+                    # Deduct from account balance if debit / pix / paid variable
+                    if parsed["type"] in ["debit", "pix", "variable"] and new_exp.get("status") == "paid":
+                        if target_month.get("accountBalance") is not None:
+                            target_month["accountBalance"] = max(0.0, round(float(target_month["accountBalance"]) - float(new_exp["amount"]), 2))
+
                     save_data(fam_data, fam_user_id)
-                    reply_text = bot.generate_reply(parsed, active_month_name=target_month.get("name", "Novembro"))
+                    reply_text = bot.generate_reply(parsed, active_month_name=target_month.get("name", "Novembro"), current_balance=target_month.get("accountBalance"))
                     return self.send_json_response({"success": True, "reply": reply_text, "expense": new_exp})
                 return self.send_json_response({"error": "No active month found"}, 400)
             except Exception as e:
@@ -1028,7 +1050,14 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             if month:
                 for exp in month.get("expenses", []):
                     if exp.get("id") == exp_id:
-                        exp["status"] = "paid" if exp.get("status") == "pending" else "pending"
+                        was_pending = (exp.get("status") == "pending")
+                        exp["status"] = "paid" if was_pending else "pending"
+                        if exp.get("type") in ["debit", "pix", "variable"] and month.get("accountBalance") is not None:
+                            amt = float(exp.get("amount", 0.0))
+                            if was_pending:
+                                month["accountBalance"] = max(0.0, round(float(month["accountBalance"]) - amt, 2))
+                            else:
+                                month["accountBalance"] = round(float(month["accountBalance"]) + amt, 2)
                         save_data(data, user_id)
                         return self.send_json_response({"success": True, "data": data})
             return self.send_json_response({"error": "Expense not found"}, 404)
@@ -1079,6 +1108,9 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                 data.setdefault("futureInstallments", []).append(inst_entry)
 
             month.setdefault("expenses", []).append(new_exp)
+            if new_exp.get("status") == "paid" and new_exp.get("type") in ["debit", "pix", "variable"]:
+                if month.get("accountBalance") is not None:
+                    month["accountBalance"] = max(0.0, round(float(month["accountBalance"]) - new_exp["amount"], 2))
             save_data(data, user_id)
             return self.send_json_response({"success": True, "expense": new_exp, "data": data})
 
@@ -1089,6 +1121,10 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             for m in target_months:
                 for exp in m.get("expenses", []):
                     if exp.get("id") == exp_id:
+                        old_status = exp.get("status")
+                        old_type = exp.get("type")
+                        old_amount = float(exp.get("amount", 0.0))
+
                         if "description" in req:
                             exp["description"] = req.get("description", exp.get("description"))
                         if "amount" in req:
@@ -1109,6 +1145,21 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                             exp["totalInstallments"] = int(req.get("totalInstallments", 1))
                             exp["currentInstallment"] = int(req.get("currentInstallment", 1))
                             exp["installments"] = f"{exp['currentInstallment']}/{exp['totalInstallments']}" if exp["totalInstallments"] > 1 else "À vista"
+
+                        new_status = exp.get("status")
+                        new_type = exp.get("type")
+                        new_amount = float(exp.get("amount", 0.0))
+
+                        if m.get("accountBalance") is not None:
+                            was_paid = old_status == "paid" and old_type in ["debit", "pix", "variable"]
+                            is_paid = new_status == "paid" and new_type in ["debit", "pix", "variable"]
+                            if was_paid and is_paid:
+                                m["accountBalance"] = max(0.0, round(float(m["accountBalance"]) + old_amount - new_amount, 2))
+                            elif was_paid and not is_paid:
+                                m["accountBalance"] = round(float(m["accountBalance"]) + old_amount, 2)
+                            elif not was_paid and is_paid:
+                                m["accountBalance"] = max(0.0, round(float(m["accountBalance"]) - new_amount, 2))
+
                         save_data(data, user_id)
                         return self.send_json_response({"success": True, "expense": exp, "data": data})
             return self.send_json_response({"error": "Expense not found"}, 404)
@@ -1117,9 +1168,12 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
         elif self.path == "/api/expenses/delete":
             exp_id = req.get("id")
             if month:
-                before_len = len(month.get("expenses", []))
-                month["expenses"] = [e for e in month.get("expenses", []) if e.get("id") != exp_id]
-                if len(month["expenses"]) < before_len:
+                to_delete = next((e for e in month.get("expenses", []) if e.get("id") == exp_id), None)
+                if to_delete:
+                    if to_delete.get("status") == "paid" and to_delete.get("type") in ["debit", "pix", "variable"]:
+                        if month.get("accountBalance") is not None:
+                            month["accountBalance"] = round(float(month["accountBalance"]) + float(to_delete.get("amount", 0.0)), 2)
+                    month["expenses"] = [e for e in month.get("expenses", []) if e.get("id") != exp_id]
                     save_data(data, user_id)
                     return self.send_json_response({"success": True, "data": data})
             return self.send_json_response({"error": "Expense not found"}, 404)
@@ -1226,7 +1280,14 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             if month:
                 for inc in month.get("incomes", []):
                     if inc.get("id") == inc_id:
-                        inc["status"] = "pending" if inc.get("status") == "received" else "received"
+                        was_pending = (inc.get("status") != "received")
+                        inc["status"] = "received" if was_pending else "pending"
+                        if month.get("accountBalance") is not None:
+                            amt = float(inc.get("amount", 0.0))
+                            if was_pending:
+                                month["accountBalance"] = round(float(month["accountBalance"]) + amt, 2)
+                            else:
+                                month["accountBalance"] = max(0.0, round(float(month["accountBalance"]) - amt, 2))
                         save_data(data, user_id)
                         return self.send_json_response({"success": True, "income": inc, "data": data})
             return self.send_json_response({"error": "Income not found"}, 404)
@@ -1245,6 +1306,8 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                 "status": req.get("status", "received" if amount > 0 else "pending")
             }
             month.setdefault("incomes", []).append(new_inc)
+            if new_inc.get("status") == "received" and month.get("accountBalance") is not None:
+                month["accountBalance"] = round(float(month["accountBalance"]) + amount, 2)
             save_data(data, user_id)
             return self.send_json_response({"success": True, "income": new_inc, "data": data})
 
@@ -1254,6 +1317,8 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             if month:
                 for inc in month.get("incomes", []):
                     if inc.get("id") == inc_id:
+                        old_status = inc.get("status")
+                        old_amount = float(inc.get("amount", 0.0))
                         inc["description"] = req.get("description", inc.get("description"))
                         inc["amount"] = float(req.get("amount", 0.0))
                         inc["person"] = req.get("person", inc.get("person"))
@@ -1261,6 +1326,17 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                             inc["category"] = req.get("category")
                         if "status" in req:
                             inc["status"] = req["status"]
+                        new_status = inc.get("status")
+                        new_amount = float(inc.get("amount", 0.0))
+                        if month.get("accountBalance") is not None:
+                            was_rec = (old_status == "received")
+                            is_rec = (new_status == "received")
+                            if was_rec and is_rec:
+                                month["accountBalance"] = round(float(month["accountBalance"]) - old_amount + new_amount, 2)
+                            elif was_rec and not is_rec:
+                                month["accountBalance"] = max(0.0, round(float(month["accountBalance"]) - old_amount, 2))
+                            elif not was_rec and is_rec:
+                                month["accountBalance"] = round(float(month["accountBalance"]) + new_amount, 2)
                         save_data(data, user_id)
                         return self.send_json_response({"success": True, "income": inc, "data": data})
             return self.send_json_response({"error": "Income not found"}, 404)
@@ -1269,9 +1345,11 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
         elif self.path == "/api/incomes/delete":
             inc_id = req.get("id")
             if month:
-                before_len = len(month.get("incomes", []))
-                month["incomes"] = [i for i in month.get("incomes", []) if i.get("id") != inc_id]
-                if len(month["incomes"]) < before_len:
+                to_delete = next((i for i in month.get("incomes", []) if i.get("id") == inc_id), None)
+                if to_delete:
+                    if to_delete.get("status") == "received" and month.get("accountBalance") is not None:
+                        month["accountBalance"] = max(0.0, round(float(month["accountBalance"]) - float(to_delete.get("amount", 0.0)), 2))
+                    month["incomes"] = [i for i in month.get("incomes", []) if i.get("id") != inc_id]
                     save_data(data, user_id)
                     return self.send_json_response({"success": True, "data": data})
             return self.send_json_response({"error": "Income not found"}, 404)
@@ -1335,6 +1413,9 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                     "subItems": []
                 }
                 month.setdefault("expenses", []).append(new_exp)
+                if new_exp.get("status") == "paid" and new_exp.get("type") in ["debit", "pix", "variable"]:
+                    if month.get("accountBalance") is not None:
+                        month["accountBalance"] = max(0.0, round(float(month["accountBalance"]) - new_exp["amount"], 2))
                 save_data(data, user_id)
                 return self.send_json_response({"success": True, "parsed": parsed, "committed": True, "expense": new_exp, "data": data})
             else:
