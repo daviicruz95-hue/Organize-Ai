@@ -59,5 +59,15 @@
         }
       ]
     }
+  ],
+  "cadernos": [
+    {
+      "id": "cad-1",
+      "name": "Caderno Leandro",
+      "description": "Contas fixas, faturas e parcelas",
+      "color": "#7C3AED",
+      "bg": "#F0EDFF",
+      "icon": "L"
+    }
   ]
 }

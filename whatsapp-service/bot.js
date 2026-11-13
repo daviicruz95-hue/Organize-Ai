@@ -67,6 +67,7 @@ if (fs.existsSync(localAuthDir) && path.resolve(AUTH_DIR) !== path.resolve(local
 
 const processedIds = new Set();
 let currentSock = null;
+let heartbeatTimer = null;
 
 const ALLOWED_GROUPS_FILE = path.join(DATA_DIR, 'allowed_groups.json');
 const allowedGroups = new Set(['120363431136155849@g.us']);
@@ -136,6 +137,18 @@ saveStatus({ status: 'starting', updatedAt: new Date().toISOString() });
 const msgRetryMap = new Map();
 
 async function startBot() {
+    if (heartbeatTimer) {
+        clearInterval(heartbeatTimer);
+        heartbeatTimer = null;
+    }
+    if (currentSock) {
+        try {
+            currentSock.ev.removeAllListeners();
+            currentSock.end(undefined);
+        } catch (e) {}
+        currentSock = null;
+    }
+
     const { version, isLatest } = await fetchLatestBaileysVersion();
     console.log(`Usando WhatsApp Web v${version.join('.')} (isLatest: ${isLatest})`);
 
@@ -150,20 +163,12 @@ async function startBot() {
         },
         browser: Browsers.macOS('Desktop'),
         syncFullHistory: false,
-        markOnlineOnConnect: false,
-        shouldIgnoreJid: (jid) => jid.endsWith('@broadcast') || jid.endsWith('@newsletter'),
         printQRInTerminal: false,
         generateHighQualityLinkPreview: false,
         defaultQueryTimeoutMs: 60000,
         connectTimeoutMs: 60000,
-        msgRetryCounterCache: {
-            get: (key) => msgRetryMap.get(key),
-            set: (key, val) => msgRetryMap.set(key, val),
-            del: (key) => msgRetryMap.delete(key),
-        },
-        getMessage: async (key) => {
-            return { conversation: '' };
-        }
+        keepAliveIntervalMs: 25000,
+        markOnlineOnConnect: true
     });
 
     currentSock = sock;
@@ -188,6 +193,18 @@ async function startBot() {
         }
 
         if (connection === 'close') {
+            if (heartbeatTimer) {
+                clearInterval(heartbeatTimer);
+                heartbeatTimer = null;
+            }
+            if (currentSock) {
+                try {
+                    currentSock.ev.removeAllListeners();
+                    currentSock.end(undefined);
+                } catch (e) {}
+                currentSock = null;
+            }
+
             const statusCode = (lastDisconnect?.error)?.output?.statusCode;
             const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
             console.log(`Conexão encerrada (código: ${statusCode}). Reconectando: ${shouldReconnect}...`);
@@ -213,6 +230,19 @@ async function startBot() {
             console.log('Usuário conectado:', sock.user?.name || sock.user?.id);
             console.log('=============================================\n');
 
+            try {
+                await sock.sendPresenceUpdate('available');
+            } catch (e) {}
+
+            if (heartbeatTimer) clearInterval(heartbeatTimer);
+            heartbeatTimer = setInterval(async () => {
+                try {
+                    if (sock?.ws?.isOpen) {
+                        await sock.sendPresenceUpdate('available');
+                    }
+                } catch (e) {}
+            }, 3 * 60 * 1000);
+
             saveStatus({
                 status: 'connected',
                 user: sock.user,
@@ -224,6 +254,8 @@ async function startBot() {
     sock.ev.on('messages.upsert', async ({ messages, type }) => {
         // Accept both notify (incoming) and append (sent from linked device/phone)
         if (type !== 'notify' && type !== 'append') return;
+
+        console.log(`📡 [Upsert Event] Recebido ${messages.length} msg(s) (tipo: ${type})`);
 
         for (const m of messages) {
             if (!m.message) continue;
@@ -239,18 +271,22 @@ async function startBot() {
             const remoteJid = m.key.remoteJid;
             if (!remoteJid || remoteJid === 'status@broadcast') continue;
 
-            // Unwrap modern WhatsApp messages (ephemeral, viewOnce, etc.)
+            // Unwrap modern WhatsApp messages (ephemeral, viewOnce, edited, etc.)
             let msg = m.message;
-            if (msg.ephemeralMessage) msg = msg.ephemeralMessage.message;
-            if (msg.viewOnceMessage) msg = msg.viewOnceMessage.message;
-            if (msg.viewOnceMessageV2) msg = msg.viewOnceMessageV2.message;
-            if (msg.documentWithCaptionMessage) msg = msg.documentWithCaptionMessage.message;
+            while (msg) {
+                if (msg.ephemeralMessage) msg = msg.ephemeralMessage.message;
+                else if (msg.viewOnceMessage) msg = msg.viewOnceMessage.message;
+                else if (msg.viewOnceMessageV2) msg = msg.viewOnceMessageV2.message;
+                else if (msg.documentWithCaptionMessage) msg = msg.documentWithCaptionMessage.message;
+                else if (msg.protocolMessage?.editedMessage) msg = msg.protocolMessage.editedMessage;
+                else break;
+            }
             if (!msg) continue;
 
             const isGroup = remoteJid.endsWith('@g.us');
             const ownPhone = sock.user?.id ? sock.user.id.split(':')[0] : '554791490805';
             const cleanOwnPhone = ownPhone.replace(/\D/g, '');
-            const senderJid = isGroup ? (m.key.participant || m.participant || '') : remoteJid;
+            const senderJid = isGroup ? (m.key.participant || m.participant || (m.key.fromMe ? (sock.user?.id || '') : '')) : remoteJid;
             const isSelfChat = !isGroup && (remoteJid.includes(ownPhone) || remoteJid.includes('5547991490805'));
 
             // Check if group is authorized
@@ -434,7 +470,12 @@ async function startBot() {
                 const data = await resp.json();
                 if (data.reply) {
                     console.log(`🤖 Zeca respondendo no chat ${remoteJid}...`);
-                    await sock.sendMessage(remoteJid, { text: data.reply }, { quoted: m });
+                    try {
+                        await sock.sendMessage(remoteJid, { text: data.reply }, { quoted: m });
+                    } catch (quoteErr) {
+                        console.warn('⚠️ Falha ao responder com quote, enviando sem quote:', quoteErr.message);
+                        await sock.sendMessage(remoteJid, { text: data.reply });
+                    }
                 }
             } catch (err) {
                 console.error('Erro ao chamar webhook:', err.message);
