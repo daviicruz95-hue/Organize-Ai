@@ -649,6 +649,21 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_json_response(data)
             except Exception as e:
                 self.send_json_response({"error": str(e)}, 500)
+        elif clean_path == "/api/whatsapp/send-test":
+            import urllib.request
+            chat = ""
+            if "?" in self.path:
+                for param in self.path.split("?")[1].split("&"):
+                    if param.startswith("chat="):
+                        chat = param.split("=")[1]
+            try:
+                url = f"http://localhost:5052/send-test?chat={chat}"
+                req = urllib.request.Request(url)
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    data = json.loads(resp.read().decode())
+                    self.send_json_response(data)
+            except Exception as e:
+                self.send_json_response({"error": str(e)}, 500)
         elif clean_path in ["/app", "/dashboard", "/app/"]:
             self.path = "/index.html"
             super().do_GET()

@@ -462,15 +462,20 @@ const pairServer = http.createServer(async (req, res) => {
             return;
         }
 
-        const testMsg = `👋 *Fala Davi! Aqui é o Zeca!* 🤖\n\nConexão estabelecida com sucesso! Toda vez que você ou a Nati mandarem uma mensagem de áudio, texto ou foto de comprovante aqui (ou no grupo de vocês), eu já calculo e lanço direto no Organize Aí.\n\n*Pode testar me mandando um áudio ou texto agora, por exemplo:*\n_"Zeca, almoço de 35 reais no débito"_`;
+        const urlParams = new URL(req.url, 'http://localhost:5052');
+        const targetChat = urlParams.searchParams.get('chat');
+        const testMsg = `👋 *Fala aí! Aqui é o Zeca do Organize Aí!* 🤖\n\nTô 100% online e conectado! Pode mandar seus gastos por texto ou áudio que eu lanço na hora! 🚀`;
 
         try {
             const ownJid = currentSock.user?.id || '554791490805@s.whatsapp.net';
             const cleanJid = ownJid.split(':')[0] + '@s.whatsapp.net';
-            await currentSock.sendMessage(cleanJid, { text: testMsg });
+            const dest = targetChat || cleanJid;
+            console.log(`📤 Enviando mensagem de teste para ${dest}...`);
+            await currentSock.sendMessage(dest, { text: testMsg });
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: true, sentTo: cleanJid }));
+            res.end(JSON.stringify({ success: true, sentTo: dest }));
         } catch (err) {
+            console.error('Erro ao enviar mensagem de teste:', err.message);
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: err.message }));
         }
