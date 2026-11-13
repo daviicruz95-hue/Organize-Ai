@@ -187,6 +187,12 @@
                     if (data.user && data.user.id) {
                         connectedUser.innerHTML = `Conectado como <b class="text-emerald-300">${data.user.name || data.user.id.split(':')[0]}</b>.<br>Pronto para receber gastos seus e da Nati!`;
                     }
+                } else if (data.status === 'disabled') {
+                    loading.classList.add('hidden');
+                    qrState.classList.add('hidden');
+                    connectedState.classList.remove('hidden');
+                    instructions.classList.add('hidden');
+                    connectedUser.innerHTML = `<span class="text-amber-400 font-semibold text-base">⏸️ Robô desativado</span><br><span class="text-xs text-slate-400">O robô está pausado e não responderá a mensagens no WhatsApp.</span>`;
                 } else if (data.status === 'scan_qr' && data.qrDataUrl) {
                     loading.classList.add('hidden');
                     connectedState.classList.add('hidden');

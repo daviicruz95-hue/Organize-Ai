@@ -1,9 +1,5 @@
 {
-  "status": "connected",
-  "user": {
-    "id": "554791490805:2@s.whatsapp.net",
-    "lid": "134016653115423:2@lid",
-    "name": "Davi Cruz"
-  },
-  "updatedAt": "2026-11-10T02:52:11.862Z"
+  "status": "disabled",
+  "message": "Robô desativado",
+  "updatedAt": "2026-11-13T19:32:00.000Z"
 }

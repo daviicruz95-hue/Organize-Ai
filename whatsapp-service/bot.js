@@ -137,6 +137,16 @@ saveStatus({ status: 'starting', updatedAt: new Date().toISOString() });
 const msgRetryMap = new Map();
 
 async function startBot() {
+    if (process.env.ENABLE_WHATSAPP_BOT !== 'true') {
+        console.log('⏸️ Robô do WhatsApp desativado por configuração.');
+        saveStatus({
+            status: 'disabled',
+            message: 'Robô desativado',
+            updatedAt: new Date().toISOString()
+        });
+        return;
+    }
+
     if (heartbeatTimer) {
         clearInterval(heartbeatTimer);
         heartbeatTimer = null;
