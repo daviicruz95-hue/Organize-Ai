@@ -150,6 +150,8 @@ async function startBot() {
         },
         browser: Browsers.macOS('Desktop'),
         syncFullHistory: false,
+        markOnlineOnConnect: false,
+        shouldIgnoreJid: (jid) => jid.endsWith('@broadcast') || jid.endsWith('@newsletter'),
         printQRInTerminal: false,
         generateHighQualityLinkPreview: false,
         defaultQueryTimeoutMs: 60000,

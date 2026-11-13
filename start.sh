@@ -22,12 +22,6 @@ PYTHON_PID=$!
 # Wait 2 seconds for server to bind
 sleep 2
 
-# Clean any broken/desynced session ratchets on boot while keeping creds.json
-if [ -n "$DATA_DIR" ] && [ -d "$DATA_DIR/auth_info_baileys" ]; then
-    echo "🧹 Limpando sessões antigas para evitar loops de Bad MAC..."
-    find "$DATA_DIR/auth_info_baileys" -name "session-*.json" -delete 2>/dev/null || true
-fi
-
 # Start WhatsApp bot supervisor if configured
 if [ -d "whatsapp-service" ]; then
     echo "🤖 Iniciando supervisor resiliente do WhatsApp..."
