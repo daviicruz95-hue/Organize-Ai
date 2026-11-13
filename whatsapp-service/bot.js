@@ -15,6 +15,24 @@ import { exec } from 'child_process';
 import util from 'util';
 import http from 'http';
 
+// Silence noisy libsignal session records that flood stdout and cause Railway rate limits
+const origConsoleInfo = console.info;
+console.info = function(...args) {
+    if (typeof args[0] === 'string' && (args[0].includes('Closing session') || args[0].includes('Opening session') || args[0].includes('SessionEntry'))) {
+        return;
+    }
+    origConsoleInfo.apply(console, args);
+};
+
+// Process error handlers to prevent unhandled crashes
+process.on('uncaughtException', (err) => {
+    console.error('⚠️ [UncaughtException WhatsApp]:', err.message);
+});
+
+process.on('unhandledRejection', (reason) => {
+    console.error('⚠️ [UnhandledRejection WhatsApp]:', (reason && reason.message) || reason);
+});
+
 const execPromise = util.promisify(exec);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -80,6 +98,11 @@ const FINANCE_KEYWORDS = [
 ];
 
 async function isGroupAuthorized(sock, remoteJid) {
+    // 1. Instant check for known authorized groups
+    if (allowedGroups.has(remoteJid)) {
+        return true;
+    }
+
     let subject = groupSubjectsCache.get(remoteJid);
     if (!subject) {
         try {
@@ -87,11 +110,14 @@ async function isGroupAuthorized(sock, remoteJid) {
             subject = (metadata?.subject || '').toLowerCase();
             groupSubjectsCache.set(remoteJid, subject);
         } catch (e) {
+            console.log(`⚠️ Metadata do grupo ${remoteJid} indisponível: ${e.message}`);
             return false;
         }
     }
     // EXCLUSIVE: ONLY allow group with name "Organize aí" / "Organize ai"
     if (subject && (subject.includes('organize a') || subject.includes('organize aí') || subject.includes('organize ai'))) {
+        allowedGroups.add(remoteJid);
+        saveAllowedGroups();
         return true;
     }
     return false;
@@ -106,6 +132,8 @@ function saveStatus(statusObj) {
 }
 
 saveStatus({ status: 'starting', updatedAt: new Date().toISOString() });
+
+const msgRetryMap = new Map();
 
 async function startBot() {
     const { version, isLatest } = await fetchLatestBaileysVersion();
@@ -125,7 +153,15 @@ async function startBot() {
         printQRInTerminal: false,
         generateHighQualityLinkPreview: false,
         defaultQueryTimeoutMs: 60000,
-        connectTimeoutMs: 60000
+        connectTimeoutMs: 60000,
+        msgRetryCounterCache: {
+            get: (key) => msgRetryMap.get(key),
+            set: (key, val) => msgRetryMap.set(key, val),
+            del: (key) => msgRetryMap.delete(key),
+        },
+        getMessage: async (key) => {
+            return { conversation: '' };
+        }
     });
 
     currentSock = sock;

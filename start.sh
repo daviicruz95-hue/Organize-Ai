@@ -22,14 +22,26 @@ PYTHON_PID=$!
 # Wait 2 seconds for server to bind
 sleep 2
 
-# Start WhatsApp bot if configured
+# Clean any broken/desynced session ratchets on boot while keeping creds.json
+if [ -n "$DATA_DIR" ] && [ -d "$DATA_DIR/auth_info_baileys" ]; then
+    echo "🧹 Limpando sessões antigas para evitar loops de Bad MAC..."
+    find "$DATA_DIR/auth_info_baileys" -name "session-*.json" -delete 2>/dev/null || true
+fi
+
+# Start WhatsApp bot supervisor if configured
 if [ -d "whatsapp-service" ]; then
-    echo "🤖 Iniciando serviço do WhatsApp..."
-    cd whatsapp-service
-    node bot.js &
-    BOT_PID=$!
-    cd ..
+    echo "🤖 Iniciando supervisor resiliente do WhatsApp..."
+    (
+        cd whatsapp-service
+        while true; do
+            echo "🤖 [Supervisor] Iniciando bot.js..."
+            node bot.js || true
+            echo "⚠️ [Supervisor] bot.js parou. Reiniciando em 3 segundos..."
+            sleep 3
+        done
+    ) &
+    BOT_SUPERVISOR_PID=$!
 fi
 
 # Wait for both processes
-wait -n $PYTHON_PID $BOT_PID
+wait -n $PYTHON_PID $BOT_SUPERVISOR_PID
