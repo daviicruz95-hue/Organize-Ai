@@ -289,9 +289,10 @@ async function startBot() {
                 if (!isAuthGroup) {
                     continue;
                 }
-            } else if (!isSelfChat) {
-                // In private chat with other people: ONLY process if message calls Zeca
-                if (!isZecaCall) {
+            } else {
+                // In private chat: ONLY allow self-chat (Davi messaging his own number)
+                // NEVER respond in private conversations with other contacts (e.g. friends, Tavares, clients)
+                if (!isSelfChat) {
                     continue;
                 }
             }
