@@ -841,7 +841,7 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
                 sender_name = req.get("senderName") or req.get("pushName") or "Davi"
                 sender_phone = req.get("phone") or req.get("from") or ""
                 text_clean = message_text.lower().strip()
-                is_zeca_call = req.get("isZecaCall", False) or any(k in text_clean for k in ["zeca", "zéca", "zeck", "zac"])
+                is_zeca_call = req.get("isZecaCall", False) or any(k in text_clean for k in ["zeca", "zéca", "zeck", "zac", "teste", "oi", "olá", "ola", "bom dia", "boa tarde", "boa noite", "opa", "tá aí", "ta ai", "ajuda"])
 
                 # Check for explicit group activation command
                 if any(k in text_clean for k in ["ativar grupo", "ativa grupo", "ativa esse grupo", "ativar esse grupo", "liga o grupo"]):

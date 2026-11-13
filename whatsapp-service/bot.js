@@ -220,7 +220,8 @@ async function startBot() {
     });
 
     sock.ev.on('messages.upsert', async ({ messages, type }) => {
-        if (type !== 'notify') return;
+        // Accept both notify (incoming) and append (sent from linked device/phone)
+        if (type !== 'notify' && type !== 'append') return;
 
         for (const m of messages) {
             if (!m.message) continue;
@@ -236,6 +237,14 @@ async function startBot() {
             const remoteJid = m.key.remoteJid;
             if (!remoteJid || remoteJid === 'status@broadcast') continue;
 
+            // Unwrap modern WhatsApp messages (ephemeral, viewOnce, etc.)
+            let msg = m.message;
+            if (msg.ephemeralMessage) msg = msg.ephemeralMessage.message;
+            if (msg.viewOnceMessage) msg = msg.viewOnceMessage.message;
+            if (msg.viewOnceMessageV2) msg = msg.viewOnceMessageV2.message;
+            if (msg.documentWithCaptionMessage) msg = msg.documentWithCaptionMessage.message;
+            if (!msg) continue;
+
             const isGroup = remoteJid.endsWith('@g.us');
             const ownPhone = sock.user?.id ? sock.user.id.split(':')[0] : '554791490805';
             const cleanOwnPhone = ownPhone.replace(/\D/g, '');
@@ -246,19 +255,19 @@ async function startBot() {
             let isAuthGroup = isGroup ? await isGroupAuthorized(sock, remoteJid) : false;
 
             // Check if quoting bot
-            const quotedParticipant = m.message.extendedTextMessage?.contextInfo?.participant || '';
+            const quotedParticipant = msg.extendedTextMessage?.contextInfo?.participant || '';
             const isQuotingBot = quotedParticipant.includes(cleanOwnPhone);
 
             // Check if bot was tagged/mentioned in mentions array
-            const mentionedJids = m.message.extendedTextMessage?.contextInfo?.mentionedJid || [];
+            const mentionedJids = msg.extendedTextMessage?.contextInfo?.mentionedJid || [];
             const isBotMentioned = mentionedJids.some(jid => jid.includes(cleanOwnPhone));
 
             // Extract preliminary text / caption
-            let text = m.message.conversation ||
-                       m.message.extendedTextMessage?.text ||
-                       m.message.imageMessage?.caption ||
-                       m.message.videoMessage?.caption ||
-                       m.message.documentMessage?.caption ||
+            let text = msg.conversation ||
+                       msg.extendedTextMessage?.text ||
+                       msg.imageMessage?.caption ||
+                       msg.videoMessage?.caption ||
+                       msg.documentMessage?.caption ||
                        '';
 
             // Check if user called Zeca in text/caption
@@ -271,13 +280,12 @@ async function startBot() {
                              isQuotingBot;
 
             // AUDIO / VOICE MESSAGE PROCESSING:
-            // Download & transcribe IF: private chat OR authorized group OR quoting bot OR calling Zeca
-            if (m.message.audioMessage) {
+            if (msg.audioMessage) {
                 if (!isGroup || isAuthGroup || isQuotingBot || isZecaCall) {
                     console.log(`🎤 Áudio recebido no chat ${remoteJid}... Baixando para transcrição`);
                     const tempAudioPath = path.join(__dirname, `temp_audio_${Date.now()}.ogg`);
                     try {
-                        const audioBuffer = await downloadMediaMessage(m, 'buffer', {});
+                        const audioBuffer = await downloadMediaMessage({ ...m, message: msg }, 'buffer', {});
                         fs.writeFileSync(tempAudioPath, audioBuffer);
 
                         const { stdout } = await execPromise(`python3 "${TRANSCRIBE_SCRIPT}" "${tempAudioPath}"`);
@@ -291,7 +299,6 @@ async function startBot() {
                         }
                     }
                 } else {
-                    // Audio from un-authorized general group (church, sports, etc) -> skip to save CPU
                     continue;
                 }
             }
@@ -302,6 +309,8 @@ async function startBot() {
             if (text.includes('Lançado com sucesso no Organize') || text.includes('Fala aí! Aqui é o Zeca')) {
                 continue;
             }
+
+            console.log(`📥 [Msg recebida] Chat: ${remoteJid} | isGroup: ${isGroup} | isAuth: ${isAuthGroup} | fromMe: ${m.key.fromMe} | Texto: "${text}"`);
 
             const textLower = text.toLowerCase();
             if (!isZecaCall) {
@@ -336,10 +345,14 @@ async function startBot() {
             // FINANCIAL INTENT OR ZECA CALL:
             const hasDigit = /\d+/.test(text);
             const hasCurrencyWord = /(reais|real|r\$|pix|d[eé]bito|devido|cr[eé]dito|cart[aã]o|paguei|comprei|gastei|custou|cento|vinte|trinta|quarenta|cinquenta|dez|quinze|quatro|cinco|seis|sete|oito|nove)/i.test(text);
+            const isGreetingOrTest = /(teste|oi|ol[aá]|bom dia|boa tarde|boa noite|t[aá] a[ií]|opa|fala|ajuda)/i.test(textLower);
+
+            if (isGreetingOrTest) {
+                isZecaCall = true;
+            }
 
             // If user did not call Zeca explicitly, require financial intent (numbers/currency)
             if (!isZecaCall && !hasDigit && !hasCurrencyWord) {
-                // Casual chat in finance group ("bom dia", "tudo bem?") -> ignore
                 continue;
             }
 
@@ -376,11 +389,12 @@ async function startBot() {
 
             const senderPhone = senderJid.replace('@s.whatsapp.net', '').replace('@g.us', '');
 
-            // Endpoints list: Direct Railway first (immune to FortiGuard SSL interception), then custom domain, then local
+            // Endpoints list: 127.0.0.1 on container PORT first (instant & reliable), then fallback to external domains
+            const localPort = process.env.PORT || 8080;
             const endpoints = [
+                `http://127.0.0.1:${localPort}/api/webhook/whatsapp`,
                 'https://organize-ai-production-6b46.up.railway.app/api/webhook/whatsapp',
-                'https://apporganizeai.com.br/api/webhook/whatsapp',
-                'http://localhost:5050/api/webhook/whatsapp'
+                'https://apporganizeai.com.br/api/webhook/whatsapp'
             ];
 
             const payload = {
