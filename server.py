@@ -48,11 +48,8 @@ SMTP_PASS = os.environ.get("SMTP_PASS", "")
 SMTP_FROM = os.environ.get("SMTP_FROM", "Organize Aí <suporte@apporganizeai.com.br>")
 
 # Cloudflare Turnstile Config
-# Chaves oficiais de teste da Cloudflare caso não estejam definidas nas variáveis de ambiente:
-# Site Key de teste: 1x00000000000000000000AA (Sempre passa)
-# Secret Key de teste: 1x00000000000000000000000000000000BB (Sempre passa)
-TURNSTILE_SITE_KEY = os.environ.get("CLOUDFLARE_TURNSTILE_SITE_KEY", "1x00000000000000000000AA").strip()
-TURNSTILE_SECRET_KEY = os.environ.get("CLOUDFLARE_TURNSTILE_SECRET_KEY", "").strip()
+TURNSTILE_SITE_KEY = os.environ.get("CLOUDFLARE_TURNSTILE_SITE_KEY", "0x4AAAAAAGCjJ-lOlYLZ4UdI").strip()
+TURNSTILE_SECRET_KEY = os.environ.get("CLOUDFLARE_TURNSTILE_SECRET_KEY", "0x4AAAAAAGCjJ1NvfRsuusAEJxzt3qVzpFM").strip()
 
 def validate_strong_password(password):
     """
