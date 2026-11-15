@@ -1190,6 +1190,31 @@
               <span id="profileEyeIcon">👁️</span>
             </button>
           </div>
+
+          <!-- Password Strength Indicator in Profile -->
+          <div id="profilePasswordStrengthBox" class="hidden mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1.5 transition-all">
+            <div class="flex items-center justify-between font-semibold text-slate-700 text-[11px] mb-1">
+              <span>Nova Senha:</span>
+              <span id="profileStrengthText" class="text-rose-600 font-bold">Fraca</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mb-2">
+              <div id="profileStrengthBar" class="h-full w-1/4 bg-rose-500 transition-all duration-300"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500">
+              <div id="profRuleLength" class="flex items-center gap-1.5">
+                <span id="profIconLength">⚪</span> 8+ caracteres
+              </div>
+              <div id="profRuleUpper" class="flex items-center gap-1.5">
+                <span id="profIconUpper">⚪</span> Letra maiúscula
+              </div>
+              <div id="profRuleNumber" class="flex items-center gap-1.5">
+                <span id="profIconNumber">⚪</span> Número (0-9)
+              </div>
+              <div id="profRuleSpecial" class="flex items-center gap-1.5">
+                <span id="profIconSpecial">⚪</span> Símbolo (@, #, $...)
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1626,10 +1651,81 @@
       document.getElementById('formProfileName').value = currentUser.name || '';
       document.getElementById('formProfileEmail').value = currentUser.email || '';
       document.getElementById('formProfilePassword').value = '';
+      const box = document.getElementById('profilePasswordStrengthBox');
+      if (box) box.classList.add('hidden');
       const msg = document.getElementById('profileMsg');
       msg.className = 'hidden';
       document.getElementById('profileModal').classList.remove('hidden');
     }
+
+    function checkProfilePasswordStrength(pwd) {
+      const box = document.getElementById('profilePasswordStrengthBox');
+      if (!pwd) {
+        if (box) box.classList.add('hidden');
+        return true;
+      }
+      if (box) box.classList.remove('hidden');
+
+      const hasLength = pwd.length >= 8;
+      const hasUpper = /[A-Z]/.test(pwd);
+      const hasNumber = /[0-9]/.test(pwd);
+      const hasSpecial = /[@#$%^&*!_+\-=\[\]{}();:,.<>?/\\|~`]/.test(pwd);
+
+      const updateRule = (id, iconId, valid) => {
+        const icon = document.getElementById(iconId);
+        const el = document.getElementById(id);
+        if (!icon || !el) return;
+        if (valid) {
+          icon.textContent = '✅';
+          el.className = 'flex items-center gap-1.5 text-emerald-700 font-semibold';
+        } else {
+          icon.textContent = '⚪';
+          el.className = 'flex items-center gap-1.5 text-slate-500';
+        }
+      };
+
+      updateRule('profRuleLength', 'profIconLength', hasLength);
+      updateRule('profRuleUpper', 'profIconUpper', hasUpper);
+      updateRule('profRuleNumber', 'profIconNumber', hasNumber);
+      updateRule('profRuleSpecial', 'profIconSpecial', hasSpecial);
+
+      let score = 0;
+      if (hasLength) score++;
+      if (hasUpper) score++;
+      if (hasNumber) score++;
+      if (hasSpecial) score++;
+
+      const bar = document.getElementById('profileStrengthBar');
+      const text = document.getElementById('profileStrengthText');
+
+      if (score <= 1) {
+        bar.style.width = '25%';
+        bar.className = 'h-full bg-rose-500 transition-all duration-300';
+        text.textContent = 'Fraca';
+        text.className = 'text-rose-600 font-bold';
+      } else if (score === 2) {
+        bar.style.width = '50%';
+        bar.className = 'h-full bg-amber-500 transition-all duration-300';
+        text.textContent = 'Razoável';
+        text.className = 'text-amber-600 font-bold';
+      } else if (score === 3) {
+        bar.style.width = '75%';
+        bar.className = 'h-full bg-blue-500 transition-all duration-300';
+        text.textContent = 'Boa';
+        text.className = 'text-blue-600 font-bold';
+      } else {
+        bar.style.width = '100%';
+        bar.className = 'h-full bg-emerald-600 transition-all duration-300';
+        text.textContent = 'Forte e Segura';
+        text.className = 'text-emerald-600 font-bold';
+      }
+
+      return hasLength && hasUpper && hasNumber && hasSpecial;
+    }
+
+    document.getElementById('formProfilePassword')?.addEventListener('input', (e) => {
+      checkProfilePasswordStrength(e.target.value);
+    });
 
     function closeProfileModal() {
       document.getElementById('profileModal').classList.add('hidden');
@@ -1641,6 +1737,15 @@
       const password = document.getElementById('formProfilePassword').value.trim();
       const btn = document.getElementById('btnSaveProfile');
       const msg = document.getElementById('profileMsg');
+
+      if (password) {
+        const isStrong = checkProfilePasswordStrength(password);
+        if (!isStrong) {
+          msg.textContent = 'A nova senha precisa ter no mínimo 8 caracteres, com letra maiúscula, número e símbolo (@, #, $...).';
+          msg.className = 'p-2.5 rounded-xl text-xs font-bold text-rose-800 bg-rose-50 border border-rose-200 block text-center';
+          return;
+        }
+      }
 
       btn.disabled = true;
       btn.innerText = 'Salvando...';

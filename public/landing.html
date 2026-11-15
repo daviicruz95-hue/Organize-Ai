@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
   
   <script>
     tailwind.config = {
@@ -575,6 +576,36 @@
               <span id="eyeIcon">👁️</span>
             </button>
           </div>
+
+          <!-- Password Strength Indicator (Register mode) -->
+          <div id="passwordStrengthBox" class="hidden mt-2 p-3 bg-neutral-50 border border-line-dark rounded-xl text-xs space-y-1.5 transition-all">
+            <div class="flex items-center justify-between font-semibold text-ink text-[11px] mb-1">
+              <span>Força da Senha:</span>
+              <span id="strengthText" class="text-rose-600 font-bold">Fraca</span>
+            </div>
+            <div class="w-full h-1.5 bg-neutral-200 rounded-full overflow-hidden mb-2">
+              <div id="strengthBar" class="h-full w-1/4 bg-rose-500 transition-all duration-300"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5 text-[11px] text-ink-muted">
+              <div id="ruleLength" class="flex items-center gap-1.5">
+                <span id="iconLength" class="text-xs text-neutral-400">⚪</span> <span>8+ caracteres</span>
+              </div>
+              <div id="ruleUpper" class="flex items-center gap-1.5">
+                <span id="iconUpper" class="text-xs text-neutral-400">⚪</span> <span>Letra maiúscula</span>
+              </div>
+              <div id="ruleNumber" class="flex items-center gap-1.5">
+                <span id="iconNumber" class="text-xs text-neutral-400">⚪</span> <span>Pelo menos 1 número</span>
+              </div>
+              <div id="ruleSpecial" class="flex items-center gap-1.5">
+                <span id="iconSpecial" class="text-xs text-neutral-400">⚪</span> <span>Símbolo (@, #, $, ...)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cloudflare Turnstile Anti-Bot Protection -->
+        <div id="turnstileRow" class="flex flex-col items-center justify-center pt-1 min-h-[66px]">
+          <div id="turnstileWidget"></div>
         </div>
 
         <!-- Remember Me (Lembrar de Mim) -->
@@ -600,12 +631,118 @@
   <!-- Client-side Logic -->
   <script>
     let currentAuthMode = 'login';
+    let turnstileWidgetId = null;
+    let turnstileSiteKey = '1x00000000000000000000AA';
+    let currentTurnstileToken = '';
+
+    async function loadTurnstileConfig() {
+      try {
+        const res = await fetch('/api/auth/config');
+        const data = await res.json();
+        if (data.turnstileSiteKey) {
+          turnstileSiteKey = data.turnstileSiteKey;
+        }
+      } catch (e) {}
+    }
+    loadTurnstileConfig();
+
+    function initTurnstile() {
+      if (typeof turnstile === 'undefined') {
+        setTimeout(initTurnstile, 250);
+        return;
+      }
+      const widgetElem = document.getElementById('turnstileWidget');
+      if (!widgetElem) return;
+
+      try {
+        if (turnstileWidgetId !== null) {
+          turnstile.reset(turnstileWidgetId);
+          return;
+        }
+        turnstileWidgetId = turnstile.render('#turnstileWidget', {
+          sitekey: turnstileSiteKey,
+          theme: 'light',
+          callback: function(token) {
+            currentTurnstileToken = token;
+          },
+          'error-callback': function() {
+            currentTurnstileToken = '';
+          },
+          'expired-callback': function() {
+            currentTurnstileToken = '';
+          }
+        });
+      } catch (e) {
+        console.warn('Turnstile init:', e);
+      }
+    }
+
+    function checkPasswordStrength(pwd) {
+      const hasLength = pwd.length >= 8;
+      const hasUpper = /[A-Z]/.test(pwd);
+      const hasNumber = /[0-9]/.test(pwd);
+      const hasSpecial = /[@#$%^&*!_+\-=\[\]{}();:,.<>?/\\|~`]/.test(pwd);
+
+      const updateRule = (id, iconId, valid) => {
+        const icon = document.getElementById(iconId);
+        const el = document.getElementById(id);
+        if (!icon || !el) return;
+        if (valid) {
+          icon.textContent = '✅';
+          el.classList.remove('text-ink-muted');
+          el.classList.add('text-emerald-700', 'font-semibold');
+        } else {
+          icon.textContent = '⚪';
+          el.classList.add('text-ink-muted');
+          el.classList.remove('text-emerald-700', 'font-semibold');
+        }
+      };
+
+      updateRule('ruleLength', 'iconLength', hasLength);
+      updateRule('ruleUpper', 'iconUpper', hasUpper);
+      updateRule('ruleNumber', 'iconNumber', hasNumber);
+      updateRule('ruleSpecial', 'iconSpecial', hasSpecial);
+
+      let score = 0;
+      if (hasLength) score++;
+      if (hasUpper) score++;
+      if (hasNumber) score++;
+      if (hasSpecial) score++;
+
+      const bar = document.getElementById('strengthBar');
+      const text = document.getElementById('strengthText');
+
+      if (score <= 1) {
+        bar.style.width = '25%';
+        bar.className = 'h-full bg-rose-500 transition-all duration-300';
+        text.textContent = 'Fraca';
+        text.className = 'text-rose-600 font-bold';
+      } else if (score === 2) {
+        bar.style.width = '50%';
+        bar.className = 'h-full bg-amber-500 transition-all duration-300';
+        text.textContent = 'Razoável';
+        text.className = 'text-amber-600 font-bold';
+      } else if (score === 3) {
+        bar.style.width = '75%';
+        bar.className = 'h-full bg-blue-500 transition-all duration-300';
+        text.textContent = 'Boa';
+        text.className = 'text-blue-600 font-bold';
+      } else {
+        bar.style.width = '100%';
+        bar.className = 'h-full bg-emerald-600 transition-all duration-300';
+        text.textContent = 'Forte e Segura';
+        text.className = 'text-emerald-600 font-bold';
+      }
+
+      return hasLength && hasUpper && hasNumber && hasSpecial;
+    }
 
     function openModal(mode = 'login') {
       const modal = document.getElementById('authModal');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       switchAuthTab(mode);
+      initTurnstile();
     }
 
     function closeModal() {
@@ -630,10 +767,22 @@
       document.getElementById('nameField').classList.toggle('hidden', isLogin);
       document.getElementById('btnForgotTrigger').classList.toggle('hidden', !isLogin);
       document.getElementById('rememberMeRow').classList.toggle('hidden', !isLogin);
+      document.getElementById('passwordStrengthBox').classList.toggle('hidden', isLogin);
       document.getElementById('btnAuthSubmit').innerText = isLogin ? 'Entrar no Organize Aí' : 'Criar Conta Gratuita';
       document.getElementById('authError').classList.add('hidden');
       document.getElementById('authSuccess').classList.add('hidden');
+
+      if (!isLogin) {
+        checkPasswordStrength(document.getElementById('inputPassword').value);
+      }
+      initTurnstile();
     }
+
+    document.getElementById('inputPassword').addEventListener('input', (e) => {
+      if (currentAuthMode === 'register') {
+        checkPasswordStrength(e.target.value);
+      }
+    });
 
     function showForgotPassword() {
       document.getElementById('authMainForm').classList.add('hidden');
@@ -714,19 +863,36 @@
       const btn = document.getElementById('btnAuthSubmit');
       const errBox = document.getElementById('authError');
       errBox.classList.add('hidden');
-      btn.disabled = true;
-      btn.innerText = 'Processando...';
 
       const email = document.getElementById('inputEmail').value.trim();
       const password = document.getElementById('inputPassword').value.trim();
       const name = document.getElementById('inputName').value.trim();
+
+      // Validate strong password on client before sending
+      if (currentAuthMode === 'register') {
+        const isStrong = checkPasswordStrength(password);
+        if (!isStrong) {
+          errBox.textContent = 'A senha precisa ter no mínimo 8 caracteres, com letra maiúscula, número e símbolo (@, #, $...).';
+          errBox.classList.remove('hidden');
+          return;
+        }
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Processando...';
+
+      // Get Turnstile token if available
+      let turnstileToken = currentTurnstileToken;
+      if (typeof turnstile !== 'undefined' && turnstileWidgetId !== null) {
+        turnstileToken = turnstile.getResponse(turnstileWidgetId) || currentTurnstileToken;
+      }
 
       const endpoint = currentAuthMode === 'login' ? '/api/auth/login' : '/api/auth/register';
       try {
         const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, name })
+          body: JSON.stringify({ email, password, name, turnstileToken })
         });
         const data = await res.json();
         if (data.success && data.user) {
@@ -740,12 +906,18 @@
           errBox.classList.remove('hidden');
           btn.disabled = false;
           btn.innerText = currentAuthMode === 'login' ? 'Entrar no Organize Aí' : 'Criar Conta Gratuita';
+          if (typeof turnstile !== 'undefined' && turnstileWidgetId !== null) {
+            turnstile.reset(turnstileWidgetId);
+          }
         }
       } catch (err) {
         errBox.textContent = 'Erro ao conectar ao servidor.';
         errBox.classList.remove('hidden');
         btn.disabled = false;
         btn.innerText = currentAuthMode === 'login' ? 'Entrar no Organize Aí' : 'Criar Conta Gratuita';
+        if (typeof turnstile !== 'undefined' && turnstileWidgetId !== null) {
+          turnstile.reset(turnstileWidgetId);
+        }
       }
     }
 

@@ -47,6 +47,69 @@ SMTP_USER = os.environ.get("SMTP_USER", "")
 SMTP_PASS = os.environ.get("SMTP_PASS", "")
 SMTP_FROM = os.environ.get("SMTP_FROM", "Organize Aí <suporte@apporganizeai.com.br>")
 
+# Cloudflare Turnstile Config
+# Chaves oficiais de teste da Cloudflare caso não estejam definidas nas variáveis de ambiente:
+# Site Key de teste: 1x00000000000000000000AA (Sempre passa)
+# Secret Key de teste: 1x00000000000000000000000000000000BB (Sempre passa)
+TURNSTILE_SITE_KEY = os.environ.get("CLOUDFLARE_TURNSTILE_SITE_KEY", "1x00000000000000000000AA").strip()
+TURNSTILE_SECRET_KEY = os.environ.get("CLOUDFLARE_TURNSTILE_SECRET_KEY", "").strip()
+
+def validate_strong_password(password):
+    """
+    Valida política de senha forte:
+    - No mínimo 8 caracteres
+    - Pelo menos 1 letra maiúscula (A-Z)
+    - Pelo menos 1 letra minúscula (a-z)
+    - Pelo menos 1 número (0-9)
+    - Pelo menos 1 caractere especial (@, #, $, %, etc.)
+    """
+    if not password or len(password) < 8:
+        return False, "A senha deve conter no mínimo 8 caracteres."
+    if not re.search(r'[A-Z]', password):
+        return False, "A senha deve conter pelo menos uma letra maiúscula (A-Z)."
+    if not re.search(r'[a-z]', password):
+        return False, "A senha deve conter pelo menos uma letra minúscula (a-z)."
+    if not re.search(r'[0-9]', password):
+        return False, "A senha deve conter pelo menos um número (0-9)."
+    if not re.search(r'[@#$%^&*!_+\-=\[\]{}();:,.<>?/\\|~`]', password):
+        return False, "A senha deve conter pelo menos um caractere especial (ex: @, #, $, %, !)."
+    return True, ""
+
+def verify_turnstile_token(token, remote_ip=None):
+    """
+    Verifica o token do Cloudflare Turnstile com a API da Cloudflare.
+    Se TURNSTILE_SECRET_KEY não for configurada no ambiente, permite a requisição.
+    """
+    if not TURNSTILE_SECRET_KEY:
+        return True, ""
+    
+    if not token:
+        return False, "Por favor, complete a verificação de segurança (Cloudflare Turnstile)."
+    
+    try:
+        url = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+        payload = {
+            "secret": TURNSTILE_SECRET_KEY,
+            "response": token
+        }
+        if remote_ip:
+            payload["remoteip"] = remote_ip
+        req_data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            url,
+            data=req_data,
+            headers={"Content-Type": "application/json"}
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            if data.get("success"):
+                return True, ""
+            print(f"⚠️ [Turnstile] Desafio rejeitado: {data.get('error-codes')}", flush=True)
+            return False, "Verificação de segurança falhou. Por favor, tente novamente."
+    except Exception as e:
+        print(f"⚠️ [Turnstile] Erro de validação: {e}", flush=True)
+        return True, ""
+
 def send_system_email(to_email, subject, html_content):
     import urllib.request
     print(f"📧 [Email Disparo] Destinatário: {to_email} | Assunto: {subject}", flush=True)
@@ -621,6 +684,11 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             if not user:
                 user = {"id": MASTER_USER_ID, "name": "Davi & Nathalie", "email": "davi@organizeai.com", "role": "master", "avatar": ""}
             self.send_json_response({"success": True, "user": user})
+        elif clean_path == "/api/auth/config":
+            self.send_json_response({
+                "turnstileSiteKey": TURNSTILE_SITE_KEY,
+                "turnstileEnabled": bool(TURNSTILE_SITE_KEY)
+            })
         elif clean_path in ["/whatsapp", "/conectar"]:
             self.path = "/whatsapp.html"
             super().do_GET()
@@ -722,9 +790,20 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             name = req.get("name", "Usuário").strip() or "Usuário"
             email = req.get("email", "").strip().lower()
             password = req.get("password", "").strip()
+            turnstile_token = req.get("turnstileToken", "").strip()
+
+            # 1. Cloudflare Turnstile Check
+            is_valid_turnstile, turnstile_err = verify_turnstile_token(turnstile_token, self.client_address[0])
+            if not is_valid_turnstile:
+                return self.send_json_response({"error": turnstile_err}, 400)
 
             if not email or not password:
                 return self.send_json_response({"error": "Informe e-mail e senha."}, 400)
+
+            # 2. Strong Password Validation
+            is_strong, pwd_err = validate_strong_password(password)
+            if not is_strong:
+                return self.send_json_response({"error": pwd_err}, 400)
 
             users = get_users()
             if any(u.get("email", "").lower() == email for u in users):
@@ -770,6 +849,13 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
         elif self.path == "/api/auth/login":
             email = req.get("email", "").strip().lower()
             password = req.get("password", "").strip()
+            turnstile_token = req.get("turnstileToken", "").strip()
+
+            # Cloudflare Turnstile Check (se token enviado ou se chave secreta configurada)
+            if TURNSTILE_SECRET_KEY or turnstile_token:
+                is_valid_turnstile, turnstile_err = verify_turnstile_token(turnstile_token, self.client_address[0])
+                if not is_valid_turnstile:
+                    return self.send_json_response({"error": turnstile_err}, 400)
 
             users = get_users()
             # If Davi/Nathalie or master
@@ -833,7 +919,11 @@ class FinanceHandler(http.server.SimpleHTTPRequestHandler):
             if "email" in req and req["email"].strip():
                 user["email"] = req["email"].strip().lower()
             if "password" in req and req["password"].strip():
-                user["password"] = req["password"].strip()
+                new_pwd = req["password"].strip()
+                is_strong, pwd_err = validate_strong_password(new_pwd)
+                if not is_strong:
+                    return self.send_json_response({"error": pwd_err}, 400)
+                user["password"] = new_pwd
             if "avatar" in req:
                 user["avatar"] = req["avatar"].strip()
 
